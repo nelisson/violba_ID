@@ -1,0 +1,51 @@
+# Project: violba_ID
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = src/Armor.o src/InputReceiver.o src/Inventory.o src/Item.o src/main.o src/MainCharacter.o src/Utils.o src/Weapon.o $(RES)
+LINKOBJ  = src/Armor.o src/InputReceiver.o src/Inventory.o src/Item.o src/main.o src/MainCharacter.o src/Utils.o src/Weapon.o $(RES)
+LIBS =  -L"lib" -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32  
+INCS =  -I"include" 
+CXXINCS =  -I"lib/gcc/mingw32/3.4.2/include"  -I"include/c++/3.4.2/backward"  -I"include/c++/3.4.2/mingw32"  -I"include/c++/3.4.2"  -I"include" 
+BIN  = violba_ID.exe
+CXXFLAGS = $(CXXINCS)  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before violba_ID.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "violba_ID.exe" $(LIBS)
+
+src/Armor.o: src/Armor.cpp
+	$(CPP) -c src/Armor.cpp -o src/Armor.o $(CXXFLAGS)
+
+src/InputReceiver.o: src/InputReceiver.cpp
+	$(CPP) -c src/InputReceiver.cpp -o src/InputReceiver.o $(CXXFLAGS)
+
+src/Inventory.o: src/Inventory.cpp
+	$(CPP) -c src/Inventory.cpp -o src/Inventory.o $(CXXFLAGS)
+
+src/Item.o: src/Item.cpp
+	$(CPP) -c src/Item.cpp -o src/Item.o $(CXXFLAGS)
+
+src/main.o: src/main.cpp
+	$(CPP) -c src/main.cpp -o src/main.o $(CXXFLAGS)
+
+src/MainCharacter.o: src/MainCharacter.cpp
+	$(CPP) -c src/MainCharacter.cpp -o src/MainCharacter.o $(CXXFLAGS)
+
+src/Utils.o: src/Utils.cpp
+	$(CPP) -c src/Utils.cpp -o src/Utils.o $(CXXFLAGS)
+
+src/Weapon.o: src/Weapon.cpp
+	$(CPP) -c src/Weapon.cpp -o src/Weapon.o $(CXXFLAGS)
