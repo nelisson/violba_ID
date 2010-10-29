@@ -1,29 +1,24 @@
 #include "InputReceiver.h"
 
-InputReceiver::InputReceiver()
-{
+InputReceiver::InputReceiver() {
     //ctor
 }
 
-InputReceiver::~InputReceiver()
-{
+InputReceiver::~InputReceiver() {
     //dtor
 }
 
 
-bool InputReceiver::OnEvent(const SEvent& event)
-{
+bool InputReceiver::OnEvent(const SEvent& event) {
 
     if (event.EventType == irr::EET_JOYSTICK_INPUT_EVENT
-        && event.JoystickEvent.Joystick == 0)
-    {
+        && event.JoystickEvent.Joystick == 0) {
         JoystickState = event.JoystickEvent;
     }
 
     return false;
 }
 
-const SEvent::SJoystickEvent& InputReceiver::GetJoystickState(void) const
-{
+const SEvent::SJoystickEvent& InputReceiver::GetJoystickState(void) const {
     return JoystickState;
 }

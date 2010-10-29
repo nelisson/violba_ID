@@ -20,7 +20,7 @@
 #define STARTING_LEVEL    1
 
 enum State{
-    moving, idle, attacking, jumping};
+    moving, idle2, attacking, jumping};
 
 enum AttackType{
     spin, punch, kick, slash};
@@ -45,6 +45,7 @@ class MainCharacter : public Character {
         virtual void levelUp();
 
         MainCharacter(string name,
+                      char * modelPath,
                       int level = STARTING_LEVEL,
                       int maxHP = STARTING_HP,
                       int vitality = STARTING_VITALITY,

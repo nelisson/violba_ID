@@ -4,6 +4,10 @@ IAnimatedMeshSceneNode* Character::getModel() {
     return model_;
 }
 
+char * Character::getModelPath() {
+    return modelPath_;
+}
+
 void Character::heal(int value) {
     currentHP_ += value;
 
@@ -26,10 +30,12 @@ bool Character::isAlive() {
     return currentHP_ > 0;
 }
 
-Character::Character(string name, int maxHP, int level) {
+Character::Character(string name, char * modelPath, int maxHP, int level) {
     name_  = name;
+    modelPath_ = modelPath;
     level_ = level;
     maxHP_ = maxHP;
+
     fillHP();
 }
 

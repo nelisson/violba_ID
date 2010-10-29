@@ -12,6 +12,7 @@ using namespace irr::scene;
 class Character {
     private:
         string name_;
+        char * modelPath_;
         IAnimatedMeshSceneNode* model_;
         int level_;
         int maxHP_;
@@ -21,6 +22,7 @@ class Character {
 
     public:
         IAnimatedMeshSceneNode* getModel();
+        char * getModelPath();
         void fillHP();
         void heal(int value);
         void hurt(int value);
@@ -28,7 +30,7 @@ class Character {
 
         virtual void levelUp() = 0;
 
-        Character(string name, int maxHP, int level = DEFAULT_CHARACTER_LEVEL);
+        Character(string name, char * modelPath, int maxHP, int level = DEFAULT_CHARACTER_LEVEL);
         virtual ~Character();
 };
 

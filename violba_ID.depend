@@ -970,52 +970,55 @@
 	<iostream>
 	"EDriverTypes.h"
 
-1288302253 source:c:\documents and settings\janine\desktop\violba_id\src\main.cpp
+1288348206 source:c:\documents and settings\janine\desktop\violba_id\src\main.cpp
 	<irrlicht.h>
 	<math.h>
 	"driverChoice.h"
 	"InputReceiver.h"
 	"Utils.h"
 
-1288298459 source:c:\documents and settings\janine\desktop\violba_id\src\maincharacter.cpp
+1288347788 source:c:\documents and settings\janine\desktop\violba_id\src\maincharacter.cpp
 	"MainCharacter.h"
 
-1288298555 c:\documents and settings\janine\desktop\violba_id\include\maincharacter.h
+1288309698 c:\documents and settings\janine\desktop\violba_id\include\maincharacter.h
 	"Inventory.h"
 	<irrlicht.h>
+	"character.h"
 
-1288291936 c:\documents and settings\janine\desktop\violba_id\include\inventory.h
+1288309222 c:\documents and settings\janine\desktop\violba_id\include\inventory.h
+	<vector>
+	"slot.h"
 
-1288298450 source:c:\documents and settings\janine\desktop\violba_id\src\inventory.cpp
+1288309230 source:c:\documents and settings\janine\desktop\violba_id\src\inventory.cpp
 	"Inventory.h"
 
-1288298464 source:c:\documents and settings\janine\desktop\violba_id\src\weapon.cpp
+1288308514 source:c:\documents and settings\janine\desktop\violba_id\src\weapon.cpp
 	"Weapon.h"
 
-1288295831 c:\documents and settings\janine\desktop\violba_id\include\weapon.h
+1288308522 c:\documents and settings\janine\desktop\violba_id\include\weapon.h
 	"Item.h"
 
-1288298441 source:c:\documents and settings\janine\desktop\violba_id\src\armor.cpp
+1288308436 source:c:\documents and settings\janine\desktop\violba_id\src\armor.cpp
 	"Armor.h"
 
-1288295833 c:\documents and settings\janine\desktop\violba_id\include\armor.h
+1288308560 c:\documents and settings\janine\desktop\violba_id\include\armor.h
 	"Item.h"
 
-1288298454 source:c:\documents and settings\janine\desktop\violba_id\src\item.cpp
+1288347474 source:c:\documents and settings\janine\desktop\violba_id\src\item.cpp
 	"Item.h"
 
-1288298501 c:\documents and settings\janine\desktop\violba_id\include\item.h
+1288308592 c:\documents and settings\janine\desktop\violba_id\include\item.h
 	<string>
 
-1288298446 source:c:\documents and settings\janine\desktop\violba_id\src\inputreceiver.cpp
+1288294848 source:c:\documents and settings\janine\desktop\violba_id\src\inputreceiver.cpp
 	"InputReceiver.h"
 
-1288298487 c:\documents and settings\janine\desktop\violba_id\include\inputreceiver.h
+1288307202 c:\documents and settings\janine\desktop\violba_id\include\inputreceiver.h
 	<irrlicht.h>
 
-1288298422 c:\documents and settings\janine\desktop\violba_id\include\utils.h
+1288294824 c:\documents and settings\janine\desktop\violba_id\include\utils.h
 
-1288298426 source:c:\documents and settings\janine\desktop\violba_id\src\utils.cpp
+1288308928 source:c:\documents and settings\janine\desktop\violba_id\src\utils.cpp
 	"Utils.h"
 
 1288308436 source:f:\ufrgs\6° semestre\pcg\violba_id 28-10\src\armor.cpp
@@ -2116,4 +2119,22 @@
 	"driverChoice.h"
 	"InputReceiver.h"
 	"Utils.h"
+
+1288347862 source:c:\documents and settings\janine\desktop\violba_id\src\character.cpp
+	"Character.h"
+
+1288347879 c:\documents and settings\janine\desktop\violba_id\include\character.h
+	<string>
+	<irrlicht.h>
+
+1288347947 source:c:\documents and settings\janine\desktop\violba_id\src\game.cpp
+	"Game.h"
+
+1288347992 c:\documents and settings\janine\desktop\violba_id\include\game.h
+
+1288308846 c:\documents and settings\janine\desktop\violba_id\include\slot.h
+	"item.h"
+
+1288347338 source:c:\documents and settings\janine\desktop\violba_id\src\slot.cpp
+	"Slot.h"
 
