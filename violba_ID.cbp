@@ -41,6 +41,7 @@
 		<Unit filename="include\Inventory.h" />
 		<Unit filename="include\Item.h" />
 		<Unit filename="include\MainCharacter.h" />
+		<Unit filename="include\Monster.h" />
 		<Unit filename="include\Slot.h" />
 		<Unit filename="include\Utils.h" />
 		<Unit filename="include\Weapon.h" />
@@ -51,6 +52,7 @@
 		<Unit filename="src\Inventory.cpp" />
 		<Unit filename="src\Item.cpp" />
 		<Unit filename="src\MainCharacter.cpp" />
+		<Unit filename="src\Monster.cpp" />
 		<Unit filename="src\Slot.cpp" />
 		<Unit filename="src\Utils.cpp" />
 		<Unit filename="src\Weapon.cpp" />
