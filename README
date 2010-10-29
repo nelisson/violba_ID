@@ -1,14 +1,14 @@
 Tutorial GIT:
 
- * criar usuário em http://github.com
+ * criar usuario em http://github.com
  * se estiver no Windows, baixar e instalar git de http://code.google.com/p/msysgit/
  * git config --global user.name "username_no_hub"
  * git config --global user.email you@yourdomain.example.com
  * git clone git://github.com/nelisson/violba_ID
  * cd violba_ID
  * git remote add origin git@github.com:bfiss/violba_ID.git
- * faça as modificações que quiser
+ * faca as modificacoes que quiser
  * git add .
- * git commit -a -m "breve descrição das suas modificações"
+ * git commit -a -m "breve descricao das suas modificacoes"
  * git push --all origin
- * link para o projeto: http://github.com/bfiss/violba_ID
+ * link para o projeto: http://github.com/nelisson/violba_ID
