@@ -3102,10 +3102,10 @@
 1288525951 c:\users\juliano\downloads\violbaid\include\item.h
 	<string>
 
-1288525951 source:c:\users\juliano\downloads\violbaid\src\character.cpp
+1288543298 source:c:\users\juliano\downloads\violbaid\src\character.cpp
 	"Character.h"
 
-1288525951 c:\users\juliano\downloads\violbaid\include\character.h
+1288543313 c:\users\juliano\downloads\violbaid\include\character.h
 	<string>
 	<irrlicht.h>
 
@@ -4083,7 +4083,7 @@
 	<irrlicht.h>
 	"IXBOX360Listener.h"
 
-1288535028 c:\users\juliano\downloads\violbaid\include\ixbox360listener.h
+1288537231 c:\users\juliano\downloads\violbaid\include\ixbox360listener.h
 	<cstdlib>
 
 1288525951 source:c:\users\juliano\downloads\violbaid\src\inventory.cpp
@@ -4099,18 +4099,18 @@
 1288525951 source:c:\users\juliano\downloads\violbaid\src\item.cpp
 	"Item.h"
 
-1288525951 source:c:\users\juliano\downloads\violbaid\src\maincharacter.cpp
+1288543324 source:c:\users\juliano\downloads\violbaid\src\maincharacter.cpp
 	"MainCharacter.h"
 
-1288525951 c:\users\juliano\downloads\violbaid\include\maincharacter.h
+1288543270 c:\users\juliano\downloads\violbaid\include\maincharacter.h
 	"Inventory.h"
 	<irrlicht.h>
 	"character.h"
 
-1288525951 source:c:\users\juliano\downloads\violbaid\src\monster.cpp
+1288543338 source:c:\users\juliano\downloads\violbaid\src\monster.cpp
 	"Monster.h"
 
-1288525951 c:\users\juliano\downloads\violbaid\include\monster.h
+1288543286 c:\users\juliano\downloads\violbaid\include\monster.h
 	"character.h"
 
 1288525951 source:c:\users\juliano\downloads\violbaid\src\slot.cpp
@@ -4127,11 +4127,11 @@
 1288525951 c:\users\juliano\downloads\violbaid\include\weapon.h
 	"Item.h"
 
-1288527628 source:c:\users\juliano\downloads\violbaid\src\main.cpp
+1288538540 source:c:\users\juliano\downloads\violbaid\src\main.cpp
 	<irrlicht.h>
 	<math.h>
 	"driverChoice.h"
-	"InputReceiver.h"
+	"XBOX360Controller.h"
 	"Utils.h"
 	<cstdlib>
 	<ctime>
@@ -4142,6 +4142,13 @@
 	<iostream>
 	"EDriverTypes.h"
 
-1288534331 source:c:\users\juliano\downloads\violbaid\src\ixbox360listener.cpp
+1288537218 source:c:\users\juliano\downloads\violbaid\src\ixbox360listener.cpp
 	"IXBOX360Listener.h"
+
+1288541362 source:c:\users\juliano\downloads\violbaid\src\xbox360controller.cpp
+	"XBOX360Controller.h"
+
+1288541081 c:\users\juliano\downloads\violbaid\include\xbox360controller.h
+	<cstdlib>
+	<irrlicht.h>
 

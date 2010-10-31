@@ -1,7 +1,7 @@
 #include <irrlicht.h>
 #include <math.h>
 #include "driverChoice.h"
-#include "InputReceiver.h"
+#include "XBOX360Controller.h"
 #include "Utils.h"
 #include <cstdlib>
 #include <ctime>
@@ -9,8 +9,9 @@
 #include "MainCharacter.h"
 #include "Monster.h"
 
+#define RESOLUTION core::dimension2d<u32>(800, 600)
+
 using namespace irr;
-// LALALA testando github
 using namespace scene;
 using namespace std;
 
@@ -34,16 +35,21 @@ int main() {
 
     srand(time(NULL));
 
-	InputReceiver receiver;
+	XBOX360Controller receiver;
 
-	IrrlichtDevice* device = createDevice(driverType,
-			core::dimension2d<u32>(800, 600), 32, false, false, false, &receiver);
+    cout << "funcao: " << driverType << endl;
+    cout << "OPENGL: " << video::EDT_OPENGL << endl;
+
+	IrrlichtDevice* device = createDevice(video::EDT_OPENGL,
+			RESOLUTION, 32, false, false, false, &receiver);
 
 	if (device == 0)
 		return 1; // could not create selected driver.
 
 	core::array<SJoystickInfo> joystickInfo;
 	device->activateJoysticks(joystickInfo);
+
+	//cout << joystickInfo[0].Name.c_str() << endl;
 
 	core::stringw tmp = L"Violba_ID (";
 	tmp += joystickInfo.size();
@@ -55,8 +61,7 @@ int main() {
 
 	scene::EMD2_ANIMATION_TYPE playerAnim;
 
-    MainCharacter * player = new MainCharacter("Violba",
-                                               "./models/ninja.b3d");
+    MainCharacter * player = new MainCharacter("Violba", "./models/ninja.b3d");
 
 	scene::IAnimatedMeshSceneNode* nodePlayer =
 		smgr->addAnimatedMeshSceneNode(smgr->getMesh(player->getModelPath()));

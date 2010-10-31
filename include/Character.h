@@ -9,7 +9,7 @@
 using namespace std;
 using namespace irr::scene;
 
-class Character {
+class Character { // : public IAnimatedMeshSceneNode {
     private:
         string name_;
         char * modelPath_;
