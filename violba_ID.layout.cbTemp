@@ -5,25 +5,22 @@
 		<Cursor position="98" topLine="0" />
 	</File>
 	<File name="include\Character.h" open="1" top="0" tabpos="13">
-		<Cursor position="63" topLine="0" />
+		<Cursor position="669" topLine="14" />
 	</File>
 	<File name="include\Game.h" open="1" top="0" tabpos="20">
 		<Cursor position="64" topLine="0" />
 	</File>
-	<File name="include\IXBOX360Listener.h" open="1" top="0" tabpos="24">
-		<Cursor position="576" topLine="12" />
-	</File>
 	<File name="include\InputReceiver.h" open="1" top="0" tabpos="2">
-		<Cursor position="374" topLine="0" />
+		<Cursor position="424" topLine="0" />
 	</File>
 	<File name="include\Inventory.h" open="1" top="0" tabpos="6">
-		<Cursor position="170" topLine="0" />
+		<Cursor position="170" topLine="2" />
 	</File>
 	<File name="include\Item.h" open="1" top="0" tabpos="5">
 		<Cursor position="189" topLine="0" />
 	</File>
 	<File name="include\MainCharacter.h" open="1" top="0" tabpos="3">
-		<Cursor position="524" topLine="0" />
+		<Cursor position="524" topLine="12" />
 	</File>
 	<File name="include\Monster.h" open="1" top="0" tabpos="22">
 		<Cursor position="223" topLine="0" />
@@ -41,16 +38,13 @@
 		<Cursor position="85" topLine="0" />
 	</File>
 	<File name="src\Character.cpp" open="1" top="0" tabpos="14">
-		<Cursor position="530" topLine="0" />
+		<Cursor position="530" topLine="23" />
 	</File>
 	<File name="src\Game.cpp" open="1" top="0" tabpos="21">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\IXBOX360Listener.cpp" open="1" top="1" tabpos="25">
-		<Cursor position="361" topLine="0" />
-	</File>
 	<File name="src\InputReceiver.cpp" open="1" top="0" tabpos="17">
-		<Cursor position="30" topLine="0" />
+		<Cursor position="113" topLine="0" />
 	</File>
 	<File name="src\Inventory.cpp" open="1" top="0" tabpos="11">
 		<Cursor position="447" topLine="0" />
@@ -59,10 +53,10 @@
 		<Cursor position="25" topLine="0" />
 	</File>
 	<File name="src\MainCharacter.cpp" open="1" top="0" tabpos="10">
-		<Cursor position="567" topLine="0" />
+		<Cursor position="567" topLine="8" />
 	</File>
 	<File name="src\Monster.cpp" open="1" top="0" tabpos="23">
-		<Cursor position="354" topLine="0" />
+		<Cursor position="123" topLine="0" />
 	</File>
 	<File name="src\Slot.cpp" open="1" top="0" tabpos="16">
 		<Cursor position="69" topLine="0" />
@@ -73,7 +67,7 @@
 	<File name="src\Weapon.cpp" open="1" top="0" tabpos="8">
 		<Cursor position="88" topLine="0" />
 	</File>
-	<File name="src\main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="605" topLine="0" />
+	<File name="src\main.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="1408" topLine="50" />
 	</File>
 </CodeBlocks_layout_file>

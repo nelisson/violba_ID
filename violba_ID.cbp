@@ -37,6 +37,7 @@
 		<Unit filename="include\Armor.h" />
 		<Unit filename="include\Character.h" />
 		<Unit filename="include\Game.h" />
+		<Unit filename="include\IXBOX360Listener.h" />
 		<Unit filename="include\InputReceiver.h" />
 		<Unit filename="include\Inventory.h" />
 		<Unit filename="include\Item.h" />
@@ -48,6 +49,7 @@
 		<Unit filename="src\Armor.cpp" />
 		<Unit filename="src\Character.cpp" />
 		<Unit filename="src\Game.cpp" />
+		<Unit filename="src\IXBOX360Listener.cpp" />
 		<Unit filename="src\InputReceiver.cpp" />
 		<Unit filename="src\Inventory.cpp" />
 		<Unit filename="src\Item.cpp" />
