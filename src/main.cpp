@@ -12,6 +12,7 @@
 #define RESOLUTION core::dimension2d<u32>(800, 600)
 
 using namespace irr;
+//hdusahdiasu
 using namespace scene;
 using namespace std;
 
