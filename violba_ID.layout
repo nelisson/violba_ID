@@ -67,7 +67,7 @@
 	<File name="src\XBOX360Controller.cpp" open="0" top="0" tabpos="23">
 		<Cursor position="2115" topLine="46" />
 	</File>
-	<File name="src\main.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="385" topLine="6" />
+	<File name="src\main.cpp" open="1" top="1" tabpos="0">
+		<Cursor position="303" topLine="6" />
 	</File>
 </CodeBlocks_layout_file>
