@@ -1,9 +1,5 @@
 #include "Character.h"
 
-IAnimatedMeshSceneNode* Character::getModel() {
-    return model_;
-}
-
 char * Character::getModelPath() {
     return modelPath_;
 }

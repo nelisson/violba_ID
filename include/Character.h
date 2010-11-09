@@ -3,17 +3,17 @@
 
 #include <string>
 #include <irrlicht/irrlicht.h>
+#include "node.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
 
 using namespace std;
 using namespace irr::scene;
 
-class Character { // : public IAnimatedMeshSceneNode {
+class Character : public Node {
     private:
         string name_;
         char * modelPath_;
-        IAnimatedMeshSceneNode* model_;
         int level_;
         int maxHP_;
         int currentHP_;
@@ -21,7 +21,6 @@ class Character { // : public IAnimatedMeshSceneNode {
     protected:
 
     public:
-        IAnimatedMeshSceneNode* getModel();
         char * getModelPath();
         void fillHP();
         void heal(int value);

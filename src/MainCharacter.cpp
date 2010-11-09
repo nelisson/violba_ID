@@ -18,6 +18,7 @@ MainCharacter::MainCharacter(string name,
                              int strength,
                              int agility)
     : Character(name, modelPath, level, maxHP) {
+
     vitality_ = vitality;
     strength_ = strength;
     agility_  = agility;

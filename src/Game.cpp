@@ -1,11 +1,9 @@
 #include "Game.h"
 
-Game::Game()
-{
+Game::Game() {
     //ctor
 }
 
-Game::~Game()
-{
+Game::~Game() {
     //dtor
 }

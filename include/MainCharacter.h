@@ -13,6 +13,9 @@
 #define SLASH 58,68
 #define JUMP 94,102
 
+#define DEFAULT_CHARACTER_NAME "Violba"
+#define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
+
 #define STARTING_HP       1
 #define STARTING_STRENGTH 1
 #define STARTING_VITALITY 1
@@ -44,8 +47,8 @@ class MainCharacter : public Character {
 
         virtual void levelUp();
 
-        MainCharacter(string name,
-                      char * modelPath,
+        MainCharacter(string name = DEFAULT_CHARACTER_NAME,
+                      char * meshPath = DEFAULT_CHARACTER_MESH,
                       int level = STARTING_LEVEL,
                       int maxHP = STARTING_HP,
                       int vitality = STARTING_VITALITY,

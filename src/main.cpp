@@ -11,6 +11,7 @@
 #include "Monster.h"
 
 #define RESOLUTION core::dimension2d<u32>(800, 600)
+#define PROGRAM_NAME "Violba_ID"
 
 using namespace irr;
 using namespace scene;
@@ -30,42 +31,30 @@ class StopAnimationWhenStop : public IAnimationEndCallBack{
 };
 
 int main() {
-	video::E_DRIVER_TYPE driverType = driverChoiceConsole();
-	if (driverType == video::EDT_COUNT)
-		return 1;
-
     srand(time(NULL));
 
 	XBOX360Controller receiver;
 
-    cout << "funcao: " << driverType << endl;
-    cout << "OPENGL: " << video::EDT_OPENGL << endl;
-
 	IrrlichtDevice* device = createDevice(video::EDT_OPENGL,
 			RESOLUTION, 32, false, false, false, &receiver);
-
-	if (device == 0)
-		return 1; // could not create selected driver.
 
 	core::array<SJoystickInfo> joystickInfo;
 	device->activateJoysticks(joystickInfo);
 
-	//cout << joystickInfo[0].Name.c_str() << endl;
-
-	core::stringw tmp = L"Violba_ID (";
-	tmp += joystickInfo.size();
-	tmp += " joysticks)";
-	device->setWindowCaption(tmp.c_str());
+    core::stringw programName = PROGRAM_NAME;
+	device->setWindowCaption(programName.c_str());
 
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
 
 	scene::EMD2_ANIMATION_TYPE playerAnim;
 
-    MainCharacter * player = new MainCharacter("Violba", "./models/ninja.b3d");
+    MainCharacter player;
 
 	scene::IAnimatedMeshSceneNode* nodePlayer =
-		smgr->addAnimatedMeshSceneNode(smgr->getMesh(player->getModelPath()));
+		smgr->addAnimatedMeshSceneNode(smgr->getMesh(player.getModelPath()));
+
+
 
     if (nodePlayer) {
         StopAnimationWhenStop stopStop;

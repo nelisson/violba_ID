@@ -4161,3 +4161,99 @@
 1289319027 c:\dev-cpp\violba_id\include\item.h
 	<string>
 
+1289323082 source:c:\dev-cpp\violba_id\src\character.cpp
+	"Character.h"
+
+1289323068 c:\dev-cpp\violba_id\include\character.h
+	<string>
+	<irrlicht/irrlicht.h>
+	"node.h"
+
+1289323089 source:c:\dev-cpp\violba_id\src\game.cpp
+	"Game.h"
+
+1289323799 c:\dev-cpp\violba_id\include\game.h
+	"MainCharacter.h"
+	"Monster.h"
+	"Level.h"
+	"XBOX360Controller.h"
+
+1289319027 source:c:\dev-cpp\violba_id\src\inventory.cpp
+	"Inventory.h"
+
+1289319027 c:\dev-cpp\violba_id\include\inventory.h
+	<vector>
+	"slot.h"
+
+1289319027 c:\dev-cpp\violba_id\include\slot.h
+	"item.h"
+
+1289319027 source:c:\dev-cpp\violba_id\src\item.cpp
+	"Item.h"
+
+1289322354 source:c:\dev-cpp\violba_id\src\maincharacter.cpp
+	"MainCharacter.h"
+
+1289323500 c:\dev-cpp\violba_id\include\maincharacter.h
+	"Inventory.h"
+	<irrlicht/irrlicht.h>
+	"character.h"
+
+1289322400 source:c:\dev-cpp\violba_id\src\monster.cpp
+	"Monster.h"
+
+1289323776 c:\dev-cpp\violba_id\include\monster.h
+	"character.h"
+
+1289319027 source:c:\dev-cpp\violba_id\src\slot.cpp
+	"Slot.h"
+
+1289319027 source:c:\dev-cpp\violba_id\src\utils.cpp
+	"Utils.h"
+
+1289319027 c:\dev-cpp\violba_id\include\utils.h
+
+1289319027 source:c:\dev-cpp\violba_id\src\weapon.cpp
+	"Weapon.h"
+
+1289319027 c:\dev-cpp\violba_id\include\weapon.h
+	"Item.h"
+
+1289319027 source:c:\dev-cpp\violba_id\src\xbox360controller.cpp
+	"XBOX360Controller.h"
+
+1289319027 c:\dev-cpp\violba_id\include\xbox360controller.h
+	<cstdlib>
+	<irrlicht/irrlicht.h>
+
+1289320590 source:c:\dev-cpp\violba_id\src\main.cpp
+	<irrlicht/irrlicht.h>
+	<math.h>
+	<irrlicht/driverChoice.h>
+	"XBOX360Controller.h"
+	"Utils.h"
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"MainCharacter.h"
+	"Monster.h"
+
+1289323194 c:\dev-cpp\violba_id\include\node.h
+	<irrlicht/irrlicht.h>
+
+1289323347 c:\dev-cpp\violba_id\include\level.h
+	<vector>
+	"Object.h"
+
+1289323055 c:\dev-cpp\violba_id\include\object.h
+	"node.h"
+
+1289322587 source:c:\dev-cpp\violba_id\src\level.cpp
+	"Level.h"
+
+1289322848 source:c:\dev-cpp\violba_id\src\node.cpp
+	"Node.h"
+
+1289323356 source:c:\dev-cpp\violba_id\src\object.cpp
+	"Object.h"
+
