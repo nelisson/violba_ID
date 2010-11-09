@@ -19,6 +19,8 @@ class Monster : public Character {
         int getExperienceGiven();
         virtual void levelUp();
 
+        int getRange();
+
         Monster(string name = DEFAULT_MONSTER_NAME,
                 char * modelPath = DEFAULT_MONSTER_MESH,
                 int experienceGiven = DEFAULT_EXPERIENCE_GIVEN,

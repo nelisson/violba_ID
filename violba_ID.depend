@@ -4161,7 +4161,7 @@
 1289319027 c:\dev-cpp\violba_id\include\item.h
 	<string>
 
-1289323082 source:c:\dev-cpp\violba_id\src\character.cpp
+1289331748 source:c:\dev-cpp\violba_id\src\character.cpp
 	"Character.h"
 
 1289323068 c:\dev-cpp\violba_id\include\character.h
@@ -4169,14 +4169,15 @@
 	<irrlicht/irrlicht.h>
 	"node.h"
 
-1289323089 source:c:\dev-cpp\violba_id\src\game.cpp
+1289332227 source:c:\dev-cpp\violba_id\src\game.cpp
 	"Game.h"
 
-1289323799 c:\dev-cpp\violba_id\include\game.h
+1289332516 c:\dev-cpp\violba_id\include\game.h
 	"MainCharacter.h"
 	"Monster.h"
 	"Level.h"
 	"XBOX360Controller.h"
+	<iostream>
 
 1289319027 source:c:\dev-cpp\violba_id\src\inventory.cpp
 	"Inventory.h"
@@ -4199,10 +4200,10 @@
 	<irrlicht/irrlicht.h>
 	"character.h"
 
-1289322400 source:c:\dev-cpp\violba_id\src\monster.cpp
+1289330509 source:c:\dev-cpp\violba_id\src\monster.cpp
 	"Monster.h"
 
-1289323776 c:\dev-cpp\violba_id\include\monster.h
+1289330509 c:\dev-cpp\violba_id\include\monster.h
 	"character.h"
 
 1289319027 source:c:\dev-cpp\violba_id\src\slot.cpp
@@ -4226,7 +4227,7 @@
 	<cstdlib>
 	<irrlicht/irrlicht.h>
 
-1289320590 source:c:\dev-cpp\violba_id\src\main.cpp
+1289332135 source:c:\dev-cpp\violba_id\src\main.cpp
 	<irrlicht/irrlicht.h>
 	<math.h>
 	<irrlicht/driverChoice.h>
@@ -4235,10 +4236,11 @@
 	<cstdlib>
 	<ctime>
 	<iostream>
+	"Game.h"
 	"MainCharacter.h"
 	"Monster.h"
 
-1289323194 c:\dev-cpp\violba_id\include\node.h
+1289325532 c:\dev-cpp\violba_id\include\node.h
 	<irrlicht/irrlicht.h>
 
 1289323347 c:\dev-cpp\violba_id\include\level.h
@@ -4251,7 +4253,7 @@
 1289322587 source:c:\dev-cpp\violba_id\src\level.cpp
 	"Level.h"
 
-1289322848 source:c:\dev-cpp\violba_id\src\node.cpp
+1289331437 source:c:\dev-cpp\violba_id\src\node.cpp
 	"Node.h"
 
 1289323356 source:c:\dev-cpp\violba_id\src\object.cpp

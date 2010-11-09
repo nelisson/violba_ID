@@ -14,6 +14,7 @@ class Node {
 
     public:
         IAnimatedMeshSceneNode* getNode();
+        void setNode(IAnimatedMeshSceneNode * node);
 
         // Wrapper node
 

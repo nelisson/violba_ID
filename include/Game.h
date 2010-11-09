@@ -5,6 +5,7 @@
 #include "Monster.h"
 #include "Level.h"
 #include "XBOX360Controller.h"
+#include <iostream>
 
 using namespace std;
 using namespace irr::scene;
@@ -13,18 +14,34 @@ class Game {
     private:
         ISceneManager * sceneManager_;
 
-        Level * level_;
-        XBOX360Controller * controller_;
-        MainCharacter * mainCharacter_;
-        vector<Monster*> monsters_;
+        Level level_;
+        XBOX360Controller controller_;
+        MainCharacter mainCharacter_;
+        vector<Monster> monsters_;
 
+        vector<ICameraSceneNode*> cameras_;
+        vector<ILightSceneNode*> lights_;
+
+        void add(Node * node);
 
     protected:
 
     public:
         ISceneManager * getSceneManager();
 
-        Game();
+        Level& getLevel();
+        XBOX360Controller& getController();
+        MainCharacter& getMainCharacter();
+        vector<Monster>& getMonsters();
+
+        vector<ICameraSceneNode*> getCameras();
+        vector<ILightSceneNode*> getLights();
+
+        void addMonster(Monster& monster);
+        void addLight();
+        void addCamera();
+
+        Game(ISceneManager * sceneManager);
         virtual ~Game();
 };
 
