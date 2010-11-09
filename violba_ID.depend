@@ -4152,3 +4152,12 @@
 	<cstdlib>
 	<irrlicht.h>
 
+1289319027 source:c:\dev-cpp\violba_id\src\armor.cpp
+	"Armor.h"
+
+1289319027 c:\dev-cpp\violba_id\include\armor.h
+	"Item.h"
+
+1289319027 c:\dev-cpp\violba_id\include\item.h
+	<string>
+
