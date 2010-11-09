@@ -1,10 +1,11 @@
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 #include <math.h>
-#include "driverChoice.h"
+#include <irrlicht/driverChoice.h>
 #include "XBOX360Controller.h"
 #include "Utils.h"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 #include "MainCharacter.h"
 #include "Monster.h"
@@ -12,8 +13,6 @@
 #define RESOLUTION core::dimension2d<u32>(800, 600)
 
 using namespace irr;
-//hdusahdiasu
-//dsadasads
 using namespace scene;
 using namespace std;
 

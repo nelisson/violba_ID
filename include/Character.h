@@ -2,7 +2,7 @@
 #define CHARACTER_H
 
 #include <string>
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 
 #define DEFAULT_CHARACTER_LEVEL 1
 

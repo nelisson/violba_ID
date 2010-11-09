@@ -2,7 +2,7 @@
 #define MAINCHARACTER_H
 
 #include "Inventory.h"
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 #include "character.h"
 
 #define WALK 0,14

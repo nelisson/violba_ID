@@ -2,7 +2,7 @@
 #define XBOX360Controller_H
 
 #include <cstdlib>
-#include <irrlicht.h>
+#include <irrlicht/irrlicht.h>
 
 #define BUTTON_COUNT 14
 #define AXIS_COUNT   4
