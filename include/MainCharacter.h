@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include <irrlicht/irrlicht.h>
 #include "character.h"
+#include <iostream>
 
 #define WALK 0,14
 #define IDLE 205,250
@@ -43,7 +44,7 @@ class MainCharacter : public Character {
         void walk();
         void attack(AttackType type);
         void stop();
-        void jump();
+        static void jump(void *);
 
         virtual void levelUp();
 

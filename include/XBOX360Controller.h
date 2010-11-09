@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <irrlicht/irrlicht.h>
 
-#define BUTTON_COUNT 14
+#define BUTTON_COUNT 1400
 #define AXIS_COUNT   4
 #define STATE_COUNT  2
 
@@ -48,12 +48,16 @@ class XBOX360Controller : public IEventReceiver {
         float deadZone_;
 
         static bool buttonWasReleased[BUTTON_COUNT];
-        void (*onButtonPressed[BUTTON_COUNT])();
-        void (*onButtonReleased[BUTTON_COUNT])();
+        void (*onButtonPressed[BUTTON_COUNT])(void *);
+        void * onButtonPressedPointers[BUTTON_COUNT];
+        void (*onButtonReleased[BUTTON_COUNT])(void *);
+        void * onButtonReleasedPointers[BUTTON_COUNT];
 
         static bool axisWasReleased[AXIS_COUNT];
-        void (*onAxisMoved[AXIS_COUNT])();
-        void (*onAxisReleased[AXIS_COUNT])();
+        void (*onAxisMoved[AXIS_COUNT])(void *);
+        void * onAxisMovedPointers[AXIS_COUNT];
+        void (*onAxisReleased[AXIS_COUNT])(void *);
+        void * onAxisReleasedPointers[AXIS_COUNT];
 
     protected:
 
@@ -61,8 +65,8 @@ class XBOX360Controller : public IEventReceiver {
         float getDeadZone();
         void setDeadZone(float deadZone);
 
-        void setCallBack(Button button, ButtonState state, void (*function)());
-        void setCallBack(Axis axis, ButtonState state, void (*function)());
+        void setCallBack(Button button, ButtonState state, void (*function)(void *), void * pointer);
+        void setCallBack(Axis axis, ButtonState state, void (*function)(void *), void * pointer);
 
         void listenButtons();
         void listenAxis();

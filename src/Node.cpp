@@ -13,6 +13,4 @@ Node::Node() {
     //ctor
 }
 
-Node::~Node() {
-    //dtor
-}
+Node::~Node() {}

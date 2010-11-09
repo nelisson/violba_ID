@@ -37,5 +37,5 @@ Character::Character(string name, char * modelPath, int maxHP, int level)
 }
 
 Character::~Character() {
-    //dtor
+    getNode()->remove();
 }

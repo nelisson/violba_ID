@@ -6,7 +6,10 @@ void MainCharacter::attack(AttackType type) {}
 
 void MainCharacter::stop() {}
 
-void MainCharacter::jump() {}
+void MainCharacter::jump(void * userData) {
+    MainCharacter * thisptr = (MainCharacter*) userData;
+    cout << "testando: " << thisptr->getNode()->getPosition().X << endl;
+}
 
 void MainCharacter::levelUp() {}
 

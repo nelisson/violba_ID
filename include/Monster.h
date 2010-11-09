@@ -26,7 +26,7 @@ class Monster : public Character {
                 int experienceGiven = DEFAULT_EXPERIENCE_GIVEN,
                 int maxHP = DEFAULT_MONSTER_HP,
                 int level = DEFAULT_MONSTER_LEVEL);
-        virtual ~Monster();
+        ~Monster();
 };
 
 #endif // MONSTER_H

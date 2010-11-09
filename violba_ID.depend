@@ -4161,7 +4161,7 @@
 1289319027 c:\dev-cpp\violba_id\include\item.h
 	<string>
 
-1289331748 source:c:\dev-cpp\violba_id\src\character.cpp
+1289341057 source:c:\dev-cpp\violba_id\src\character.cpp
 	"Character.h"
 
 1289323068 c:\dev-cpp\violba_id\include\character.h
@@ -4169,10 +4169,10 @@
 	<irrlicht/irrlicht.h>
 	"node.h"
 
-1289332227 source:c:\dev-cpp\violba_id\src\game.cpp
+1289341932 source:c:\dev-cpp\violba_id\src\game.cpp
 	"Game.h"
 
-1289332516 c:\dev-cpp\violba_id\include\game.h
+1289342095 c:\dev-cpp\violba_id\include\game.h
 	"MainCharacter.h"
 	"Monster.h"
 	"Level.h"
@@ -4192,18 +4192,19 @@
 1289319027 source:c:\dev-cpp\violba_id\src\item.cpp
 	"Item.h"
 
-1289322354 source:c:\dev-cpp\violba_id\src\maincharacter.cpp
+1289334793 source:c:\dev-cpp\violba_id\src\maincharacter.cpp
 	"MainCharacter.h"
 
-1289323500 c:\dev-cpp\violba_id\include\maincharacter.h
+1289342932 c:\dev-cpp\violba_id\include\maincharacter.h
 	"Inventory.h"
 	<irrlicht/irrlicht.h>
 	"character.h"
+	<iostream>
 
-1289330509 source:c:\dev-cpp\violba_id\src\monster.cpp
+1289342029 source:c:\dev-cpp\violba_id\src\monster.cpp
 	"Monster.h"
 
-1289330509 c:\dev-cpp\violba_id\include\monster.h
+1289342005 c:\dev-cpp\violba_id\include\monster.h
 	"character.h"
 
 1289319027 source:c:\dev-cpp\violba_id\src\slot.cpp
@@ -4220,14 +4221,14 @@
 1289319027 c:\dev-cpp\violba_id\include\weapon.h
 	"Item.h"
 
-1289319027 source:c:\dev-cpp\violba_id\src\xbox360controller.cpp
+1289340270 source:c:\dev-cpp\violba_id\src\xbox360controller.cpp
 	"XBOX360Controller.h"
 
-1289319027 c:\dev-cpp\violba_id\include\xbox360controller.h
+1289340125 c:\dev-cpp\violba_id\include\xbox360controller.h
 	<cstdlib>
 	<irrlicht/irrlicht.h>
 
-1289332135 source:c:\dev-cpp\violba_id\src\main.cpp
+1289343290 source:c:\dev-cpp\violba_id\src\main.cpp
 	<irrlicht/irrlicht.h>
 	<math.h>
 	<irrlicht/driverChoice.h>
@@ -4253,7 +4254,7 @@
 1289322587 source:c:\dev-cpp\violba_id\src\level.cpp
 	"Level.h"
 
-1289331437 source:c:\dev-cpp\violba_id\src\node.cpp
+1289341011 source:c:\dev-cpp\violba_id\src\node.cpp
 	"Node.h"
 
 1289323356 source:c:\dev-cpp\violba_id\src\object.cpp

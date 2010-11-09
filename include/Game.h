@@ -14,10 +14,10 @@ class Game {
     private:
         ISceneManager * sceneManager_;
 
-        Level level_;
-        XBOX360Controller controller_;
-        MainCharacter mainCharacter_;
-        vector<Monster> monsters_;
+        Level * level_;
+        XBOX360Controller * controller_;
+        MainCharacter * mainCharacter_;
+
 
         vector<ICameraSceneNode*> cameras_;
         vector<ILightSceneNode*> lights_;
@@ -27,17 +27,19 @@ class Game {
     protected:
 
     public:
+        vector<Monster*> monsters_;
+
         ISceneManager * getSceneManager();
 
-        Level& getLevel();
-        XBOX360Controller& getController();
-        MainCharacter& getMainCharacter();
-        vector<Monster>& getMonsters();
+        Level * getLevel();
+        XBOX360Controller * getController();
+        MainCharacter * getMainCharacter();
+        vector<Monster*>& getMonsters();
 
         vector<ICameraSceneNode*> getCameras();
         vector<ILightSceneNode*> getLights();
 
-        void addMonster(Monster& monster);
+        void addMonster(Monster * monster);
         void addLight();
         void addCamera();
 
