@@ -9,7 +9,7 @@
 #define TRIGGER_COUNT 2
 #define STATE_COUNT   2
 
-#define DEFAULT_DEADZONE 0.2f
+#define DEFAULT_DEADZONE 600.f
 
 using namespace irr;
 

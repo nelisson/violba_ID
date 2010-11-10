@@ -57,7 +57,6 @@ int main() {
 
 	u32 then = device->getTimer()->getTime();
 	const f32 MOVEMENT_SPEED = 10.f;
-    camera->setPosition(ninja->getNode()->getPosition() - core::vector3df(0, -10, 30));
 
 	while(device->run()) {
         const SEvent::SJoystickEvent & joystickData = controller->GetJoystickState();

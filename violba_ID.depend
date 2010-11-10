@@ -19,7 +19,7 @@
 1289407407 c:\dev-cpp\violba\include\node.h
 	<irrlicht/irrlicht.h>
 
-1289414646 source:c:\dev-cpp\violba\src\game.cpp
+1289414876 source:c:\dev-cpp\violba\src\game.cpp
 	"Game.h"
 
 1289410499 c:\dev-cpp\violba\include\game.h
@@ -55,7 +55,7 @@
 1289407407 c:\dev-cpp\violba\include\object.h
 	"node.h"
 
-1289407407 c:\dev-cpp\violba\include\xbox360controller.h
+1289415685 c:\dev-cpp\violba\include\xbox360controller.h
 	<cstdlib>
 	<irrlicht/irrlicht.h>
 
@@ -89,10 +89,10 @@
 1289407407 c:\dev-cpp\violba\include\weapon.h
 	"Item.h"
 
-1289407407 source:c:\dev-cpp\violba\src\xbox360controller.cpp
+1289415587 source:c:\dev-cpp\violba\src\xbox360controller.cpp
 	"XBOX360Controller.h"
 
-1289413959 source:c:\dev-cpp\violba\src\main.cpp
+1289415796 source:c:\dev-cpp\violba\src\main.cpp
 	<irrlicht/irrlicht.h>
 	<math.h>
 	<irrlicht/driverChoice.h>
@@ -104,4 +104,7 @@
 	"Game.h"
 	"MainCharacter.h"
 	"Monster.h"
+
+1289414823 source:c:\dev-cpp\violba\src\maincharacter.cpp
+	"MainCharacter.h"
 

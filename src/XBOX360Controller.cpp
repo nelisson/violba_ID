@@ -112,7 +112,7 @@ bool XBOX360Controller::triggersMoved() {
 }
 
 float XBOX360Controller::fixInput(float x) {
-    return (x < getDeadZone()) ? 0 : x;
+    return (abs(x) < getDeadZone()) ? 0 : x;
 }
 
 int XBOX360Controller::toAxis(int analog) {

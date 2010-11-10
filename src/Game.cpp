@@ -54,11 +54,11 @@ void Game::moveCharacter(void* userData, core::vector2df desl) {
 
     cout << "X: " << moveHorizontal << " Y: " << moveVertical << endl;
 
-    nodePosition.X = thisptr->getMainCharacter()->getSpeed() *0.001*  moveHorizontal;
-    nodePosition.Z = (-1)*thisptr->getMainCharacter()->getSpeed() *0.001*  moveVertical;
+    nodePosition.X = thisptr->getMainCharacter()->getSpeed() *0.01*  moveHorizontal;
+    nodePosition.Z = (-1)*thisptr->getMainCharacter()->getSpeed() *0.01*  moveVertical;
 
     thisptr->getMainCharacter()->walk(nodePosition);
-    //thisptr->getCameras()[0]->setPosition(thisptr->getMainCharacter()->getNode()->getPosition());
+    thisptr->getCameras()[0]->setPosition(thisptr->getCameras()[0]->getPosition()+nodePosition);
 }
 
 Game::Game(ISceneManager * sceneManager) {
@@ -71,9 +71,10 @@ Game::Game(ISceneManager * sceneManager) {
     getMainCharacter()->setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh));
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
-	cameras_.push_back(getSceneManager()->addCameraSceneNode());
+	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, core::vector3df(0, 10, -30)));
 	//mainCharacter_->getNode()->addChild(cameras_[0]);
-    cameras_[0]->bindTargetAndRotation(true);
+    //cameras_[0]->bindTargetAndRotation(true);
+
 }
 
 Game::~Game() {
