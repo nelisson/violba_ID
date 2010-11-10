@@ -42,7 +42,7 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
     protected:
 
     public:
-        static void walk(void *, irr::core::vector2df);
+        void walk(irr::core::vector2df);
         static void slash(void *);
         static void spin(void *);
         void stop();

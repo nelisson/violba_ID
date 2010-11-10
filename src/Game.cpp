@@ -53,8 +53,9 @@ Game::Game(ISceneManager * sceneManager) {
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
 	cameras_.push_back(getSceneManager()->addCameraSceneNode());
-
 	//mainCharacter_->getNode()->addChild(cameras_[0]);
+    //cameras_[0]->bindTargetAndRotation(true);
+    cameras_[0]->setTarget(mainCharacter_->getNode()->getPosition());
 }
 
 Game::~Game() {

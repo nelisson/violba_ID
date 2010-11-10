@@ -1,20 +1,19 @@
 #include "MainCharacter.h"
 
-void MainCharacter::walk(void* userData, core::vector2df desl) {
+void MainCharacter::walk(core::vector2df desl) {
 
-    MainCharacter * thisptr = (MainCharacter*) userData;
-    core::vector3df nodePosition = thisptr->getNode()->getPosition();
+    core::vector3df nodePosition = getNode()->getPosition();
     desl.normalize();
     float moveHorizontal = desl.X;
     float moveVertical =desl.Y;
     double ang = sinal(moveHorizontal) *(180.0/3.1415)*acos(core::vector3df(0,0,1).dotProduct(core::vector3df(moveHorizontal,0,moveVertical).normalize()));
 
 
-    thisptr->getNode()->setRotation(core::vector3df(0,ang,0));
-    nodePosition.X += thisptr->getSpeed() *0.0007*  moveHorizontal;
-    nodePosition.Z += thisptr->getSpeed() *0.0007*  moveVertical;
+    getNode()->setRotation(core::vector3df(0,ang,0));
+    nodePosition.X += getSpeed() *0.0007*  moveHorizontal;
+    nodePosition.Z += getSpeed() *0.0007*  moveVertical;
 
-    thisptr->getNode()->setPosition(nodePosition);
+    getNode()->setPosition(nodePosition);
 }
 
 void MainCharacter::slash(void * userData) {
