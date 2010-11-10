@@ -6,6 +6,7 @@
 #include "node.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
+#define DEFAULT_CHARACTER_MOVESPEED 10
 
 using namespace std;
 using namespace irr::scene;
@@ -16,20 +17,27 @@ class Character : public Node {
         char * modelPath_;
         int level_;
         int maxHP_;
-        int currentHP_;
+        float currentHP_;
+        float moveSpeed_;
 
     protected:
 
     public:
         char * getModelPath();
         void fillHP();
-        void heal(int value);
-        void hurt(int value);
+        float heal(float value);
+        float hurt(float value);
         bool isAlive();
+        float getMoveSpeed() { return moveSpeed_; }
+        virtual float getDamage() = 0;
 
         virtual void levelUp() = 0;
 
-        Character(string name, char * modelPath, int maxHP, int level = DEFAULT_CHARACTER_LEVEL);
+        Character(string name,
+                  char * modelPath,
+                  int maxHP,
+                  int level = DEFAULT_CHARACTER_LEVEL,
+                  float moveSpeed = DEFAULT_CHARACTER_MOVESPEED);
         virtual ~Character();
 };
 

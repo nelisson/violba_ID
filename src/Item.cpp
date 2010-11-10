@@ -18,7 +18,7 @@ string Item::getName() {
     return name_;
 }
 
-Item::Item(int level, string name) {
+Item::Item(string name, int level) {
     level_ = level;
     ID_    = generateID();
     name_  = name;

@@ -1,17 +1,17 @@
 # depslib dependency file v1.0
-1289407407 source:c:\dev-cpp\violba\src\armor.cpp
+1289424288 source:c:\dev-cpp\violba\src\armor.cpp
 	"Armor.h"
 
-1289407407 c:\dev-cpp\violba\include\armor.h
+1289424302 c:\dev-cpp\violba\include\armor.h
 	"Item.h"
 
-1289407407 c:\dev-cpp\violba\include\item.h
+1289423947 c:\dev-cpp\violba\include\item.h
 	<string>
 
-1289407407 source:c:\dev-cpp\violba\src\character.cpp
+1289428879 source:c:\dev-cpp\violba\src\character.cpp
 	"Character.h"
 
-1289407407 c:\dev-cpp\violba\include\character.h
+1289428847 c:\dev-cpp\violba\include\character.h
 	<string>
 	<irrlicht/irrlicht.h>
 	"node.h"
@@ -19,22 +19,23 @@
 1289407407 c:\dev-cpp\violba\include\node.h
 	<irrlicht/irrlicht.h>
 
-1289414876 source:c:\dev-cpp\violba\src\game.cpp
+1289428642 source:c:\dev-cpp\violba\src\game.cpp
 	"Game.h"
 
-1289410499 c:\dev-cpp\violba\include\game.h
+1289428099 c:\dev-cpp\violba\include\game.h
 	"MainCharacter.h"
 	"Monster.h"
 	"Level.h"
 	"XBOX360Controller.h"
 	<iostream>
 
-1289414777 c:\dev-cpp\violba\include\maincharacter.h
+1289429197 c:\dev-cpp\violba\include\maincharacter.h
 	"Inventory.h"
 	<irrlicht/irrlicht.h>
 	"character.h"
 	<iostream>
 	"Utils.h"
+	"weapon.h"
 
 1289407407 c:\dev-cpp\violba\include\inventory.h
 	<vector>
@@ -45,7 +46,7 @@
 
 1289407407 c:\dev-cpp\violba\include\utils.h
 
-1289407407 c:\dev-cpp\violba\include\monster.h
+1289428928 c:\dev-cpp\violba\include\monster.h
 	"character.h"
 
 1289407407 c:\dev-cpp\violba\include\level.h
@@ -62,13 +63,13 @@
 1289407407 source:c:\dev-cpp\violba\src\inventory.cpp
 	"Inventory.h"
 
-1289407407 source:c:\dev-cpp\violba\src\item.cpp
+1289423958 source:c:\dev-cpp\violba\src\item.cpp
 	"Item.h"
 
 1289407407 source:c:\dev-cpp\violba\src\level.cpp
 	"Level.h"
 
-1289407407 source:c:\dev-cpp\violba\src\monster.cpp
+1289428910 source:c:\dev-cpp\violba\src\monster.cpp
 	"Monster.h"
 
 1289407407 source:c:\dev-cpp\violba\src\node.cpp
@@ -83,16 +84,17 @@
 1289407407 source:c:\dev-cpp\violba\src\utils.cpp
 	"Utils.h"
 
-1289407407 source:c:\dev-cpp\violba\src\weapon.cpp
+1289428677 source:c:\dev-cpp\violba\src\weapon.cpp
 	"Weapon.h"
 
-1289407407 c:\dev-cpp\violba\include\weapon.h
+1289428462 c:\dev-cpp\violba\include\weapon.h
 	"Item.h"
+	<cstdlib>
 
 1289415587 source:c:\dev-cpp\violba\src\xbox360controller.cpp
 	"XBOX360Controller.h"
 
-1289415796 source:c:\dev-cpp\violba\src\main.cpp
+1289425743 source:c:\dev-cpp\violba\src\main.cpp
 	<irrlicht/irrlicht.h>
 	<math.h>
 	<irrlicht/driverChoice.h>
@@ -105,6 +107,6 @@
 	"MainCharacter.h"
 	"Monster.h"
 
-1289414823 source:c:\dev-cpp\violba\src\maincharacter.cpp
+1289429065 source:c:\dev-cpp\violba\src\maincharacter.cpp
 	"MainCharacter.h"
 

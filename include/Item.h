@@ -2,6 +2,8 @@
 #define ITEM_H
 #include <string>
 
+#define DEFAULT_ITEM_LEVEL 1
+
 using namespace std;
 
 class Item {
@@ -19,7 +21,7 @@ class Item {
         int getID();
         string getName();
 
-        Item(int level, string name);
+        Item(string name, int level = DEFAULT_ITEM_LEVEL);
         virtual ~Item();
 
 };

@@ -14,7 +14,7 @@ class Armor : public Item {
 
     public:
 
-        Armor(int level, string name);
+        Armor(string name, int level = DEFAULT_ITEM_LEVEL);
         virtual ~Armor();
 };
 

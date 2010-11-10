@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace irr::scene;
+using namespace irr::core;
 
 class Game {
     private:
@@ -17,33 +18,37 @@ class Game {
         Level * level_;
         XBOX360Controller * controller_;
         MainCharacter * mainCharacter_;
-
+        vector<Monster*> * monsters_;
 
         vector<ICameraSceneNode*> cameras_;
         vector<ILightSceneNode*> lights_;
+
+        f32 elapsedTime_;
 
         void add(Node * node);
 
     protected:
 
     public:
-        vector<Monster*> monsters_;
+        ISceneManager * getSceneManager() { return sceneManager_; }
 
-        ISceneManager * getSceneManager();
+        Level * getLevel() { return level_; }
+        XBOX360Controller * getController() { return controller_; }
+        MainCharacter * getMainCharacter() { return mainCharacter_; }
+        vector<Monster*> * getMonsters() { return monsters_; }
 
-        Level * getLevel();
-        XBOX360Controller * getController();
-        MainCharacter * getMainCharacter();
-        vector<Monster*>& getMonsters();
-
-        vector<ICameraSceneNode*> getCameras();
-        vector<ILightSceneNode*> getLights();
+        vector<ICameraSceneNode*> getCameras() { return cameras_; }
+        vector<ILightSceneNode*> getLights() { return lights_; }
 
         void addMonster(Monster * monster);
-        void addLight();
-        void addCamera();
 
         void setCallbacks();
+        void doActions();
+        vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);
+        int attackMonsters();
+
+        f32 getElapsedTime() { return elapsedTime_; }
+        void setElapsedTime(f32 elapsedTime) { elapsedTime_ = elapsedTime; }
 
         static void moveCharacter(void*, core::vector2df desl);
 

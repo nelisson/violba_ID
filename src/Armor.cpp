@@ -1,10 +1,7 @@
 #include "Armor.h"
 
-Armor::Armor(int level, string name)
-    : Item(level, name) {
+Armor::Armor(string name, int level)
+    : Item(name, level) {
 }
 
-Armor::~Armor()
-{
-    //dtor
-}
+Armor::~Armor() {}

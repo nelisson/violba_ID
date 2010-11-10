@@ -11,8 +11,13 @@ int Monster::getRange() {
     return 10;
 }
 
-Monster::Monster(string name, char * modelPath, int experienceGiven, int maxHP, int level)
-    : Character(name, modelPath, maxHP, level) {
+Monster::Monster(string name,
+                 char * modelPath,
+                 int experienceGiven,
+                 int maxHP,
+                 int level,
+                 float moveSpeed)
+    : Character(name, modelPath, maxHP, level, moveSpeed) {
     experienceGiven_ = experienceGiven;
 }
 

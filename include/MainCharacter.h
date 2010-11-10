@@ -6,6 +6,7 @@
 #include "character.h"
 #include <iostream>
 #include "Utils.h"
+#include "weapon.h"
 
 #define WALK 0,13
 #define IDLE 205,250
@@ -33,6 +34,7 @@ enum State{
 class MainCharacter : public Character, public IAnimationEndCallBack {
     private:
         Inventory inventory_;
+        Weapon * equippedWeapon_;
 
         int vitality_, strength_, agility_;
         long experience_;
@@ -42,12 +44,12 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
     protected:
 
     public:
-        void walk(core::vector3df desl);
-        static void slash(void *);
-        static void spin(void *);
-        static void kick(void *);
-        void stop();
-        static void jump(void *);
+        bool walk(core::vector3df desl);
+        static void slash(void *userData);
+        static void spin(void *userData);
+        static void kick(void *userData);
+        static void stop(void *userData, core::vector2df direction);
+        static void jump(void *userData);
 
         virtual void levelUp();
 
@@ -57,14 +59,16 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
                       int maxHP = STARTING_HP,
                       int vitality = STARTING_VITALITY,
                       int strength = STARTING_STRENGTH,
-                      int agility = STARTING_AGILITY);
+                      int agility = STARTING_AGILITY,
+                      float moveSpeed = DEFAULT_CHARACTER_MOVESPEED);
 
         ~MainCharacter();
 
         State getState() { return state_; }
         void setState(State state);
 
-        f32 getSpeed() { return speed_; }
+        Weapon * getEquippedWeapon() { return equippedWeapon_; }
+        virtual float getDamage();
 
         void OnAnimationEnd(IAnimatedMeshSceneNode *node) {
             node->setFrameLoop(IDLE);
