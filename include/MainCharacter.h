@@ -5,6 +5,7 @@
 #include <irrlicht/irrlicht.h>
 #include "character.h"
 #include <iostream>
+#include "Utils.h"
 
 #define WALK 0,14
 #define IDLE 205,250
@@ -23,6 +24,8 @@
 #define STARTING_AGILITY  1
 #define STARTING_LEVEL    1
 
+using namespace irr;
+
 enum State{
     MOVING, STOPPING, ATTACKING, JUMPING};
 
@@ -34,12 +37,14 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         int vitality_, strength_, agility_;
         long experience_;
         State state_;
+        f32 speed_;
 
     protected:
 
     public:
-        void walk();
+        static void walk(void *, irr::core::vector2df);
         static void slash(void *);
+        static void spin(void *);
         void stop();
         static void jump(void *);
 
@@ -57,6 +62,8 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
 
         State getState() { return state_; }
         void setState(State state);
+
+        f32 getSpeed() { return speed_; }
 
         void OnAnimationEnd(IAnimatedMeshSceneNode *node) {
             node->setFrameLoop(IDLE);

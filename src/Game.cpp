@@ -35,6 +35,13 @@ void Game::addMonster(Monster * monster) {
     monster->setNode(getSceneManager()->addAnimatedMeshSceneNode(monsterMesh));
 }
 
+void Game::setCallbacks() {
+    controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
+    controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
+    controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
+    controller_->setCallBack(L_ANALOG, PRESSED, mainCharacter_->walk, mainCharacter_);
+}
+
 Game::Game(ISceneManager * sceneManager) {
     sceneManager_  = sceneManager;
     level_         = new Level();
@@ -46,6 +53,8 @@ Game::Game(ISceneManager * sceneManager) {
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
 	cameras_.push_back(getSceneManager()->addCameraSceneNode());
+
+	//mainCharacter_->getNode()->addChild(cameras_[0]);
 }
 
 Game::~Game() {

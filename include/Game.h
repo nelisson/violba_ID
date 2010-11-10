@@ -43,6 +43,8 @@ class Game {
         void addLight();
         void addCamera();
 
+        void setCallbacks();
+
         Game(ISceneManager * sceneManager);
         virtual ~Game();
 };

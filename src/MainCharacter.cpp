@@ -1,6 +1,21 @@
 #include "MainCharacter.h"
 
-void MainCharacter::walk() {}
+void MainCharacter::walk(void* userData, core::vector2df desl) {
+
+    MainCharacter * thisptr = (MainCharacter*) userData;
+    core::vector3df nodePosition = thisptr->getNode()->getPosition();
+    desl.normalize();
+    float moveHorizontal = desl.X;
+    float moveVertical =desl.Y;
+    double ang = sinal(moveHorizontal) *(180.0/3.1415)*acos(core::vector3df(0,0,1).dotProduct(core::vector3df(moveHorizontal,0,moveVertical).normalize()));
+
+
+    thisptr->getNode()->setRotation(core::vector3df(0,ang,0));
+    nodePosition.X += thisptr->getSpeed() *0.0007*  moveHorizontal;
+    nodePosition.Z += thisptr->getSpeed() *0.0007*  moveVertical;
+
+    thisptr->getNode()->setPosition(nodePosition);
+}
 
 void MainCharacter::slash(void * userData) {
 
@@ -10,7 +25,13 @@ void MainCharacter::slash(void * userData) {
         thisptr->setState(ATTACKING);
     }
 }
-
+void MainCharacter::spin(void *userData) {
+    MainCharacter * thisptr = (MainCharacter*) userData;
+    if(thisptr->getState() == STOPPING) {
+        thisptr->getNode()->setFrameLoop(SPIN);
+        thisptr->setState(ATTACKING);
+    }
+}
 void MainCharacter::stop() {}
 
 void MainCharacter::jump(void * userData) {
@@ -41,6 +62,7 @@ MainCharacter::MainCharacter(string name,
     vitality_ = vitality;
     strength_ = strength;
     agility_  = agility;
+    speed_ = 10.f;
 }
 
 MainCharacter::~MainCharacter()
