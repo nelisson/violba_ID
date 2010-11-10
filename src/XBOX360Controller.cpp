@@ -47,7 +47,7 @@ void XBOX360Controller::setCallBack(Trigger trigger, ButtonState state, void (*f
 void XBOX360Controller::listenButtons() {
     for (int button = 0; button < BUTTON_COUNT; button++)
         if (GetJoystickState().IsButtonPressed(button)) {
-
+            printf("%i: %p %p\n", button, onButton[PRESSED][button],onButtonPointers[PRESSED][button]);
             if (onButton[PRESSED][button] != NULL)
                 (*onButton[PRESSED][button])(onButtonPointers[PRESSED][button]);
 

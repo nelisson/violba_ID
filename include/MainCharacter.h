@@ -24,13 +24,10 @@
 #define STARTING_LEVEL    1
 
 enum State{
-    moving, idle2, attacking, jumping};
-
-enum AttackType{
-    spin, punch, kick, slash};
+    MOVING, STOPPING, ATTACKING, JUMPING};
 
 
-class MainCharacter : public Character {
+class MainCharacter : public Character, public IAnimationEndCallBack {
     private:
         Inventory inventory_;
 
@@ -42,7 +39,7 @@ class MainCharacter : public Character {
 
     public:
         void walk();
-        void attack(AttackType type);
+        static void slash(void *);
         void stop();
         static void jump(void *);
 
@@ -57,6 +54,14 @@ class MainCharacter : public Character {
                       int agility = STARTING_AGILITY);
 
         ~MainCharacter();
+
+        State getState() { return state_; }
+        void setState(State state);
+
+        void OnAnimationEnd(IAnimatedMeshSceneNode *node) {
+            node->setFrameLoop(IDLE);
+            state_ = STOPPING;
+        }
 };
 
 #endif // MAINCHARACTER_H

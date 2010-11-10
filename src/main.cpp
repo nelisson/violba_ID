@@ -19,18 +19,6 @@ using namespace irr;
 using namespace scene;
 using namespace std;
 
-bool globalSacana = false;
-bool idle = true;
-
-class StopAnimationWhenStop : public IAnimationEndCallBack{
-
-    public:
-        void OnAnimationEnd(IAnimatedMeshSceneNode *node) {
-            node->setFrameLoop(205, 249);
-            globalSacana = false;
-            idle = true;
-        }
-};
 
 int main() {
 
@@ -47,7 +35,10 @@ int main() {
     XBOX360Controller * controller = game.getController();
     //vector<Monster*> monsters = game.getMonsters();
 
-    controller->setCallBack(X, PRESSED, ninja->jump, ninja);
+    controller->setCallBack(X, PRESSED, ninja->slash, ninja);
+    controller->setCallBack(A, PRESSED, ninja->jump, ninja);
+    controller->setCallBack(B, PRESSED, ninja->slash, ninja);
+    controller->setCallBack(Y, PRESSED, ninja->slash, ninja);
 
 	core::array<SJoystickInfo> joystickInfo;
 	device->activateJoysticks(joystickInfo);
@@ -57,10 +48,9 @@ int main() {
 
 	video::IVideoDriver* driver = device->getVideoDriver();
 
-    StopAnimationWhenStop stopStop;
-    //ninja->getNode()->setAnimationEndCallback(&stopStop);
+    ninja->getNode()->setAnimationEndCallback(ninja);
     ninja->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
-    //node->setFrameLoop(0, 59);
+    ninja->getNode()->setFrameLoop(IDLE);
     ninja->getNode()->setAnimationSpeed(30);
     ninja->getNode()->setLoopMode(false);
     //nodePlayer->setMaterialTexture(0, driver->getTexture("./models/water.jpg"));
@@ -82,9 +72,9 @@ int main() {
         int random = rand() % 1000;
         if (random < 10) {
             Monster * newMonster = new Monster("Cubo da morte", "./models/teste.md2", 100, 10, 1);
-            cout << "AntesCriar" << endl;
+
             game.addMonster(newMonster);
-            cout << "DepoisCriar" << endl;
+
             delays.push_back(1000);
             int randomx = (rand() % 100) - 50;
             int randomz = (rand() % 100) - 50;
@@ -98,7 +88,7 @@ int main() {
             newMonster->getNode()->setMaterialTexture(0, driver->getTexture("./models/water.jpg"));
             newMonster->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 
-            cout << "numero monstros: " << game.monsters_.size() << endl;
+
         }
 
         for (int i = 0; i < game.monsters_.size(); i++) {
@@ -106,11 +96,11 @@ int main() {
 
                 //game.monsters_.erase(game.monsters_.begin() + i);
 
-                cout << "antes delete" << endl;
+
                 delays.erase(delays.begin() + i);
                 delete game.monsters_.at(i);
                 game.monsters_.erase(game.monsters_.begin() + i);
-                cout << "depois delete" << endl;
+
 
                 break;
             }
@@ -126,8 +116,7 @@ int main() {
 		const u32 now = device->getTimer()->getTime();
 		const f32 frameDeltaTime = (f32)(now - then) / 1000.f; // Time in seconds
 		then = now;
-
-		bool movedWithJoystick = false;
+/*
 		core::vector3df nodePosition = ninja->getNode()->getPosition();
         core::vector3df nodeRotation = ninja->getNode()->getRotation();
 
@@ -196,11 +185,10 @@ int main() {
             nodePosition.X += MOVEMENT_SPEED * frameDeltaTime * moveHorizontal;
             nodePosition.Z += MOVEMENT_SPEED * frameDeltaTime * moveVertical;
 
-            movedWithJoystick = true;
         }
 
 		ninja->getNode()->setPosition(nodePosition);
-
+*/
 		driver->beginScene(true, true, 0);
 		game.getSceneManager()->drawAll();
 		driver->endScene();
