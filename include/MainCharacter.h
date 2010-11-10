@@ -7,7 +7,7 @@
 #include <iostream>
 #include "Utils.h"
 
-#define WALK 0,14
+#define WALK 0,13
 #define IDLE 205,250
 #define SPIN 45,59
 #define PUNCH 31,45
@@ -42,15 +42,16 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
     protected:
 
     public:
-        void walk(irr::core::vector2df);
+        void walk(core::vector3df desl);
         static void slash(void *);
         static void spin(void *);
+        static void kick(void *);
         void stop();
         static void jump(void *);
 
         virtual void levelUp();
 
-        MainCharacter(string name = DEFAULT_CHARACTER_NAME,
+        MainCharacter(char * name = DEFAULT_CHARACTER_NAME,
                       char * meshPath = DEFAULT_CHARACTER_MESH,
                       int level = STARTING_LEVEL,
                       int maxHP = STARTING_HP,

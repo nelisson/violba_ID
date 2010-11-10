@@ -39,7 +39,26 @@ void Game::setCallbacks() {
     controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
     controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
     controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
-    controller_->setCallBack(L_ANALOG, PRESSED, mainCharacter_->walk, mainCharacter_);
+    controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
+    controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
+}
+
+void Game::moveCharacter(void* userData, core::vector2df desl) {
+
+    Game * thisptr = (Game*) userData;
+
+    core::vector3df nodePosition;
+    desl.normalize();
+    float moveHorizontal = desl.X;
+    float moveVertical = desl.Y;
+
+    cout << "X: " << moveHorizontal << " Y: " << moveVertical << endl;
+
+    nodePosition.X = thisptr->getMainCharacter()->getSpeed() *0.001*  moveHorizontal;
+    nodePosition.Z = (-1)*thisptr->getMainCharacter()->getSpeed() *0.001*  moveVertical;
+
+    thisptr->getMainCharacter()->walk(nodePosition);
+    //thisptr->getCameras()[0]->setPosition(thisptr->getMainCharacter()->getNode()->getPosition());
 }
 
 Game::Game(ISceneManager * sceneManager) {
@@ -54,8 +73,7 @@ Game::Game(ISceneManager * sceneManager) {
     lights_.push_back(getSceneManager()->addLightSceneNode());
 	cameras_.push_back(getSceneManager()->addCameraSceneNode());
 	//mainCharacter_->getNode()->addChild(cameras_[0]);
-    //cameras_[0]->bindTargetAndRotation(true);
-    cameras_[0]->setTarget(mainCharacter_->getNode()->getPosition());
+    cameras_[0]->bindTargetAndRotation(true);
 }
 
 Game::~Game() {

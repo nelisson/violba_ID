@@ -1,19 +1,19 @@
 #include "MainCharacter.h"
 
-void MainCharacter::walk(core::vector2df desl) {
+void MainCharacter::walk(core::vector3df desl) {
 
-    core::vector3df nodePosition = getNode()->getPosition();
-    desl.normalize();
     float moveHorizontal = desl.X;
-    float moveVertical =desl.Y;
+    float moveVertical = desl.Z;
     double ang = sinal(moveHorizontal) *(180.0/3.1415)*acos(core::vector3df(0,0,1).dotProduct(core::vector3df(moveHorizontal,0,moveVertical).normalize()));
-
-
     getNode()->setRotation(core::vector3df(0,ang,0));
-    nodePosition.X += getSpeed() *0.0007*  moveHorizontal;
-    nodePosition.Z += getSpeed() *0.0007*  moveVertical;
-
-    getNode()->setPosition(nodePosition);
+    core::vector3df nodePosition = getNode()->getPosition();
+    getNode()->setPosition(nodePosition + desl);
+    if(getState() == STOPPING) {
+        if(getState() != MOVING){
+            getNode()->setFrameLoop(WALK);
+            setState(MOVING);
+        }
+    }
 }
 
 void MainCharacter::slash(void * userData) {
@@ -24,6 +24,16 @@ void MainCharacter::slash(void * userData) {
         thisptr->setState(ATTACKING);
     }
 }
+
+void MainCharacter::kick(void * userData) {
+
+    MainCharacter * thisptr = (MainCharacter*) userData;
+    if(thisptr->getState() == STOPPING) {
+        thisptr->getNode()->setFrameLoop(KICK);
+        thisptr->setState(ATTACKING);
+    }
+}
+
 void MainCharacter::spin(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if(thisptr->getState() == STOPPING) {
@@ -49,7 +59,7 @@ void MainCharacter::setState(State state) {
         state_ = state;
 }
 
-MainCharacter::MainCharacter(string name,
+MainCharacter::MainCharacter(char * name,
                              char * modelPath,
                              int level,
                              int maxHP,

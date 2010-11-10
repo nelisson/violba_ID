@@ -48,7 +48,7 @@ int main() {
     ninja->getNode()->setAnimationEndCallback(ninja);
     ninja->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     ninja->getNode()->setFrameLoop(IDLE);
-    ninja->getNode()->setAnimationSpeed(30);
+    ninja->getNode()->setAnimationSpeed(20);
     ninja->getNode()->setLoopMode(false);
     //nodePlayer->setMaterialTexture(0, driver->getTexture("./models/water.jpg"));
     ninja->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
@@ -57,13 +57,11 @@ int main() {
 
 	u32 then = device->getTimer()->getTime();
 	const f32 MOVEMENT_SPEED = 10.f;
+    camera->setPosition(ninja->getNode()->getPosition() - core::vector3df(0, -10, 30));
 
 	while(device->run()) {
-        camera->setPosition(ninja->getNode()->getPosition() - core::vector3df(0, -10, 30));
-
         const SEvent::SJoystickEvent & joystickData = controller->GetJoystickState();
         //controller.OnEvent(joystickData);
-
         // cubos
 
         int random = rand() % 1000;
@@ -79,7 +77,6 @@ int main() {
             newMonster->getNode()->OnAnimate(0);
             newMonster->getNode()->setPosition(core::vector3df(randomx, 0.0, randomz));
             newMonster->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
-            //node->setFrameLoop(0, 59);
             newMonster->getNode()->setAnimationSpeed(30);
             newMonster->getNode()->setLoopMode(false);
             newMonster->getNode()->setMaterialTexture(0, driver->getTexture("./models/water.jpg"));

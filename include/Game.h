@@ -45,6 +45,8 @@ class Game {
 
         void setCallbacks();
 
+        static void moveCharacter(void*, core::vector2df desl);
+
         Game(ISceneManager * sceneManager);
         virtual ~Game();
 };
