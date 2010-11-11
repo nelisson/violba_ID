@@ -78,13 +78,13 @@ int main() {
         //controller.OnEvent(joystickData);
 
         // cubos
-/*
+
         int random = rand() % 1000;
         if (random < 10) {
             Monster * newMonster = new Monster("Cubo da morte", "./models/teste.md2", 100, 10, 1);
-            cout << "Antes" << endl;
+            cout << "AntesCriar" << endl;
             game.addMonster(newMonster);
-            cout << "Depois" << endl;
+            cout << "DepoisCriar" << endl;
             delays.push_back(1000);
             int randomx = (rand() % 100) - 50;
             int randomz = (rand() % 100) - 50;
@@ -98,16 +98,18 @@ int main() {
             newMonster->getNode()->setMaterialTexture(0, driver->getTexture("./models/water.jpg"));
             newMonster->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 
-            cout << "numero monstros: " << game.getMonsters().size() << endl;
+            cout << "numero monstros: " << game.monsters_.size() << endl;
         }
 
         for (int i = 0; i < game.monsters_.size(); i++) {
             if (--(delays[i]) <= 0) {
-                delays.erase(delays.begin() + i);
+
                 //game.monsters_.erase(game.monsters_.begin() + i);
 
                 cout << "antes delete" << endl;
-                delete game.monsters_[i];
+                delays.erase(delays.begin() + i);
+                delete game.monsters_.at(i);
+                game.monsters_.erase(game.monsters_.begin() + i);
                 cout << "depois delete" << endl;
 
                 break;
@@ -119,7 +121,7 @@ int main() {
                     game.monsters_[i]->getNode()->setPosition( game.monsters_[i]->getNode()->getPosition() + (vetor * 0.2) );
                 }
         }
-*/
+
 
 		const u32 now = device->getTimer()->getTime();
 		const f32 frameDeltaTime = (f32)(now - then) / 1000.f; // Time in seconds

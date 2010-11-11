@@ -16,6 +16,4 @@ Monster::Monster(string name, char * modelPath, int experienceGiven, int maxHP, 
     experienceGiven_ = experienceGiven;
 }
 
-Monster::~Monster() {
-    //dtor
-}
+Monster::~Monster() {}

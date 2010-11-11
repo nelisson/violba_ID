@@ -36,6 +36,4 @@ Character::Character(string name, char * modelPath, int maxHP, int level)
     fillHP();
 }
 
-Character::~Character() {
-    getNode()->remove();
-}
+Character::~Character() {}

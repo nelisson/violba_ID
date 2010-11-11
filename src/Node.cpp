@@ -13,4 +13,6 @@ Node::Node() {
     //ctor
 }
 
-Node::~Node() {}
+Node::~Node() {
+    node_->remove();
+}

@@ -5,8 +5,8 @@ void (XBOX360Controller::*onButtonPressed[BUTTON_COUNT])(void *) = {NULL};
 void (XBOX360Controller::*onButtonReleased[BUTTON_COUNT])(void *) = {NULL};
 
 bool XBOX360Controller::axisWasReleased[AXIS_COUNT] = {false};
-void (XBOX360Controller::*onAxisMoved[AXIS_COUNT])(void *) = {NULL};
-void (XBOX360Controller::*onAxisReleased[AXIS_COUNT])(void *) = {NULL};
+void (XBOX360Controller::*onAxisMoved[AXIS_COUNT])(void * classPointer, core::vector2d direction) = {NULL};
+void (XBOX360Controller::*onAxisReleased[AXIS_COUNT])(void * classPointer, core::vector2d direction) = {NULL};
 
 
 float XBOX360Controller::getDeadZone() {
@@ -59,7 +59,36 @@ void XBOX360Controller::listenButtons() {
             }
 }
 
-void XBOX360Controller::listenAxis() {}
+void XBOX360Controller::listenAxis() {
+
+    float x = fixInput(GetJoystickState().axis[Axis.L_ANALOG]);
+    float y = fixInput(GetJoystickState().axis[Axis.L_ANALOG + 1]);
+
+    float trigger = fixInput(GetJoystickState().axis[Axis.LT]);
+
+    for (int axis = 0; axis < AXIS_COUNT; axis++) {
+
+        else
+            if (axisWasReleased[axis]) {
+
+                if (onAxisReleased[axis] != NULL)
+                    (*onAxisReleased[axis])(onAxisReleasedPointers[axis], core::vector2d(x, y));
+
+                axisWasReleased[axis] = false;
+            }
+    }
+
+
+    }
+}
+
+bool XBOX360Controller::anyAxisMoved() {
+
+}
+
+float XBOX360Controller::fixInput(float x) {
+    return (x < getDeadZone()) ? 0 : x;
+}
 
 bool XBOX360Controller::OnEvent(const SEvent& event) {
     if (event.EventType == irr::EET_JOYSTICK_INPUT_EVENT

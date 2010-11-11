@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <irrlicht/irrlicht.h>
 
-#define BUTTON_COUNT 1400
+#define BUTTON_COUNT 14
 #define AXIS_COUNT   4
 #define STATE_COUNT  2
 
@@ -35,17 +35,21 @@ enum ButtonState {
 };
 
 enum Axis {
-    LT,
-    RT,
-    L_ANALOG,
-    R_ANALOG,
+    LT = SEvent::SJoystickEvent::AXIS_Z,
+    RT = SEvent::SJoystickEvent::AXIS_Z,
+    L_ANALOG = SEvent::SJoystickEvent::AXIS_X,
+    R_ANALOG = SEvent::SJoystickEvent::AXIS_U,
 };
 
 class XBOX360Controller : public IEventReceiver {
 
     private:
         SEvent::SJoystickEvent joystickState_;
+        float lAnalogX
+        float lAnalogY
+
         float deadZone_;
+        float fixInput(float x);
 
         static bool buttonWasReleased[BUTTON_COUNT];
         void (*onButtonPressed[BUTTON_COUNT])(void *);
@@ -54,9 +58,9 @@ class XBOX360Controller : public IEventReceiver {
         void * onButtonReleasedPointers[BUTTON_COUNT];
 
         static bool axisWasReleased[AXIS_COUNT];
-        void (*onAxisMoved[AXIS_COUNT])(void *);
+        void (*onAxisMoved[AXIS_COUNT])(void * classPointer, core::vector2d direction);
         void * onAxisMovedPointers[AXIS_COUNT];
-        void (*onAxisReleased[AXIS_COUNT])(void *);
+        void (*onAxisReleased[AXIS_COUNT])(void * classPointer, core::vector2d direction);
         void * onAxisReleasedPointers[AXIS_COUNT];
 
     protected:
