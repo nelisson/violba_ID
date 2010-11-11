@@ -52,8 +52,10 @@ class XBOX360Controller : public IEventReceiver {
         float triggers_[TRIGGER_COUNT];
         core::vector2df analogs_[ANALOG_COUNT];
 
+        //bool isIdle;
         float deadZone_;
         float fixInput(float x);
+        int toAxis(int analog);
 
         static bool buttonWasReleased[BUTTON_COUNT];
         void (*onButton[STATE_COUNT][BUTTON_COUNT])(void *);
@@ -73,13 +75,12 @@ class XBOX360Controller : public IEventReceiver {
         float getDeadZone();
         void setDeadZone(float deadZone);
 
-        core::vector2df getLAnalog();
-
-        float getTrigger(Trigger trigger);
-        core::vector2df getAnalog(Analog analog);
+        float getTrigger(int trigger);
         core::vector2df getAnalog(int analog);
 
-        bool analogsMoved();
+        bool analogMoved(int analog);
+        bool triggersMoved();
+        bool isIdle();
 
         void setCallBack(Button button, ButtonState state, void (*function)(void *), void * pointer);
         void setCallBack(Analog analog, ButtonState state, void (*function)(void *, core::vector2df), void * pointer);

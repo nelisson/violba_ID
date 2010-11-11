@@ -1,6 +1,5 @@
 #include "XBOX360Controller.h"
 
-
 bool XBOX360Controller::buttonWasReleased[BUTTON_COUNT] = {false};
 bool XBOX360Controller::analogWasReleased[ANALOG_COUNT] = {false};
 bool XBOX360Controller::triggerWasReleased[TRIGGER_COUNT] = {false};
@@ -17,15 +16,11 @@ void XBOX360Controller::setDeadZone(float deadZone) {
     deadZone_ = deadZone;
 }
 
-core::vector2df XBOX360Controller::getAnalog(Analog analog) {
-    return analogs_[analog];
-}
-
 core::vector2df XBOX360Controller::getAnalog(int analog) {
     return analogs_[analog];
 }
 
-float XBOX360Controller::getTrigger(Trigger trigger) {
+float XBOX360Controller::getTrigger(int trigger) {
     return triggers_[trigger];
 }
 
@@ -47,7 +42,7 @@ void XBOX360Controller::setCallBack(Trigger trigger, ButtonState state, void (*f
 void XBOX360Controller::listenButtons() {
     for (int button = 0; button < BUTTON_COUNT; button++)
         if (GetJoystickState().IsButtonPressed(button)) {
-            printf("%i: %p %p\n", button, onButton[PRESSED][button],onButtonPointers[PRESSED][button]);
+
             if (onButton[PRESSED][button] != NULL)
                 (*onButton[PRESSED][button])(onButtonPointers[PRESSED][button]);
 
@@ -64,12 +59,11 @@ void XBOX360Controller::listenButtons() {
 }
 
 void XBOX360Controller::listenAnalogs() {
-
-    float x = fixInput(GetJoystickState().Axis[L_ANALOG]);
-    float y = fixInput(GetJoystickState().Axis[L_ANALOG + 1]);
-
     for (int analog = 0; analog < ANALOG_COUNT; analog++) {
-        if (analogsMoved()) {
+        analogs_[analog] = core::vector2df(fixInput(GetJoystickState().Axis[toAxis(analog)]),
+                                           fixInput(GetJoystickState().Axis[toAxis(analog) + 1]));
+
+        if (analogMoved(analog)) {
 
             if (onAnalog[PRESSED][analog] != NULL)
                 (*onAnalog[PRESSED][analog])(onAnalogPointers[PRESSED][analog], getAnalog(analog));
@@ -87,17 +81,46 @@ void XBOX360Controller::listenAnalogs() {
     }
 }
 
-void XBOX360Controller::listenTriggers() {}
+void XBOX360Controller::listenTriggers() {
+    float value = fixInput(GetJoystickState().Axis[SEvent::SJoystickEvent::AXIS_Z]);
+    int trigger = (value > 0) ? LT : RT;
+    triggers_[trigger] = value;
 
-bool XBOX360Controller::analogsMoved() {
+    if (triggersMoved()) {
 
-    // TODO
+        if (onTrigger[PRESSED][trigger] != NULL)
+            (*onTrigger[PRESSED][trigger])(onTriggerPointers[PRESSED][trigger], getTrigger(trigger));
 
-    return 0;
+        triggerWasReleased[trigger] = true;
+    }
+    else
+        if (triggerWasReleased[trigger]) {
+
+            if (onTrigger[RELEASED][trigger] != NULL)
+                (*onTrigger[RELEASED][trigger])(onTriggerPointers[RELEASED][trigger], getTrigger(trigger));
+
+            triggerWasReleased[trigger] = false;
+        }
+}
+
+bool XBOX360Controller::analogMoved(int analog) {
+    return analogs_[analog].X || analogs_[analog].Y;
+}
+
+bool XBOX360Controller::triggersMoved() {
+    return triggers_[LT] || triggers_[RT];
 }
 
 float XBOX360Controller::fixInput(float x) {
     return (x < getDeadZone()) ? 0 : x;
+}
+
+int XBOX360Controller::toAxis(int analog) {
+    switch(analog) {
+        case L_ANALOG : return SEvent::SJoystickEvent::AXIS_X;
+        case R_ANALOG : return SEvent::SJoystickEvent::AXIS_U;
+        default : return NULL;
+    }
 }
 
 bool XBOX360Controller::OnEvent(const SEvent& event) {
@@ -121,8 +144,16 @@ const SEvent::SJoystickEvent& XBOX360Controller::GetJoystickState(void) const {
 
 XBOX360Controller::XBOX360Controller(float deadZone) {
     deadZone_ = deadZone;
+    for (int state = 0; state < STATE_COUNT; state++) {
+        for (int button = 0; button < BUTTON_COUNT; button++)
+            onButton[state][button] = NULL;
+
+        for (int analog = 0; analog < ANALOG_COUNT; analog++)
+            onAnalog[state][analog] = NULL;
+
+        for (int trigger = 0; trigger < TRIGGER_COUNT; trigger++)
+            onTrigger[state][trigger] = NULL;
+    }
 }
 
-XBOX360Controller::~XBOX360Controller() {
-    //dtor
-}
+XBOX360Controller::~XBOX360Controller() {}
