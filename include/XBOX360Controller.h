@@ -5,7 +5,7 @@
 #include <irrlicht/irrlicht.h>
 
 #define BUTTON_COUNT 14
-#define AXIS_COUNT   4
+#define AXIS_COUNT   5
 #define STATE_COUNT  2
 
 #define DEFAULT_DEADZONE 0.2f
@@ -45,6 +45,8 @@ class XBOX360Controller : public IEventReceiver {
 
     private:
         SEvent::SJoystickEvent joystickState_;
+        float axis[AXIS_COUNT];
+
         float lAnalogX;
         float lAnalogY;
 
@@ -55,16 +57,12 @@ class XBOX360Controller : public IEventReceiver {
         float fixInput(float x);
 
         static bool buttonWasReleased[BUTTON_COUNT];
-        void (*onButtonPressed[BUTTON_COUNT])(void *);
-        void * onButtonPressedPointers[BUTTON_COUNT];
-        void (*onButtonReleased[BUTTON_COUNT])(void *);
-        void * onButtonReleasedPointers[BUTTON_COUNT];
+        void (*onButton[STATE_COUNT][BUTTON_COUNT])(void *);
+        void * onButtonPointers[STATE_COUNT][BUTTON_COUNT];
 
         static bool axisWasReleased[AXIS_COUNT];
-        void (*onAxisMoved[AXIS_COUNT])(void * classPointer, core::vector2df direction);
-        void * onAxisMovedPointers[AXIS_COUNT];
-        void (*onAxisReleased[AXIS_COUNT])(void * classPointer, core::vector2df direction);
-        void * onAxisReleasedPointers[AXIS_COUNT];
+        void (*onAxis[STATE_COUNT][AXIS_COUNT])(void * classPointer, core::vector2df direction);
+        void * onAxisPointers[STATE_COUNT][AXIS_COUNT];
 
     protected:
 

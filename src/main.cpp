@@ -47,7 +47,7 @@ int main() {
     XBOX360Controller * controller = game.getController();
     //vector<Monster*> monsters = game.getMonsters();
 
-    controller->setCallBack(X, PRESSED, ninja->jump, &ninja);
+    controller->setCallBack(X, PRESSED, ninja->jump, ninja);
 
 	core::array<SJoystickInfo> joystickInfo;
 	device->activateJoysticks(joystickInfo);
