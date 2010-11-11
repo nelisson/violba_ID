@@ -45,8 +45,11 @@ class XBOX360Controller : public IEventReceiver {
 
     private:
         SEvent::SJoystickEvent joystickState_;
-        float lAnalogX
-        float lAnalogY
+        float lAnalogX;
+        float lAnalogY;
+
+        float lTrigger;
+        float rTrigger;
 
         float deadZone_;
         float fixInput(float x);
@@ -58,9 +61,9 @@ class XBOX360Controller : public IEventReceiver {
         void * onButtonReleasedPointers[BUTTON_COUNT];
 
         static bool axisWasReleased[AXIS_COUNT];
-        void (*onAxisMoved[AXIS_COUNT])(void * classPointer, core::vector2d direction);
+        void (*onAxisMoved[AXIS_COUNT])(void * classPointer, core::vector2df direction);
         void * onAxisMovedPointers[AXIS_COUNT];
-        void (*onAxisReleased[AXIS_COUNT])(void * classPointer, core::vector2d direction);
+        void (*onAxisReleased[AXIS_COUNT])(void * classPointer, core::vector2df direction);
         void * onAxisReleasedPointers[AXIS_COUNT];
 
     protected:
@@ -69,8 +72,15 @@ class XBOX360Controller : public IEventReceiver {
         float getDeadZone();
         void setDeadZone(float deadZone);
 
+        core::vector2df getLAnalog();
+
+        float getLTrigger();
+        float getRTrigger();
+
+        bool anyAxisMoved();
+
         void setCallBack(Button button, ButtonState state, void (*function)(void *), void * pointer);
-        void setCallBack(Axis axis, ButtonState state, void (*function)(void *), void * pointer);
+        void setCallBack(Axis axis, ButtonState state, void (*function)(void *, core::vector2df), void * pointer);
 
         void listenButtons();
         void listenAxis();
