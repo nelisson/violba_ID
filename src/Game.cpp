@@ -24,20 +24,19 @@ void Game::moveCharacter(void* userData, core::vector2df desl) {
     float moveHorizontal = desl.X;
     float moveVertical = desl.Y;
 
-    //cout << "X: " << moveHorizontal << " Y: " << moveVertical << endl;
-
     float speed = thisptr->getMainCharacter()->getMoveSpeed();
     f32 elapsedTime = thisptr->getElapsedTime();
 
     delta.X =  speed * elapsedTime *  moveHorizontal;
     delta.Z = -1 * speed * elapsedTime *  moveVertical;
 
-    if (thisptr->getMainCharacter()->walk(delta))
+    if (thisptr->getMainCharacter()->walk(delta)) {
         thisptr->getCameras()[0]->setPosition(thisptr->getCameras()[0]->getPosition() + delta);
+        thisptr->getCameras()[0]->setTarget(thisptr->getMainCharacter()->getNode()->getPosition());
+    }
 }
 
 void Game::doActions() {
-//    cout << "Checking Hits..." << endl;
     if (mainCharacter_->getState() == ATTACKING) {
 
         f32 startFrame = mainCharacter_->getNode()->getStartFrame();
@@ -50,9 +49,8 @@ void Game::doActions() {
 }
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
-    cout << "Dealt " << (*monster)->hurt(mainCharacter_->getDamage()) << " damage." << endl;
+    (*monster)->hurt(mainCharacter_->getDamage());
     if (!(*monster)->isAlive() ) {
-        cout << "Monster is dead, GG." << endl;
         delete (*monster);
         return --(getMonsters()->erase(monster));
     }
@@ -75,24 +73,10 @@ int Game::attackMonsters() {
         monsterPosition = (*monster)->getNode()->getAbsolutePosition();
 
         if (monsterPosition.getDistanceFrom(characterPosition) <= mainCharacter_->getEquippedWeapon()->getRange()) {
-
-            cout << "Monster In Range..." << endl;
             characterToMonster = monsterPosition - characterPosition;
-
-            cout << "Right Attack Limit: X: " << rightAttackLimit.X;
-            cout << " Y: " << rightAttackLimit.Y;
-            cout << " Z: " << rightAttackLimit.Z << endl;
-
-            cout << "Left Attack Limit: X: " << leftAttackLimit.X;
-            cout << " Y: " << leftAttackLimit.Y;
-            cout << " Z: " << leftAttackLimit.Z;
-
-            cout << "Angulo: " << (180/3.14) * acos( (leftAttackLimit.dotProduct(rightAttackLimit))/ (leftAttackLimit.getLength() * rightAttackLimit.getLength()) ) << endl;
 
             if (rightAttackLimit.crossProduct(characterToMonster).Y > 0 &&
                 leftAttackLimit.crossProduct(characterToMonster).Y < 0) {
-
-                cout << "Attacking Monster (In angle range)..." << endl;
                 monster = attackMonster(monster);
                 hitCounter++;
             }
@@ -113,12 +97,12 @@ Game::Game(ISceneManager * sceneManager) {
     getMainCharacter()->setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh));
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
-	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, core::vector3df(0, 10, -30)));
+	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, core::vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)));
 }
 
 Game::~Game() {
     delete level_;
     delete controller_;
-    delete mainCharacter_;
+   // delete mainCharacter_;
     delete monsters_;
 }

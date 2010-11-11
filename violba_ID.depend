@@ -11,7 +11,7 @@
 1289428879 source:c:\dev-cpp\violba\src\character.cpp
 	"Character.h"
 
-1289428847 c:\dev-cpp\violba\include\character.h
+1289431064 c:\dev-cpp\violba\include\character.h
 	<string>
 	<irrlicht/irrlicht.h>
 	"node.h"
@@ -19,10 +19,10 @@
 1289407407 c:\dev-cpp\violba\include\node.h
 	<irrlicht/irrlicht.h>
 
-1289428642 source:c:\dev-cpp\violba\src\game.cpp
+1289434199 source:c:\dev-cpp\violba\src\game.cpp
 	"Game.h"
 
-1289428099 c:\dev-cpp\violba\include\game.h
+1289434263 c:\dev-cpp\violba\include\game.h
 	"MainCharacter.h"
 	"Monster.h"
 	"Level.h"
@@ -72,7 +72,7 @@
 1289428910 source:c:\dev-cpp\violba\src\monster.cpp
 	"Monster.h"
 
-1289407407 source:c:\dev-cpp\violba\src\node.cpp
+1289432664 source:c:\dev-cpp\violba\src\node.cpp
 	"Node.h"
 
 1289407407 source:c:\dev-cpp\violba\src\object.cpp
@@ -94,7 +94,7 @@
 1289415587 source:c:\dev-cpp\violba\src\xbox360controller.cpp
 	"XBOX360Controller.h"
 
-1289425743 source:c:\dev-cpp\violba\src\main.cpp
+1289433893 source:c:\dev-cpp\violba\src\main.cpp
 	<irrlicht/irrlicht.h>
 	<math.h>
 	<irrlicht/driverChoice.h>
@@ -107,6 +107,6 @@
 	"MainCharacter.h"
 	"Monster.h"
 
-1289429065 source:c:\dev-cpp\violba\src\maincharacter.cpp
+1289432872 source:c:\dev-cpp\violba\src\maincharacter.cpp
 	"MainCharacter.h"
 

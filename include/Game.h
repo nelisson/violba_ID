@@ -7,6 +7,10 @@
 #include "XBOX360Controller.h"
 #include <iostream>
 
+#define DEFAULT_CAMERA_X 0
+#define DEFAULT_CAMERA_Y 25
+#define DEFAULT_CAMERA_Z -25
+
 using namespace std;
 using namespace irr::scene;
 using namespace irr::core;

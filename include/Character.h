@@ -29,6 +29,8 @@ class Character : public Node {
         float hurt(float value);
         bool isAlive();
         float getMoveSpeed() { return moveSpeed_; }
+
+        float getHPPercentual() { return 100 * currentHP_/(float)maxHP_; }
         virtual float getDamage() = 0;
 
         virtual void levelUp() = 0;

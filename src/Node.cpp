@@ -14,5 +14,6 @@ Node::Node() {
 }
 
 Node::~Node() {
-    node_->remove();
+    if (node_ != NULL)
+        node_->remove();
 }
