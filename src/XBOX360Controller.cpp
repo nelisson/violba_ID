@@ -2,19 +2,12 @@
 
 
 bool XBOX360Controller::buttonWasReleased[BUTTON_COUNT] = {false};
-/*
-void (XBOX360Controller::*onButtonPressed[BUTTON_COUNT])(void *) = {NULL};
-void (XBOX360Controller::*onButtonReleased[BUTTON_COUNT])(void *) = {NULL};
-*/
+bool XBOX360Controller::analogWasReleased[ANALOG_COUNT] = {false};
+bool XBOX360Controller::triggerWasReleased[TRIGGER_COUNT] = {false};
 
 void (XBOX360Controller::*onButton[STATE_COUNT][BUTTON_COUNT])(void *) = {NULL};
-void (XBOX360Controller::*onAxis[STATE_COUNT][AXIS_COUNT])(void * classPointer, core::vector2df direction) = {NULL};
-
-bool XBOX360Controller::axisWasReleased[AXIS_COUNT] = {false};
-/*
-void (XBOX360Controller::*onAxisMoved[AXIS_COUNT])(void * classPointer, core::vector2df direction) = {NULL};
-void (XBOX360Controller::*onAxisReleased[AXIS_COUNT])(void * classPointer, core::vector2df direction) = {NULL};
-*/
+void (XBOX360Controller::*onAnalog[STATE_COUNT][ANALOG_COUNT])(void * classPointer, core::vector2df direction) = {NULL};
+void (XBOX360Controller::*onTrigger[STATE_COUNT][TRIGGER_COUNT])(void * classPointer, float value) = {NULL};
 
 float XBOX360Controller::getDeadZone() {
     return deadZone_;
@@ -24,16 +17,16 @@ void XBOX360Controller::setDeadZone(float deadZone) {
     deadZone_ = deadZone;
 }
 
-core::vector2df XBOX360Controller::getLAnalog() {
-    return core::vector2df(lAnalogX, lAnalogY);
+core::vector2df XBOX360Controller::getAnalog(Analog analog) {
+    return analogs_[analog];
 }
 
-float XBOX360Controller::getLTrigger() {
-    return lTrigger;
+core::vector2df XBOX360Controller::getAnalog(int analog) {
+    return analogs_[analog];
 }
 
-float XBOX360Controller::getRTrigger() {
-    return rTrigger;
+float XBOX360Controller::getTrigger(Trigger trigger) {
+    return triggers_[trigger];
 }
 
 void XBOX360Controller::setCallBack(Button button, ButtonState state, void (*function)(void* ), void * pointer) {
@@ -41,10 +34,14 @@ void XBOX360Controller::setCallBack(Button button, ButtonState state, void (*fun
     onButtonPointers[state][button] = pointer;
 }
 
+void XBOX360Controller::setCallBack(Analog analog, ButtonState state, void (*function)(void *, core::vector2df), void * pointer) {
+    onAnalog[state][analog] = function;
+    onAnalogPointers[state][analog] = pointer;
+}
 
-void XBOX360Controller::setCallBack(Axis axis, ButtonState state, void (*function)(void *, core::vector2df), void * pointer) {
-    onAxis[state][axis] = function;
-    onAxisPointers[state][axis] = pointer;
+void XBOX360Controller::setCallBack(Trigger trigger, ButtonState state, void (*function)(void *, float), void * pointer) {
+    onTrigger[state][trigger] = function;
+    onTriggerPointers[state][trigger] = pointer;
 }
 
 void XBOX360Controller::listenButtons() {
@@ -66,34 +63,37 @@ void XBOX360Controller::listenButtons() {
             }
 }
 
-void XBOX360Controller::listenAxis() {
+void XBOX360Controller::listenAnalogs() {
 
     float x = fixInput(GetJoystickState().Axis[L_ANALOG]);
     float y = fixInput(GetJoystickState().Axis[L_ANALOG + 1]);
 
-    float trigger = fixInput(GetJoystickState().Axis[LT]);
+    for (int analog = 0; analog < ANALOG_COUNT; analog++) {
+        if (analogsMoved()) {
 
-    for (int axis = 0; axis < AXIS_COUNT; axis++) {
-        if (anyAxisMoved()) {
+            if (onAnalog[PRESSED][analog] != NULL)
+                (*onAnalog[PRESSED][analog])(onAnalogPointers[PRESSED][analog], getAnalog(analog));
 
-            if (onAxis[PRESSED][axis] != NULL)
-                (*onAxis[PRESSED][axis])(onAxisPointers[PRESSED][axis], getLAnalog());
-
-            axisWasReleased[axis] = true;
+            analogWasReleased[analog] = true;
         }
         else
-            if (axisWasReleased[axis]) {
+            if (analogWasReleased[analog]) {
 
-                if (onAxis[RELEASED][axis] != NULL)
-                    (*onAxis[RELEASED][axis])(onAxisPointers[RELEASED][axis], getLAnalog());
+                if (onAnalog[RELEASED][analog] != NULL)
+                    (*onAnalog[RELEASED][analog])(onAnalogPointers[RELEASED][analog], getAnalog(analog));
 
-                axisWasReleased[axis] = false;
+                analogWasReleased[analog] = false;
             }
     }
 }
 
-bool XBOX360Controller::anyAxisMoved() {
-    return lAnalogX || lAnalogY;
+void XBOX360Controller::listenTriggers() {}
+
+bool XBOX360Controller::analogsMoved() {
+
+    // TODO
+
+    return 0;
 }
 
 float XBOX360Controller::fixInput(float x) {
@@ -106,7 +106,8 @@ bool XBOX360Controller::OnEvent(const SEvent& event) {
 
         joystickState_ = event.JoystickEvent;
         listenButtons();
-        listenAxis();
+        listenAnalogs();
+        listenTriggers();
 
         return true;
     }
