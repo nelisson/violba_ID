@@ -30,29 +30,33 @@ void Game::moveCharacter(void* userData, core::vector2df desl) {
     delta.X =  speed * elapsedTime *  moveHorizontal;
     delta.Z = -1 * speed * elapsedTime *  moveVertical;
 
-    core::vector3df oldcharPosition = thisptr->getMainCharacter()->getNode()->getPosition();
-    if (thisptr->getMainCharacter()->walk(delta)) {
-        core::vector3df newCharPosition = thisptr->getMainCharacter()->getNode()->getPosition();
-
-        thisptr->getCameras()[0]->setPosition(thisptr->getCameras()[0]->getPosition() + newCharPosition - oldcharPosition);
-        thisptr->getCameras()[0]->setTarget(thisptr->getMainCharacter()->getNode()->getPosition());
-    }
+    thisptr->getMainCharacter()->walk(delta);
 }
 
 void Game::doActions() {
+
+    f32 startFrame = mainCharacter_->getNode()->getStartFrame();
+    f32 currentFrame = mainCharacter_->getNode()->getFrameNr();
+    f32 endFrame = mainCharacter_->getNode()->getEndFrame();
+    f32 middleFrame = (endFrame + startFrame)/2;
+
+    if(mainCharacter_->getState() == JUMPING) {
+
+        if(currentFrame < middleFrame)
+            mainCharacter_->getNode()->setPosition(mainCharacter_->getNode()->getPosition() + core::vector3df(0, 3, 0));
+    }
+
     if (mainCharacter_->getState() == ATTACKING) {
 
-        f32 startFrame = mainCharacter_->getNode()->getStartFrame();
-        f32 currentFrame = mainCharacter_->getNode()->getFrameNr();
-        f32 endFrame = mainCharacter_->getNode()->getEndFrame();
-
-        if ((int)currentFrame == (int)(endFrame + startFrame)/2 )
+        if ((int)currentFrame == (int)middleFrame )
             attackMonsters();
     }
 }
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
+
     (*monster)->hurt(mainCharacter_->getDamage());
+
     if (!(*monster)->isAlive() ) {
         delete (*monster);
         return --(getMonsters()->erase(monster));
@@ -100,7 +104,8 @@ Game::Game(ISceneManager * sceneManager) {
     getMainCharacter()->setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh));
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
-	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, core::vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)));
+    //lights_[0]->setPosition(core::vector3df(0, DEFAULT_CAMERA_Y, 0));
+	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, mainCharacter_->getNode()->getPosition() +  core::vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)));
 	cameras_[0]->setTarget(mainCharacter_->getNode()->getPosition());
 }
 

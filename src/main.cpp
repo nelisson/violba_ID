@@ -50,7 +50,7 @@ int main() {
     ninja->getNode()->setFrameLoop(IDLE);
     ninja->getNode()->setAnimationSpeed(20);
     ninja->getNode()->setLoopMode(false);
-    ninja->getNode()->setMaterialFlag(video::EMF_LIGHTING, false);
+
 
 	u32 then = device->getTimer()->getTime();
 
@@ -122,7 +122,7 @@ int main() {
             0.0005f);
 
 	ninja->getNode()->addAnimator(anim);
-    game.getCameras()[0]->addAnimator(anim2);
+    //game.getCameras()[0]->addAnimator(anim2);
 
 	anim->drop();
 	anim2->drop();
@@ -137,17 +137,21 @@ int main() {
             driver->draw2DLine()
 */
 
+        core::vector3df charPosition = game.getMainCharacter()->getNode()->getPosition();
+
+        game.getCameras()[0]->setPosition(charPosition + core::vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z));
+        game.getCameras()[0]->setTarget(game.getMainCharacter()->getNode()->getPosition());
         game.doActions();
         // cubos
 
         int random = rand() % 1000;
-        if (random < 10) {
-            Monster * newMonster = new Monster("Cubo da morte", "./models/dwarf.x", 100, 10, 1);
+        if (random < 20) {
+            Monster * newMonster = new Monster("Dwarf da morte", "./models/dwarf.x");
 
             game.addMonster(newMonster);
 
-            int randomx = (rand() % 100) - 50;
-            int randomz = (rand() % 100) - 50;
+            int randomx = (rand() % 300) - 150;
+            int randomz = (rand() % 300) - 150;
 
             newMonster->getNode()->OnAnimate(0);
             newMonster->getNode()->setPosition(core::vector3df(randomx, 0.0, randomz));

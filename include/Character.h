@@ -6,7 +6,7 @@
 #include "node.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
-#define DEFAULT_CHARACTER_MOVESPEED 20
+#define DEFAULT_CHARACTER_MOVESPEED 100
 
 using namespace std;
 using namespace irr::scene;

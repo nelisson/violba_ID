@@ -18,8 +18,8 @@ void Character::fillHP() {
 }
 
 float Character::hurt(float value) {
-    currentHP_ -= value;
 
+    currentHP_ -= value;
     if (currentHP_ < 0)
         currentHP_ = 0;
 

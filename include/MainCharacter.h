@@ -14,7 +14,8 @@
 #define PUNCH 31,45
 #define KICK 73,83
 #define SLASH 58,68
-#define JUMP 94,102
+//#define JUMP 94,102 // with height
+#define JUMP 102,111  // without height
 
 #define DEFAULT_CHARACTER_NAME "Violba"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"

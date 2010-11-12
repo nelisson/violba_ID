@@ -119,10 +119,10 @@
 1289558891 c:\documents and settings\janine\desktop\violba_id\include\item.h
 	<string>
 
-1289558891 source:c:\documents and settings\janine\desktop\violba_id\src\character.cpp
+1289569322 source:c:\documents and settings\janine\desktop\violba_id\src\character.cpp
 	"Character.h"
 
-1289562327 c:\documents and settings\janine\desktop\violba_id\include\character.h
+1289567503 c:\documents and settings\janine\desktop\violba_id\include\character.h
 	<string>
 	<irrlicht/irrlicht.h>
 	"node.h"
@@ -130,17 +130,17 @@
 1289558891 c:\documents and settings\janine\desktop\violba_id\include\node.h
 	<irrlicht/irrlicht.h>
 
-1289561954 source:c:\documents and settings\janine\desktop\violba_id\src\game.cpp
+1289570231 source:c:\documents and settings\janine\desktop\violba_id\src\game.cpp
 	"Game.h"
 
-1289561584 c:\documents and settings\janine\desktop\violba_id\include\game.h
+1289570289 c:\documents and settings\janine\desktop\violba_id\include\game.h
 	"MainCharacter.h"
 	"Monster.h"
 	"Level.h"
 	"XBOX360Controller.h"
 	<iostream>
 
-1289560102 c:\documents and settings\janine\desktop\violba_id\include\maincharacter.h
+1289568835 c:\documents and settings\janine\desktop\violba_id\include\maincharacter.h
 	"Inventory.h"
 	<irrlicht/irrlicht.h>
 	"character.h"
@@ -208,7 +208,7 @@
 1289558892 source:c:\documents and settings\janine\desktop\violba_id\src\xbox360controller.cpp
 	"XBOX360Controller.h"
 
-1289562108 source:c:\documents and settings\janine\desktop\violba_id\src\main.cpp
+1289568568 source:c:\documents and settings\janine\desktop\violba_id\src\main.cpp
 	<irrlicht/irrlicht.h>
 	<math.h>
 	<irrlicht/driverChoice.h>
