@@ -8,7 +8,7 @@
 #include "Utils.h"
 #include "weapon.h"
 
-#define WALK 0,13
+#define WALK 0,14
 #define IDLE 205,250
 #define SPIN 45,59
 #define PUNCH 31,45

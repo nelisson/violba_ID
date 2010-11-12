@@ -8,8 +8,8 @@
 #include <iostream>
 
 #define DEFAULT_CAMERA_X 0
-#define DEFAULT_CAMERA_Y 25
-#define DEFAULT_CAMERA_Z -25
+#define DEFAULT_CAMERA_Y 20
+#define DEFAULT_CAMERA_Z -40
 
 using namespace std;
 using namespace irr::scene;

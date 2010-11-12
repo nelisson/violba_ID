@@ -60,9 +60,9 @@ int main() {
 		"./models/heightmap.bmp",
 		0,					// parent node
 		-1,					// node id
-		core::vector3df(-300.f, -10.f, -100.f),		// position
+		core::vector3df(-1000.f, -10.f,   -800.f),		// position
 		core::vector3df(0.f, 0.f, 0.f),		// rotation
-		core::vector3df(40.f, 4.4f, 40.f),	// scale
+		core::vector3df(40.f, 3.0f, 40.f),	// scale
 		video::SColor ( 255, 255, 255, 255 ),	// vertexColor
 		5,					// maxLOD
 		scene::ETPS_17,				// patchSize
@@ -78,7 +78,7 @@ int main() {
 
 	terrain->setMaterialType(video::EMT_DETAIL_MAP);
 
-	terrain->scaleTexture(1.0f, 20.0f);
+	terrain->scaleTexture(1.0f, 15.0f);
 
 	CDynamicMeshBuffer* buffer = new CDynamicMeshBuffer(video::EVT_2TCOORDS, video::EIT_16BIT);
 	terrain->getMeshBufferForLOD(*buffer, 0);
@@ -99,21 +99,37 @@ int main() {
 
 	driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 
+    ITriangleSelector* selector	= game.getSceneManager()->
+		createTerrainTriangleSelector(terrain, 0);
+	terrain->setTriangleSelector(selector);
 
+	ISceneNodeAnimator* anim = game.getSceneManager()->
+		createCollisionResponseAnimator(
+			selector,
+			ninja->getNode(),
+            core::vector3df(5, 5, 5),
+            core::vector3df(0,-8.0f, 0),
+            core::vector3df(0, 0, 0),
+            0.0005f);
+
+    ISceneNodeAnimator* anim2 = game.getSceneManager()->
+		createCollisionResponseAnimator(
+			selector,
+			game.getCameras()[0],
+            core::vector3df(25, 25, 25),
+            core::vector3df(0, 0, 0),
+            core::vector3df(0, 0, 0),
+            0.0005f);
+
+	ninja->getNode()->addAnimator(anim);
+    game.getCameras()[0]->addAnimator(anim2);
+
+	anim->drop();
+	anim2->drop();
+	selector->drop();
 
 
 	while(device->run()) {
-
-	    core::vector3df camerapos = game.getCameras().at(0)->getPosition();
-	    core::vector3df ninjapos = ninja->getNode()->getPosition();
-
-	    cout << "Camera X: " << camerapos.X;
-	    cout << " Y: " << camerapos.Y;
-	    cout << " Z: " << camerapos.Z << endl;
-
-	    cout << "Ninja X: " << ninjapos.X;
-	    cout << " Y: " << ninjapos.Y;
-	    cout << " Z: " << ninjapos.Z << endl;
 
 /*
         for (int i = 0; i < monsters->size(); i++) {

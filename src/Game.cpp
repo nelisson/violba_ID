@@ -30,8 +30,11 @@ void Game::moveCharacter(void* userData, core::vector2df desl) {
     delta.X =  speed * elapsedTime *  moveHorizontal;
     delta.Z = -1 * speed * elapsedTime *  moveVertical;
 
+    core::vector3df oldcharPosition = thisptr->getMainCharacter()->getNode()->getPosition();
     if (thisptr->getMainCharacter()->walk(delta)) {
-        thisptr->getCameras()[0]->setPosition(thisptr->getCameras()[0]->getPosition() + delta);
+        core::vector3df newCharPosition = thisptr->getMainCharacter()->getNode()->getPosition();
+
+        thisptr->getCameras()[0]->setPosition(thisptr->getCameras()[0]->getPosition() + newCharPosition - oldcharPosition);
         thisptr->getCameras()[0]->setTarget(thisptr->getMainCharacter()->getNode()->getPosition());
     }
 }
@@ -98,6 +101,7 @@ Game::Game(ISceneManager * sceneManager) {
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
 	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, core::vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)));
+	cameras_[0]->setTarget(mainCharacter_->getNode()->getPosition());
 }
 
 Game::~Game() {
