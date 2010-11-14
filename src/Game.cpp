@@ -1,11 +1,18 @@
 #include "Game.h"
 
 void Game::addMonster(Monster * monster) {
-    monsters_->push_back(monster);
+    monsters_.push_back(monster);
 
-    IAnimatedMesh * monsterMesh = getSceneManager()->getMesh(monster->getModelPath());
-    monster->setNode(getSceneManager()->addAnimatedMeshSceneNode(monsterMesh));
+	ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), monster, core::vector3df(5, 5, 5));
+	monster->addAnimator(anim);
+
+	anim->drop();
 }
+
+vector<Monster*>::iterator Game::removeMonster(vector<Monster*>::iterator monster) {
+    return monsters_.erase(monster);
+}
+
 
 void Game::setCallbacks() {
     controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
@@ -16,10 +23,10 @@ void Game::setCallbacks() {
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
 }
 
-void Game::moveCharacter(void* userData, core::vector2df desl) {
+void Game::moveCharacter(void* userData, vector2df desl) {
     Game * thisptr = (Game*) userData;
 
-    core::vector3df delta;
+    vector3df delta;
     desl.normalize();
     float moveHorizontal = desl.X;
     float moveVertical = desl.Y;
@@ -34,56 +41,66 @@ void Game::moveCharacter(void* userData, core::vector2df desl) {
 }
 
 void Game::doActions() {
+    cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
+    cameras_[0]->setTarget(mainCharacter_->getPosition());
 
-    f32 startFrame = mainCharacter_->getNode()->getStartFrame();
-    f32 currentFrame = mainCharacter_->getNode()->getFrameNr();
-    f32 endFrame = mainCharacter_->getNode()->getEndFrame();
+    f32 startFrame = mainCharacter_->getStartFrame();
+    f32 currentFrame = mainCharacter_->getFrameNr();
+    f32 endFrame = mainCharacter_->getEndFrame();
     f32 middleFrame = (endFrame + startFrame)/2;
 
+    float jumpDelta = mainCharacter_->getJumpHeight() / (float)(endFrame - startFrame);
+
     if(mainCharacter_->getState() == JUMPING) {
-
         if(currentFrame < middleFrame)
-            mainCharacter_->getNode()->setPosition(mainCharacter_->getNode()->getPosition() + core::vector3df(0, 3, 0));
+            mainCharacter_->setPosition(mainCharacter_->getPosition() + vector3df(0, jumpDelta * getElapsedTime(), 0));
     }
 
-    if (mainCharacter_->getState() == ATTACKING) {
+    if (mainCharacter_->getState() == ATTACK_STARTING) {
 
-        if ((int)currentFrame == (int)middleFrame )
-            attackMonsters();
+        if ( (int)currentFrame == (int)middleFrame) {
+            cout << "Hits: " << attackMonsters() << endl;
+            mainCharacter_->setState(ATTACK_ENDING);
+        }
     }
+
+    tryGeneratingMonster(DEFAULT_MONSTER_GENERATION_CHANCE_PER_FRAME);
+    runMonstersAI();
 }
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
 
-    (*monster)->hurt(mainCharacter_->getDamage());
+    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage()) << endl;
 
     if (!(*monster)->isAlive() ) {
+        mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         delete (*monster);
-        return --(getMonsters()->erase(monster));
+        return --(removeMonster(monster));
     }
+
     return monster;
 }
 
 int Game::attackMonsters() {
     int hitCounter = 0;
-    vector3df characterRotation = mainCharacter_->getNode()->getRotation();
-    vector3df monsterPosition, characterPosition = mainCharacter_->getNode()->getAbsolutePosition();
+    vector3df characterRotation = mainCharacter_->getRotation();
+    vector3df monsterPosition, characterPosition = mainCharacter_->getPosition();
     vector3df characterToMonster;
 
     vector3df characterForward = characterRotation.rotationToDirection();
-    vector3df rightAttackLimit = vector3df(0, - mainCharacter_->getEquippedWeapon()->getAttackAngle(), 0).rotationToDirection(characterForward);
-    vector3df leftAttackLimit = vector3df(0, mainCharacter_->getEquippedWeapon()->getAttackAngle(), 0).rotationToDirection(characterForward);
+    vector3df rightAttackLimit = vector3df(0, - mainCharacter_->getEquippedWeapon()->getAttackAngle()/2, 0).rotationToDirection(characterForward);
+    vector3df leftAttackLimit = vector3df(0, mainCharacter_->getEquippedWeapon()->getAttackAngle()/2, 0).rotationToDirection(characterForward);
 
     vector<Monster*>::iterator monster;
-    for (monster = getMonsters()->begin(); monster < getMonsters()->end(); monster++) {
+    for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
 
-        monsterPosition = (*monster)->getNode()->getAbsolutePosition();
-
+        monsterPosition = (*monster)->getAbsolutePosition();
         if (monsterPosition.getDistanceFrom(characterPosition) <= mainCharacter_->getEquippedWeapon()->getRange()) {
-            characterToMonster = monsterPosition - characterPosition;
 
+            characterToMonster = monsterPosition - characterPosition;
             if (rightAttackLimit.crossProduct(characterToMonster).Y > 0 &&
                 leftAttackLimit.crossProduct(characterToMonster).Y < 0) {
+
                 monster = attackMonster(monster);
                 hitCounter++;
             }
@@ -93,25 +110,53 @@ int Game::attackMonsters() {
     return hitCounter;
 }
 
+void Game::tryGeneratingMonster(int chancePercent) {
+    if (randomBetween(0, 100) <= chancePercent) {
+        Monster * newMonster = new Monster(level_, sceneManager_, "Dwarf da morte", "./models/dwarf.x");
+        addMonster(newMonster);
+        newMonster->setPosition(vector3df(randomBetween(-150, 150),
+                                          0.0,
+                                          randomBetween(-150, 150)));
+    }
+}
+
+void Game::runMonstersAI() {
+    vector<Monster*>::iterator monster;
+    for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
+        vector3df ninjaPosition = mainCharacter_->getAbsolutePosition();
+        vector3df monsterPosition = (*monster)->getPosition();
+
+        if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
+
+            vector3df vetor = ninjaPosition - monsterPosition;
+            vetor.normalize();
+            (*monster)->walk(vetor * getElapsedTime());
+        }
+    }
+}
+
 Game::Game(ISceneManager * sceneManager) {
     sceneManager_  = sceneManager;
-    level_         = new Level();
+    level_         = new Level(sceneManager);
     controller_    = new XBOX360Controller();
-    mainCharacter_ = new MainCharacter();
-    monsters_      = new vector<Monster*>();
-
-    IAnimatedMesh * mesh = getSceneManager()->getMesh(getMainCharacter()->getModelPath());
-    getMainCharacter()->setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh));
+    mainCharacter_ = new MainCharacter(level_, sceneManager);
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
-    //lights_[0]->setPosition(core::vector3df(0, DEFAULT_CAMERA_Y, 0));
-	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, mainCharacter_->getNode()->getPosition() +  core::vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)));
-	cameras_[0]->setTarget(mainCharacter_->getNode()->getPosition());
+	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, DEFAULT_CAMERA_POSITION));
+	cameras_[0]->setTarget(mainCharacter_->getPosition());
+
+    setCallbacks();
+
+    sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+
+	ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), mainCharacter_, vector3df(5, 5, 5));
+	mainCharacter_->addAnimator(anim);
+
+	anim->drop();
 }
 
 Game::~Game() {
-    delete level_;
+    //delete level_;
     delete controller_;
-   // delete mainCharacter_;
-    delete monsters_;
+    delete mainCharacter_;
 }

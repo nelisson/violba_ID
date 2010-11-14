@@ -221,3 +221,126 @@
 	"MainCharacter.h"
 	"Monster.h"
 
+1289576994 source:c:\dev-cpp\pcg\violba_id\src\armor.cpp
+	"Armor.h"
+
+1289576994 c:\dev-cpp\pcg\violba_id\include\armor.h
+	"Item.h"
+
+1289576994 c:\dev-cpp\pcg\violba_id\include\item.h
+	<string>
+
+1289765087 source:c:\dev-cpp\pcg\violba_id\src\character.cpp
+	"Character.h"
+
+1289775386 c:\dev-cpp\pcg\violba_id\include\character.h
+	<string>
+	<irrlicht/irrlicht.h>
+	<iostream>
+	"node.h"
+	"bar.h"
+
+1289755172 c:\dev-cpp\pcg\violba_id\include\node.h
+	<irrlicht/irrlicht.h>
+
+1289776550 source:c:\dev-cpp\pcg\violba_id\src\game.cpp
+	"Game.h"
+
+1289772902 c:\dev-cpp\pcg\violba_id\include\game.h
+	"MainCharacter.h"
+	"Monster.h"
+	"Level.h"
+	"XBOX360Controller.h"
+	<iostream>
+
+1289776650 c:\dev-cpp\pcg\violba_id\include\maincharacter.h
+	"Inventory.h"
+	<irrlicht/irrlicht.h>
+	"character.h"
+	<iostream>
+	"Utils.h"
+	"weapon.h"
+
+1289576994 c:\dev-cpp\pcg\violba_id\include\inventory.h
+	<vector>
+	"slot.h"
+
+1289576994 c:\dev-cpp\pcg\violba_id\include\slot.h
+	"item.h"
+
+1289759614 c:\dev-cpp\pcg\violba_id\include\utils.h
+	<cstdlib>
+
+1289776706 c:\dev-cpp\pcg\violba_id\include\weapon.h
+	"Item.h"
+	"utils.h"
+	<cstdlib>
+
+1289772932 c:\dev-cpp\pcg\violba_id\include\monster.h
+	"character.h"
+
+1289769658 c:\dev-cpp\pcg\violba_id\include\level.h
+	<vector>
+	<iostream>
+	"Object.h"
+
+1289576994 c:\dev-cpp\pcg\violba_id\include\object.h
+	"node.h"
+
+1289576994 c:\dev-cpp\pcg\violba_id\include\xbox360controller.h
+	<cstdlib>
+	<irrlicht/irrlicht.h>
+
+1289576994 source:c:\dev-cpp\pcg\violba_id\src\inventory.cpp
+	"Inventory.h"
+
+1289576994 source:c:\dev-cpp\pcg\violba_id\src\item.cpp
+	"Item.h"
+
+1289769761 source:c:\dev-cpp\pcg\violba_id\src\level.cpp
+	"Level.h"
+
+1289776650 source:c:\dev-cpp\pcg\violba_id\src\maincharacter.cpp
+	"MainCharacter.h"
+
+1289772816 source:c:\dev-cpp\pcg\violba_id\src\monster.cpp
+	"Monster.h"
+
+1289763112 source:c:\dev-cpp\pcg\violba_id\src\node.cpp
+	"Node.h"
+
+1289576994 source:c:\dev-cpp\pcg\violba_id\src\object.cpp
+	"Object.h"
+
+1289576994 source:c:\dev-cpp\pcg\violba_id\src\slot.cpp
+	"Slot.h"
+
+1289759598 source:c:\dev-cpp\pcg\violba_id\src\utils.cpp
+	"Utils.h"
+
+1289576994 source:c:\dev-cpp\pcg\violba_id\src\weapon.cpp
+	"Weapon.h"
+
+1289751129 source:c:\dev-cpp\pcg\violba_id\src\xbox360controller.cpp
+	"XBOX360Controller.h"
+
+1289773208 source:c:\dev-cpp\pcg\violba_id\src\main.cpp
+	<irrlicht/irrlicht.h>
+	<math.h>
+	<irrlicht/driverChoice.h>
+	"XBOX360Controller.h"
+	"Utils.h"
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"Game.h"
+	"MainCharacter.h"
+	"Monster.h"
+
+1289762864 source:c:\dev-cpp\pcg\violba_id\src\bar.cpp
+	"Bar.h"
+	<iostream>
+
+1289761278 c:\dev-cpp\pcg\violba_id\include\bar.h
+	<irrlicht/irrlicht.h>
+

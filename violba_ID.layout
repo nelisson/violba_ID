@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="All" />
-	<File name="include\Armor.h" open="0" top="0" tabpos="21">
+	<File name="include\Armor.h" open="0" top="0" tabpos="16">
 		<Cursor position="222" topLine="0" />
 	</File>
-	<File name="include\Character.h" open="1" top="0" tabpos="11">
-		<Cursor position="190" topLine="0" />
+	<File name="include\Bar.h" open="1" top="0" tabpos="21">
+		<Cursor position="1576" topLine="30" />
 	</File>
-	<File name="include\Game.h" open="1" top="1" tabpos="3">
-		<Cursor position="243" topLine="4" />
+	<File name="include\Character.h" open="1" top="0" tabpos="11">
+		<Cursor position="733" topLine="8" />
+	</File>
+	<File name="include\Game.h" open="1" top="0" tabpos="3">
+		<Cursor position="1632" topLine="17" />
 	</File>
 	<File name="include\Inventory.h" open="0" top="0" tabpos="13">
 		<Cursor position="80" topLine="0" />
@@ -16,76 +19,79 @@
 	<File name="include\Item.h" open="1" top="0" tabpos="2">
 		<Cursor position="269" topLine="0" />
 	</File>
-	<File name="include\Level.h" open="0" top="0" tabpos="22">
-		<Cursor position="130" topLine="0" />
+	<File name="include\Level.h" open="1" top="0" tabpos="15">
+		<Cursor position="342" topLine="0" />
 	</File>
 	<File name="include\MainCharacter.h" open="1" top="0" tabpos="7">
-		<Cursor position="396" topLine="0" />
+		<Cursor position="398" topLine="38" />
 	</File>
 	<File name="include\Monster.h" open="1" top="0" tabpos="6">
-		<Cursor position="349" topLine="10" />
+		<Cursor position="230" topLine="0" />
 	</File>
-	<File name="include\Node.h" open="0" top="0" tabpos="12">
-		<Cursor position="127" topLine="0" />
+	<File name="include\Node.h" open="1" top="0" tabpos="18">
+		<Cursor position="311" topLine="0" />
 	</File>
-	<File name="include\Object.h" open="0" top="0" tabpos="14">
+	<File name="include\Object.h" open="1" top="0" tabpos="17">
 		<Cursor position="134" topLine="0" />
 	</File>
 	<File name="include\Slot.h" open="0" top="0" tabpos="14">
 		<Cursor position="51" topLine="0" />
 	</File>
-	<File name="include\Utils.h" open="0" top="0" tabpos="3">
-		<Cursor position="107" topLine="0" />
+	<File name="include\Utils.h" open="1" top="0" tabpos="25">
+		<Cursor position="72" topLine="0" />
 	</File>
 	<File name="include\Weapon.h" open="1" top="0" tabpos="9">
-		<Cursor position="260" topLine="14" />
+		<Cursor position="455" topLine="0" />
 	</File>
 	<File name="include\XBOX360Controller.h" open="1" top="0" tabpos="5">
 		<Cursor position="242" topLine="0" />
 	</File>
-	<File name="src\Armor.cpp" open="0" top="0" tabpos="20">
+	<File name="src\Armor.cpp" open="0" top="0" tabpos="17">
 		<Cursor position="88" topLine="0" />
 	</File>
-	<File name="src\Character.cpp" open="1" top="0" tabpos="12">
-		<Cursor position="366" topLine="10" />
+	<File name="src\Bar.cpp" open="1" top="0" tabpos="20">
+		<Cursor position="1186" topLine="0" />
 	</File>
-	<File name="src\Game.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="1799" topLine="30" />
+	<File name="src\Character.cpp" open="1" top="0" tabpos="12">
+		<Cursor position="371" topLine="0" />
+	</File>
+	<File name="src\Game.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="1946" topLine="39" />
 	</File>
 	<File name="src\Inventory.cpp" open="0" top="0" tabpos="16">
 		<Cursor position="447" topLine="0" />
 	</File>
-	<File name="src\Item.cpp" open="0" top="0" tabpos="19">
+	<File name="src\Item.cpp" open="1" top="0" tabpos="19">
 		<Cursor position="183" topLine="0" />
 	</File>
-	<File name="src\Level.cpp" open="0" top="0" tabpos="9">
-		<Cursor position="76" topLine="0" />
+	<File name="src\Level.cpp" open="1" top="0" tabpos="14">
+		<Cursor position="312" topLine="0" />
 	</File>
 	<File name="src\MainCharacter.cpp" open="1" top="0" tabpos="8">
-		<Cursor position="2139" topLine="42" />
+		<Cursor position="2159" topLine="45" />
 	</File>
 	<File name="src\Monster.cpp" open="1" top="0" tabpos="13">
-		<Cursor position="169" topLine="0" />
+		<Cursor position="586" topLine="0" />
 	</File>
-	<File name="src\Node.cpp" open="0" top="0" tabpos="23">
-		<Cursor position="247" topLine="0" />
+	<File name="src\Node.cpp" open="1" top="0" tabpos="23">
+		<Cursor position="208" topLine="0" />
 	</File>
-	<File name="src\Object.cpp" open="0" top="0" tabpos="15">
+	<File name="src\Object.cpp" open="1" top="0" tabpos="16">
 		<Cursor position="18" topLine="0" />
 	</File>
 	<File name="src\Slot.cpp" open="0" top="0" tabpos="15">
 		<Cursor position="184" topLine="0" />
 	</File>
-	<File name="src\Utils.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="81" topLine="0" />
+	<File name="src\Utils.cpp" open="1" top="0" tabpos="26">
+		<Cursor position="18" topLine="0" />
 	</File>
 	<File name="src\Weapon.cpp" open="1" top="0" tabpos="10">
-		<Cursor position="348" topLine="0" />
+		<Cursor position="417" topLine="0" />
 	</File>
-	<File name="src\XBOX360Controller.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="4279" topLine="114" />
+	<File name="src\XBOX360Controller.cpp" open="1" top="0" tabpos="22">
+		<Cursor position="4377" topLine="95" />
 	</File>
 	<File name="src\main.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="4498" topLine="137" />
+		<Cursor position="4831" topLine="106" />
 	</File>
 </CodeBlocks_layout_file>

@@ -1,24 +1,32 @@
 #include "Monster.h"
 
-int Monster::getExperienceGiven() {
-    return experienceGiven_;
+void Monster::levelUp() {}
+
+bool Monster::walk(vector3df delta) {
+    moveDelta(delta * getMoveSpeed());
+
+    float angle = 180/PI * acos(delta.normalize().dotProduct(vector3df(1.0, 0.0, 0.0)));
+    setRotation( vector3df(0.0, -angle, 0.0));
 }
 
-void Monster::levelUp() {
-}
-
-int Monster::getRange() {
-    return 10;
-}
-
-Monster::Monster(string name,
+Monster::Monster(ISceneNode * parent,
+                 ISceneManager * manager,
+                 std::string name,
                  char * modelPath,
                  int experienceGiven,
                  int maxHP,
+                 int range,
                  int level,
                  float moveSpeed)
-    : Character(name, modelPath, maxHP, level, moveSpeed) {
-    experienceGiven_ = experienceGiven;
+    : Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
+      experienceGiven_(experienceGiven),
+      range_(range) {
+
+    getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
+    setAnimationSpeed(30);
+    setLoopMode(false);
+    setScale(core::vector3df(0.1, 0.1, 0.1));
+    getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 }
 
 Monster::~Monster() {}

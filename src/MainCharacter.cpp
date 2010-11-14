@@ -1,19 +1,18 @@
 #include "MainCharacter.h"
 
-bool MainCharacter::walk(core::vector3df desl) {
+bool MainCharacter::walk(vector3df desl) {
 
     if(getState() == STOPPING || getState() == MOVING || getState() == JUMPING) {
         float moveHorizontal = desl.X;
         float moveVertical = desl.Z;
-        double ang = sinal(moveHorizontal) * (180.0/3.1415) * acos(core::vector3df(0,0,1).dotProduct(core::vector3df(moveHorizontal,0,moveVertical).normalize()));
+        double ang = sinal(moveHorizontal) * (180.0/PI) * acos(vector3df(0,0,1).dotProduct(vector3df(moveHorizontal,0,moveVertical).normalize()));
         if (ang >= 180)
             ang = 179;
-        getNode()->setRotation(core::vector3df(0,ang,0));
-        core::vector3df nodePosition = getNode()->getPosition();
 
-        getNode()->setPosition(nodePosition + desl);
+        setRotation(vector3df(0, ang, 0));
+        moveDelta(desl);
         if (getState() == STOPPING) {
-            getNode()->setFrameLoop(WALK);
+            setFrameLoop(WALK);
             setState(MOVING);
         }
 
@@ -24,43 +23,67 @@ bool MainCharacter::walk(core::vector3df desl) {
 
 void MainCharacter::slash(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACKING) {
-        thisptr->getNode()->setFrameLoop(SLASH);
-        thisptr->setState(ATTACKING);
+    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+        thisptr->setFrameLoop(SLASH);
+        thisptr->setAnimationSpeed(thisptr->getEquippedWeapon()->getAttackSpeed());
+        thisptr->setState(ATTACK_STARTING);
     }
 }
 
 void MainCharacter::kick(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACKING) {
-        thisptr->getNode()->setFrameLoop(KICK);
-        thisptr->setState(ATTACKING);
+    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+        thisptr->setFrameLoop(KICK);
+        thisptr->setState(ATTACK_STARTING);
     }
 }
 
 void MainCharacter::spin(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACKING) {
-        thisptr->getNode()->setFrameLoop(SPIN);
-        thisptr->setState(ATTACKING);
+    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+        thisptr->setFrameLoop(SPIN);
+        thisptr->setAnimationSpeed(thisptr->getEquippedWeapon()->getAttackSpeed());
+        thisptr->setState(ATTACK_STARTING);
     }
 }
 
-void MainCharacter::stop(void *userData, core::vector2df direction) {
+void MainCharacter::stop(void *userData, vector2df direction) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    thisptr->getNode()->setFrameLoop(IDLE);
+    thisptr->setFrameLoop(IDLE);
     thisptr->setState(STOPPING);
 }
 
 void MainCharacter::jump(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACKING) {
-        thisptr->getNode()->setFrameLoop(JUMP);
+    if(thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+        thisptr->setFrameLoop(JUMP);
         thisptr->setState(JUMPING);
     }
 }
 
-void MainCharacter::levelUp() {}
+void MainCharacter::levelUp() {
+    if (getLevel() < DEFAULT_CHARACTER_MAX_LEVEL) {
+        addLevels(1);
+        experienceToLevelUp_ = experienceCurve(getLevel());
+
+        cout << "Level Up! (current level " << getLevel() << ")" << endl;
+
+        updateAttributes();
+    }
+}
+
+void MainCharacter::updateAttributes() {
+    strength_++;
+    vitality_++;
+    agility_++;
+
+    increaseMaxHP(5);
+    increaseMoveSpeed(3);
+
+    speed_ += 3;
+    jumpHeight_ += 5;
+    fillHP();
+}
 
 void MainCharacter::setState(State state) {
     state_ = state;
@@ -70,21 +93,57 @@ float MainCharacter::getDamage() {
     return getEquippedWeapon()->getDamage() * strength_;
 }
 
-MainCharacter::MainCharacter(char * name,
+void MainCharacter::earnExperience(int experience) {
+    if (getLevel() < DEFAULT_CHARACTER_MAX_LEVEL) {
+        currentExperience_ += experience;
+
+        if (currentExperience_ >= experienceToLevelUp_) {
+            int overflowExperience = currentExperience_ - experienceToLevelUp_;
+
+            currentExperience_ = experienceToLevelUp_;
+            levelUp();
+            earnExperience(overflowExperience);
+        }
+    }
+}
+
+long MainCharacter::experienceCurve(int level) {
+    return 980 + 20*level*level;
+}
+
+void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
+    node->setFrameLoop(IDLE);
+    state_ = STOPPING;
+}
+
+MainCharacter::MainCharacter(ISceneNode * parent,
+                             ISceneManager * manager,
+                             char * name,
                              char * modelPath,
                              int level,
+                             int currentExperience,
                              int maxHP,
                              int vitality,
                              int strength,
                              int agility,
-                             float moveSpeed)
-    : Character(name, modelPath, level, maxHP, moveSpeed) {
-
-    vitality_ = vitality;
-    strength_ = strength;
-    agility_  = agility;
+                             float moveSpeed,
+                             float jumpHeight)
+    : Character(parent, manager, name, modelPath, level, maxHP, moveSpeed),
+      vitality_(vitality),
+      strength_(strength),
+      agility_(agility),
+      jumpHeight_(jumpHeight){
 
     equippedWeapon_ = new Weapon("Espada");
+
+    setAnimationEndCallback(this);
+    getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
+    setFrameLoop(IDLE);
+    setAnimationSpeed(20);
+    setLoopMode(false);
+
+    experienceToLevelUp_ += experienceCurve(level);
+    earnExperience(currentExperience);
 
     state_ = STOPPING;
 }

@@ -66,9 +66,7 @@
 		<Unit filename="src\XBOX360Controller.cpp" />
 		<Unit filename="src\main.cpp" />
 		<Extensions>
-			<code_completion>
-				<search_path add="..\Codeblocks\MinGW\include\irrlicht" />
-			</code_completion>
+			<code_completion />
 			<debugger />
 		</Extensions>
 	</Project>

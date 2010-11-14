@@ -1,13 +1,14 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 #include "Item.h"
+#include "utils.h"
 #include <cstdlib>
 
 #define DEFAULT_WEAPON_MINDAMAGE 10
 #define DEFAULT_WEAPON_MAXDAMAGE 20
 #define DEFAULT_WEAPON_RANGE 10
-#define DEFAULT_WEAPON_ATTACKSPEED 10
-#define DEFAULT_WEAPON_ATTACKANGLE 30
+#define DEFAULT_WEAPON_ATTACKSPEED 30
+#define DEFAULT_WEAPON_ATTACKANGLE 60
 
 class Weapon : public Item {
     private:
@@ -22,12 +23,12 @@ class Weapon : public Item {
     public:
         int getMinDamage() { return minDamage_; }
         int getMaxDamage() { return maxDamage_; }
-        float getDamage() { return rand() % (maxDamage_ - minDamage_) + minDamage_; }
+        float getDamage() { return randomBetween(minDamage_, maxDamage_); }
         float getRange() { return range_; }
         float getAttackSpeed() { return attackSpeed_; }
         float getAttackAngle() { return attackAngle_;}
 
-        Weapon(string name,
+        Weapon(std::string name,
                int level = DEFAULT_ITEM_LEVEL,
                float minDamage = DEFAULT_WEAPON_MINDAMAGE,
                float maxDamage = DEFAULT_WEAPON_MAXDAMAGE,

@@ -1,9 +1,5 @@
 #include "Character.h"
 
-char * Character::getModelPath() {
-    return modelPath_;
-}
-
 float Character::heal(float value) {
     currentHP_ += value;
 
@@ -23,6 +19,8 @@ float Character::hurt(float value) {
     if (currentHP_ < 0)
         currentHP_ = 0;
 
+    healthBar_->fillPercentage = getHPPercentual();
+
     return value;
 }
 
@@ -30,19 +28,35 @@ bool Character::isAlive() {
     return currentHP_ > 0;
 }
 
-Character::Character(string name,
+void Character::render() {}
+
+const core::aabbox3d<f32>& Character::getBoundingBox() const {}
+
+Character::Character(ISceneNode * parent,
+                     ISceneManager * manager,
+                     std::string name,
                      char * modelPath,
                      int maxHP,
                      int level,
                      float moveSpeed)
-    : Node() {
+    : Node(), ISceneNode(parent, manager) {
+
+    cout << "Created node+iscenenode..." << endl;
+
     name_  = name;
-    modelPath_ = modelPath;
     level_ = level;
     maxHP_ = maxHP;
     moveSpeed_ = moveSpeed;
+    healthBar_ = new Bar(this, manager);
 
     fillHP();
+    IAnimatedMesh * mesh = getSceneManager()->getMesh(modelPath);
+    cout << "Got char mesh..." << endl;
+    setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh, this));
+    cout << "Set anim node as child..." << endl;
 }
 
-Character::~Character() {}
+Character::~Character() {
+    delete healthBar_;
+    remove();
+}
