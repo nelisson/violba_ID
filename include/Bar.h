@@ -3,7 +3,7 @@
 
 #include <irrlicht/irrlicht.h>
 
-#define DEFAULT_BAR_FILL_PERCENTAGE 20
+#define DEFAULT_BAR_FILL_PERCENTAGE 100
 
 #define DEFAULT_BAR_BORDER_COLOR     SColor(255, 0, 255, 255)
 #define DEFAULT_BAR_BACKGROUND_COLOR SColor(255, 0, 0, 0)
