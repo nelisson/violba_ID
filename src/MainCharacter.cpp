@@ -135,7 +135,7 @@ void MainCharacter::refresh() {
 
     cout << "Position X: " << getPosition().X << " Z: " << getPosition().Z << endl;
     cout << "Center X: " << center.X << " Z: " << center.Z << endl;
-    cout << "Size X: " << (center.X - getPosition().X)*2 << " Z:" << (center.Z - getPosition().Z)*2 << endl;
+    cout << "Size X: " << (center.X)*2 << " Z:" << (center.Z)*2 << endl;
 }
 
 bool MainCharacter::tryHitCheck() {

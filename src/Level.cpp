@@ -24,22 +24,15 @@ Level::Level(ISceneManager * manager)
                                                       scene::ETPS_17,				// patchSize
                                                       4);				// smoothFactor
 
-<<<<<<< HEAD
     terrain_->setMaterialFlag(video::EMF_LIGHTING, false);
-    //terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
-    terrain_->setMaterialTexture(1, driver->getTexture("./models/detailmap3.jpg"));
+    terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
+    //terrain_->setMaterialTexture(1, driver->getTexture("./models/detailmap3.jpg"));
     terrain_->setMaterialType(video::EMT_DETAIL_MAP);
     terrain_->scaleTexture(10.0f, 150.0f);
 
     cout << "Terrain X :" << terrain_->getTerrainCenter().X << " Z: " << terrain_->getTerrainCenter().Z << endl;
     cout << "Pos X :" << terrain_->getPosition().X << " Z: " << terrain_->getPosition().Z << endl;
-=======
-	terrain_->setMaterialFlag(video::EMF_LIGHTING, false);
-	terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
-	//terrain_->setMaterialTexture(1, driver->getTexture("./models/detailmap3.jpg"));
-	terrain_->setMaterialType(video::EMT_DETAIL_MAP);
-	terrain_->scaleTexture(10.0f, 150.0f);
->>>>>>> origin/master
+
 
     size_ = dimension2df(getPosition().X + terrain_->getTerrainCenter().X, getPosition().Z + terrain_->getTerrainCenter().Z);
     selector_ = getSceneManager()->createTerrainTriangleSelector(getTerrain());

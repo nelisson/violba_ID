@@ -1,36 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="All" />
-<<<<<<< HEAD
-	<File name="include\Level.h" open="1" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
-	</File>
-	<File name="include\MainCharacter.h" open="0" top="0" tabpos="2">
-		<Cursor position="491" topLine="0" />
-	</File>
-	<File name="src\Level.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="262" topLine="0" />
-	</File>
-	<File name="src\MainCharacter.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="0" topLine="0" />
-=======
-	<File name="include\Character.h" open="1" top="0" tabpos="3">
-		<Cursor position="1594" topLine="33" />
-	</File>
-	<File name="include\MainCharacter.h" open="1" top="0" tabpos="5">
-		<Cursor position="1828" topLine="54" />
-	</File>
-	<File name="include\Monster.h" open="1" top="0" tabpos="6">
-		<Cursor position="762" topLine="8" />
-	</File>
-	<File name="src\Game.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="1846" topLine="39" />
-	</File>
-	<File name="src\MainCharacter.cpp" open="1" top="1" tabpos="4">
-		<Cursor position="4013" topLine="112" />
-	</File>
-	<File name="src\main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="881" topLine="25" />
->>>>>>> origin/master
-	</File>
 </CodeBlocks_layout_file>
