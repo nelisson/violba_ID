@@ -123,14 +123,25 @@ void MainCharacter::refresh() {
     float jumpDelta = getJumpHeight() / (float)(middleFrame - getStartFrame());
     f32 timeBetweenFrames = getFrameNr() - lastFrameNumber;
 
+    irr::core::list<ISceneNodeAnimator*>::ConstIterator animIt = getAnimators().getLast();
+    ISceneNodeAnimatorCollisionResponse* anim = (ISceneNodeAnimatorCollisionResponse*) *animIt;
+
     if(getState() == JUMPING) {
-        if(getFrameNr() < middleFrame)
+        if(getFrameNr() < middleFrame) {
+            anim->setGravity(vector3df(0,0,0));
             moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
-        else
-            moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
+            lastFrameNumber = getFrameNr();
+            anim->setGravity(vector3df(0,-10.0f,0));
+        }
+        else {
+            //anim->setGravity(vector3df(0,-10.0f,0));
+            //if(middleFrame - lastFrameNumber > 0)
+                moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
+            lastFrameNumber = middleFrame;
+        }
+        //lastFrameNumber = getFrameNr();
         cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
         cout << "Height: " << getPosition().Y << endl;
-        lastFrameNumber = getFrameNr();
     }
     else
         lastFrameNumber = 102;
