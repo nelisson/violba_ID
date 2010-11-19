@@ -16,8 +16,8 @@ Level::Level(ISceneManager * manager)
                                                       scene::ETPS_17,				// patchSize
                                                       4);				// smoothFactor
 
-	terrain_->setMaterialFlag(video::EMF_LIGHTING, true);
-	//terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
+	terrain_->setMaterialFlag(video::EMF_LIGHTING, false);
+	terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
 	//terrain_->setMaterialTexture(1, driver->getTexture("./models/detailmap3.jpg"));
 	terrain_->setMaterialType(video::EMT_DETAIL_MAP);
 	terrain_->scaleTexture(10.0f, 150.0f);
