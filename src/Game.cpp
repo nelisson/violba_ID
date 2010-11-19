@@ -44,25 +44,10 @@ void Game::doActions() {
     cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
     cameras_[0]->setTarget(mainCharacter_->getPosition());
 
-    f32 startFrame = mainCharacter_->getStartFrame();
-    f32 currentFrame = mainCharacter_->getFrameNr();
-    f32 endFrame = mainCharacter_->getEndFrame();
-    f32 middleFrame = (endFrame + startFrame)/2;
+    mainCharacter_->refresh();
 
-    float jumpDelta = mainCharacter_->getJumpHeight() / (float)(endFrame - startFrame);
-
-    if(mainCharacter_->getState() == JUMPING) {
-        if(currentFrame < middleFrame)
-            mainCharacter_->setPosition(mainCharacter_->getPosition() + vector3df(0, jumpDelta * getElapsedTime(), 0));
-    }
-
-    if (mainCharacter_->getState() == ATTACK_STARTING) {
-
-        if ( (int)currentFrame == (int)middleFrame) {
-            cout << "Hits: " << attackMonsters() << endl;
-            mainCharacter_->setState(ATTACK_ENDING);
-        }
-    }
+    if (mainCharacter_->tryHitCheck())
+        cout << "Hits: " << attackMonsters();
 
     tryGeneratingMonster(DEFAULT_MONSTER_GENERATION_CHANCE_PER_FRAME);
     runMonstersAI();

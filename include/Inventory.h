@@ -2,7 +2,7 @@
 #define INVENTORY_H
 
 #include <vector>
-#include "slot.h"
+#include "Slot.h"
 
 #define DEFAULT_MAX_ITEMS 5
 

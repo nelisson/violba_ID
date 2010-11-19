@@ -3,10 +3,10 @@
 
 #include "Inventory.h"
 #include <irrlicht/irrlicht.h>
-#include "character.h"
+#include "Character.h"
 #include <iostream>
 #include "Utils.h"
-#include "weapon.h"
+#include "Weapon.h"
 
 #define WALK 0,14
 #define IDLE 205,250
@@ -70,11 +70,13 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         void earnExperience(int experience);
 
         void updateAttributes();
+        bool tryHitCheck();
 
         Weapon * getEquippedWeapon() { return equippedWeapon_; }
         virtual float getDamage();
         virtual bool walk(vector3df desl);
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
+        virtual void refresh();
 
         MainCharacter(ISceneNode* parent,
                       ISceneManager* manager,

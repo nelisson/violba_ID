@@ -116,6 +116,36 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
     state_ = STOPPING;
 }
 
+void MainCharacter::refresh() {
+    static f32 lastTimeBetweenFrames = 0;
+    f32 middleFrame = (getEndFrame() + getStartFrame())/2.0;
+
+    float jumpDelta = getJumpHeight() / (float)(getEndFrame() - getStartFrame());
+    float timeBetweenFrames = getFrameNr() - (int)getFrameNr() - lastTimeBetweenFrames;
+    lastTimeBetweenFrames = timeBetweenFrames;
+
+    if(getState() == JUMPING) {
+        if(getFrameNr() < middleFrame)
+            moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
+    }
+    else
+        lastTimeBetweenFrames = 0;
+}
+
+bool MainCharacter::tryHitCheck() {
+    f32 middleFrame = (getEndFrame() + getStartFrame())/2.0;
+
+    if (getState() == ATTACK_STARTING) {
+        if ( (int)getFrameNr() == (int)middleFrame) {
+            setState(ATTACK_ENDING);
+            return true;
+        }
+
+        return false;
+    }
+    return false;
+}
+
 MainCharacter::MainCharacter(ISceneNode * parent,
                              ISceneManager * manager,
                              char * name,

@@ -1,7 +1,7 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 #include "Item.h"
-#include "utils.h"
+#include "Utils.h"
 #include <cstdlib>
 
 #define DEFAULT_WEAPON_MINDAMAGE 10

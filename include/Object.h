@@ -1,7 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "node.h"
+#include "Node.h"
 
 class Object : public Node {
     private:

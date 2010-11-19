@@ -1,7 +1,7 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
-#include "character.h"
+#include "Character.h"
 
 #define DEFAULT_MONSTER_NAME "CuboDaMorte"
 #define DEFAULT_MONSTER_MESH "./models/teste.md2"
@@ -25,6 +25,7 @@ class Monster : public Character {
         virtual void levelUp();
         virtual float getDamage() { return DEFAULT_MONSTER_DAMAGE; };
         virtual bool walk(vector3df delta);
+        virtual void refresh() {}
 
         Monster(ISceneNode * parent,
                 ISceneManager * manager,
