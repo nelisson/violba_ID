@@ -70,11 +70,13 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         void earnExperience(int experience);
 
         void updateAttributes();
+        bool tryHitCheck();
 
         Weapon * getEquippedWeapon() { return equippedWeapon_; }
         virtual float getDamage();
         virtual bool walk(vector3df desl);
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
+        virtual void refresh();
 
         MainCharacter(ISceneNode* parent,
                       ISceneManager* manager,

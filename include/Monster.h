@@ -25,6 +25,7 @@ class Monster : public Character {
         virtual void levelUp();
         virtual float getDamage() { return DEFAULT_MONSTER_DAMAGE; };
         virtual bool walk(vector3df delta);
+        virtual void refresh() {}
 
         Monster(ISceneNode * parent,
                 ISceneManager * manager,

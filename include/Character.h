@@ -50,6 +50,7 @@ class Character : public Node, public ISceneNode {
         virtual float getDamage() = 0;
         virtual void levelUp() = 0;
         virtual bool walk(vector3df delta) = 0;
+        virtual void refresh() = 0;
 
         virtual void render();
         const core::aabbox3d<f32>& getBoundingBox() const;

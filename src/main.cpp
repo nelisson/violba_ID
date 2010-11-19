@@ -28,11 +28,6 @@ int main() {
     Game game(device->getSceneManager());
     device->setEventReceiver(game.getController());
 
-    MainCharacter * ninja          = game.getMainCharacter();
-    ICameraSceneNode * camera      = game.getCameras()[0];
-    ILightSceneNode * light        = game.getLights()[0];
-    XBOX360Controller * controller = game.getController();
-
 	core::array<SJoystickInfo> joystickInfo;
 	device->activateJoysticks(joystickInfo);
 
