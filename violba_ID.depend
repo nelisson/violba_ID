@@ -38,7 +38,11 @@
 	"XBOX360Controller.h"
 	<iostream>
 
+<<<<<<< HEAD
+1290110634 c:\dev-cpp\pcg\violba_id\include\maincharacter.h
+=======
 1290165440 c:\dev-cpp\pcg\violba_id\include\maincharacter.h
+>>>>>>> origin/master
 	"Inventory.h"
 	<irrlicht/irrlicht.h>
 	"character.h"
