@@ -16,6 +16,7 @@ using namespace irr::scene;
 class Character : public Node, public ISceneNode {
     private:
         std::string name_;
+        dimension2df size_;
         int level_;
         int maxHP_;
         float currentHP_;
@@ -26,6 +27,7 @@ class Character : public Node, public ISceneNode {
 
     public:
 
+        dimension2df getSize() { return size_; } 
         void fillHP();
         float heal(float value);
         float hurt(float value);

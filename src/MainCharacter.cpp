@@ -117,25 +117,25 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
 }
 
 void MainCharacter::refresh() {
-    static f32 lastTimeBetweenFrames = 0;
+    static f32 lastFrameNumber = getStartFrame();
     f32 middleFrame = (getEndFrame() + getStartFrame())/2.0;
 
-    float jumpDelta = getJumpHeight() / (float)(getEndFrame() - getStartFrame());
-    float timeBetweenFrames = getFrameNr() - (int)getFrameNr() - lastTimeBetweenFrames;
-    lastTimeBetweenFrames = timeBetweenFrames;
+    float jumpDelta = getJumpHeight() / (float)(middleFrame - getStartFrame());
+    float timeBetweenFrames = getFrameNr() - lastFrameNumber;
+    lastFrameNumber = getFrameNr();
 
     if(getState() == JUMPING) {
         if(getFrameNr() < middleFrame)
             moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
     }
     else
-        lastTimeBetweenFrames = 0;
+        lastFrameNumber = getStartFrame();
 
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
 
     cout << "Position X: " << getPosition().X << " Z: " << getPosition().Z << endl;
     cout << "Center X: " << center.X << " Z: " << center.Z << endl;
-    cout << "Size X: " << (center.X - getPosition().X)*2 << " Z:" << (center.Z - getPosition().Z)*2 << endl;
+    cout << "Size X: " << (center.X + getPosition().X)*2 << " Z:" << (center.Z + getPosition().Z)*2 << endl;
 }
 
 bool MainCharacter::tryHitCheck() {
