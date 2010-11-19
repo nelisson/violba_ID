@@ -128,7 +128,7 @@ void MainCharacter::refresh() {
             moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
         else
             moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
-        cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
+        //cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
         cout << "Height: " << getPosition().Y << endl;
         lastFrameNumber = getFrameNr();
     }
