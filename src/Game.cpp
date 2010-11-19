@@ -36,6 +36,7 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 
     delta.X =  speed * elapsedTime *  moveHorizontal;
     delta.Z = -1 * speed * elapsedTime *  moveVertical;
+    delta.Y = 0;
 
     thisptr->getMainCharacter()->walk(delta);
 }
@@ -134,7 +135,7 @@ Game::Game(ISceneManager * sceneManager) {
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-	ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), mainCharacter_, vector3df(5, 5, 5));
+	ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), mainCharacter_, vector3df(5, 5, 5), vector3df(0,0,0));
 	mainCharacter_->addAnimator(anim);
 
 	anim->drop();
