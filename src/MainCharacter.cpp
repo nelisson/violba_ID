@@ -78,10 +78,10 @@ void MainCharacter::updateAttributes() {
     agility_++;
 
     increaseMaxHP(5);
-    increaseMoveSpeed(3);
+    //increaseMoveSpeed(3);
 
-    speed_ += 3;
-    jumpHeight_ += 5;
+    //speed_ += 3;
+    //jumpHeight_ += 5;
     fillHP();
 }
 
@@ -108,7 +108,7 @@ void MainCharacter::earnExperience(int experience) {
 }
 
 long MainCharacter::experienceCurve(int level) {
-    return 980 + 20*level*level;
+    return 980 + 200*level*level;
 }
 
 void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
@@ -117,25 +117,29 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
 }
 
 void MainCharacter::refresh() {
-    static f32 lastFrameNumber = getStartFrame();
+    static f32 lastFrameNumber = 102;
     f32 middleFrame = (getEndFrame() + getStartFrame())/2.0;
 
     float jumpDelta = getJumpHeight() / (float)(middleFrame - getStartFrame());
-    float timeBetweenFrames = getFrameNr() - lastFrameNumber;
-    lastFrameNumber = getFrameNr();
+    f32 timeBetweenFrames = getFrameNr() - lastFrameNumber;
 
     if(getState() == JUMPING) {
         if(getFrameNr() < middleFrame)
             moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
+        else
+            moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
+        cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
+        cout << "Height: " << getPosition().Y << endl;
+        lastFrameNumber = getFrameNr();
     }
     else
-        lastFrameNumber = getStartFrame();
+        lastFrameNumber = 102;
 
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
 
-    cout << "Position X: " << getPosition().X << " Z: " << getPosition().Z << endl;
-    cout << "Center X: " << center.X << " Z: " << center.Z << endl;
-    cout << "Size X: " << (center.X)*2 << " Z:" << (center.Z)*2 << endl;
+    //cout << "Position X: " << getPosition().X << " Z: " << getPosition().Z << endl;
+    //cout << "Center X: " << center.X << " Z: " << center.Z << endl;
+    //cout << "Size X: " << (center.X)*2 << " Z:" << (center.Z)*2 << endl;
 }
 
 bool MainCharacter::tryHitCheck() {

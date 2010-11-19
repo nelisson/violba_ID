@@ -39,9 +39,9 @@ Character::Character(ISceneNode * parent,
                      int level,
                      float moveSpeed)
     : Node(), ISceneNode(parent, manager) {
-    
-    vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
-    size_  = dimension2df(getPosition().X + center.X, getPosition().Z + center.Z);
+
+    //vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
+    //size_  = dimension2df(getPosition().X + center.X, getPosition().Z + center.Z);
     name_  = name;
     level_ = level;
     maxHP_ = maxHP;
