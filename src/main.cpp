@@ -19,35 +19,34 @@ using namespace irr;
 using namespace scene;
 using namespace std;
 
-
 int main() {
 
-	IrrlichtDevice* device = createDevice(video::EDT_OPENGL,
-			RESOLUTION, 32, false, false, false);
+    IrrlichtDevice* device = createDevice(video::EDT_OPENGL,
+            RESOLUTION, 32, false, false, false);
 
     Game game(device->getSceneManager());
     device->setEventReceiver(game.getController());
 
-	core::array<SJoystickInfo> joystickInfo;
-	device->activateJoysticks(joystickInfo);
+    core::array<SJoystickInfo> joystickInfo;
+    device->activateJoysticks(joystickInfo);
 
     core::stringw programName = PROGRAM_NAME;
-	device->setWindowCaption(programName.c_str());
+    device->setWindowCaption(programName.c_str());
 
-	u32 then = device->getTimer()->getTime();
+    u32 then = device->getTimer()->getTime();
 
-	while(device->run()) {
+    while (device->run()) {
         game.doActions();
 
-		u32 now = device->getTimer()->getTime();
-		game.setElapsedTime((f32)(now - then) / 1000.f);
-		then = now;
+        u32 now = device->getTimer()->getTime();
+        game.setElapsedTime((f32) (now - then) / 1000.f);
+        then = now;
 
         device->getVideoDriver()->beginScene(true, true, 0);
-		game.getSceneManager()->drawAll();
-		device->getVideoDriver()->endScene();
-	}
+        game.getSceneManager()->drawAll();
+        device->getVideoDriver()->endScene();
+    }
 
-	device->drop();
-	return 0;
+    device->drop();
+    return 0;
 }

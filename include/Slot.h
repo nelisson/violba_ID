@@ -1,7 +1,7 @@
 #ifndef SLOT_H
 #define SLOT_H
 
-#include "item.h"
+#include "Item.h"
 
 class Slot {
     private:

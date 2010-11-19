@@ -3,10 +3,10 @@
 
 #include "Inventory.h"
 #include <irrlicht/irrlicht.h>
-#include "character.h"
+#include "Character.h"
 #include <iostream>
 #include "Utils.h"
-#include "weapon.h"
+#include "Weapon.h"
 
 #define WALK 0,14
 #define IDLE 205,250
@@ -30,6 +30,7 @@
 #define STARTING_LEVEL       1
 #define STARTING_JUMP_HEIGHT 30
 
+using namespace std;
 using namespace irr;
 using namespace irr::scene;
 

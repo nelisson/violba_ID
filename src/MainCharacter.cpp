@@ -130,6 +130,12 @@ void MainCharacter::refresh() {
     }
     else
         lastTimeBetweenFrames = 0;
+
+    vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
+
+    cout << "Position X: " << getPosition().X << " Z: " << getPosition().Z << endl;
+    cout << "Center X: " << center.X << " Z: " << center.Z << endl;
+    cout << "Size X: " << (center.X - getPosition().X)*2 << " Z:" << (center.Z - getPosition().Z)*2 << endl;
 }
 
 bool MainCharacter::tryHitCheck() {

@@ -4,8 +4,8 @@
 #include <string>
 #include <irrlicht/irrlicht.h>
 #include <iostream>
-#include "node.h"
-#include "bar.h"
+#include "Node.h"
+#include "Bar.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
 #define DEFAULT_CHARACTER_MOVESPEED 60
@@ -53,7 +53,7 @@ class Character : public Node, public ISceneNode {
         virtual void refresh() = 0;
 
         virtual void render();
-        const core::aabbox3d<f32>& getBoundingBox() const;
+        virtual const core::aabbox3d<f32>& getBoundingBox() const { }
 
         Character(ISceneNode * parent,
                   ISceneManager * manager,

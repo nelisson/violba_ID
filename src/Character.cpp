@@ -30,7 +30,6 @@ bool Character::isAlive() {
 
 void Character::render() {}
 
-const core::aabbox3d<f32>& Character::getBoundingBox() const {}
 
 Character::Character(ISceneNode * parent,
                      ISceneManager * manager,
