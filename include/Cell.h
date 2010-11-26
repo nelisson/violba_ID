@@ -11,8 +11,7 @@ class Cell {
     protected:
         
     public:
-        void occupy() { occupied_ = true; }
-        void disoccupy() { occupied_ = false; }
+        void occupy(bool occupation) { occupied_ = occupation; }
 
         bool isOccupied() { return occupied_; }
         bool hasItem() { return item_; }

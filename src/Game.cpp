@@ -3,10 +3,10 @@
 void Game::addMonster(Monster * monster) {
     monsters_.push_back(monster);
 
-	ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), monster, core::vector3df(5, 5, 5));
-	monster->addAnimator(anim);
+    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), monster, core::vector3df(5, 5, 5));
+    monster->addAnimator(anim);
 
-	anim->drop();
+    anim->drop();
 }
 
 vector<Monster*>::iterator Game::removeMonster(vector<Monster*>::iterator monster) {
@@ -33,8 +33,8 @@ void Game::moveCharacter(void* userData, vector2df desl) {
     float speed = thisptr->getMainCharacter()->getMoveSpeed();
     f32 elapsedTime = thisptr->getElapsedTime();
 
-    delta.X =  speed * elapsedTime *  moveHorizontal;
-    delta.Z = -1 * speed * elapsedTime *  moveVertical;
+    delta.X = speed * elapsedTime * moveHorizontal;
+    delta.Z = -1 * speed * elapsedTime * moveVertical;
     delta.Y = 0;
 
     thisptr->getMainCharacter()->walk(delta);
@@ -57,7 +57,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 
     cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage()) << endl;
 
-    if (!(*monster)->isAlive() ) {
+    if (!(*monster)->isAlive()) {
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         delete (*monster);
         return --(removeMonster(monster));
@@ -73,8 +73,8 @@ int Game::attackMonsters() {
     vector3df characterToMonster;
 
     vector3df characterForward = characterRotation.rotationToDirection();
-    vector3df rightAttackLimit = vector3df(0, - mainCharacter_->getEquippedWeapon()->getAttackAngle()/2, 0).rotationToDirection(characterForward);
-    vector3df leftAttackLimit = vector3df(0, mainCharacter_->getEquippedWeapon()->getAttackAngle()/2, 0).rotationToDirection(characterForward);
+    vector3df rightAttackLimit = vector3df(0, -mainCharacter_->getEquippedWeapon()->getAttackAngle() / 2, 0).rotationToDirection(characterForward);
+    vector3df leftAttackLimit = vector3df(0, mainCharacter_->getEquippedWeapon()->getAttackAngle() / 2, 0).rotationToDirection(characterForward);
 
     vector<Monster*>::iterator monster;
     for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
@@ -84,7 +84,7 @@ int Game::attackMonsters() {
 
             characterToMonster = monsterPosition - characterPosition;
             if (rightAttackLimit.crossProduct(characterToMonster).Y > 0 &&
-                leftAttackLimit.crossProduct(characterToMonster).Y < 0) {
+                    leftAttackLimit.crossProduct(characterToMonster).Y < 0) {
 
                 monster = attackMonster(monster);
                 hitCounter++;
@@ -100,8 +100,8 @@ void Game::tryGeneratingMonster(int chancePercent) {
         Monster * newMonster = new Monster(level_, sceneManager_, "Dwarf da morte", "./models/dwarf.x");
         addMonster(newMonster);
         newMonster->setPosition(vector3df(randomBetween(-150, 150),
-                                          0.0,
-                                          randomBetween(-150, 150)));
+                0.0,
+                randomBetween(-150, 150)));
     }
 }
 
@@ -121,23 +121,25 @@ void Game::runMonstersAI() {
 }
 
 Game::Game(ISceneManager * sceneManager) {
-    sceneManager_  = sceneManager;
-    level_         = new Level(sceneManager);
-    controller_    = new XBOX360Controller();
+    sceneManager_ = sceneManager;
+    level_ = new Level(sceneManager);
+    controller_ = new XBOX360Controller();
     mainCharacter_ = new MainCharacter(level_, sceneManager);
 
+    grid_.fillCell()
+
     lights_.push_back(getSceneManager()->addLightSceneNode());
-	cameras_.push_back(getSceneManager()->addCameraSceneNode(0, DEFAULT_CAMERA_POSITION));
-	cameras_[0]->setTarget(mainCharacter_->getPosition());
+    cameras_.push_back(getSceneManager()->addCameraSceneNode(0, DEFAULT_CAMERA_POSITION));
+    cameras_[0]->setTarget(mainCharacter_->getPosition());
 
     setCallbacks();
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-	ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), mainCharacter_, vector3df(5, 5, 5));
-	mainCharacter_->addAnimator(anim);
+    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), mainCharacter_, vector3df(5, 5, 5));
+    mainCharacter_->addAnimator(anim);
 
-	anim->drop();
+    anim->drop();
 }
 
 Game::~Game() {

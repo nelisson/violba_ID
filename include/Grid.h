@@ -7,6 +7,11 @@
 
 using namespace irr::core;
 
+enum CellAttributes {
+    ITEM = 1,
+    CHARACTER = 1 << 1,
+};
+
 class Grid {
     private:
         Cell** grid_;
@@ -16,8 +21,9 @@ class Grid {
 
     public:
         void mapTerrain(Level* level);
-        void mapObstacles(Level* level);
-        void mapObstables(Character* character);
+        void fillCell(position2di position, bool occupied);
+        void fillCell(position2di position, Item* item);
+        void fillCell(position2di position, bool occupied, Item* item);
 
         Grid();
         Grid(const Grid& orig);
