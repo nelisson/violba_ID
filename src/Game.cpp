@@ -13,7 +13,6 @@ vector<Monster*>::iterator Game::removeMonster(vector<Monster*>::iterator monste
     return monsters_.erase(monster);
 }
 
-
 void Game::setCallbacks() {
     controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
     controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);

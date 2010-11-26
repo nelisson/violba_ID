@@ -1,9 +1,9 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "Node.h"
+#include "AnimatedNode.h"
 
-class Object : public Node {
+class Object : public AnimatedNode {
     private:
 
     protected:

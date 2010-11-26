@@ -4,6 +4,7 @@
 #include "MainCharacter.h"
 #include "Monster.h"
 #include "Level.h"
+#include "Grid.h"
 #include "XBOX360Controller.h"
 #include <iostream>
 
@@ -21,6 +22,7 @@ using namespace irr::core;
 class Game {
     private:
         ISceneManager * sceneManager_;
+        Grid grid_;
 
         Level * level_;
         XBOX360Controller * controller_;

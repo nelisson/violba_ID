@@ -4,7 +4,7 @@
 #include <string>
 #include <irrlicht/irrlicht.h>
 #include <iostream>
-#include "Node.h"
+#include "AnimatedNode.h"
 #include "Bar.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
@@ -13,7 +13,7 @@
 using namespace std;
 using namespace irr::scene;
 
-class Character : public Node, public ISceneNode {
+class Character : public AnimatedNode, public ISceneNode {
     private:
         std::string name_;
         dimension2df size_;
@@ -27,6 +27,7 @@ class Character : public Node, public ISceneNode {
 
     public:
 
+        void setSize(dimension2df size) { size_ = size; }
         dimension2df getSize() { return size_; } 
         void fillHP();
         float heal(float value);

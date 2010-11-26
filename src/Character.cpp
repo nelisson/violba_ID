@@ -38,7 +38,7 @@ Character::Character(ISceneNode * parent,
                      int maxHP,
                      int level,
                      float moveSpeed)
-    : Node(), ISceneNode(parent, manager) {
+    : AnimatedNode(), ISceneNode(parent, manager) {
 
     //vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
     //size_  = dimension2df(getPosition().X + center.X, getPosition().Z + center.Z);
@@ -51,6 +51,10 @@ Character::Character(ISceneNode * parent,
     fillHP();
     IAnimatedMesh * mesh = getSceneManager()->getMesh(modelPath);
     setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh, this));
+
+    vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
+    f32 x = max_(center.X, center.Z);
+    setSize(dimension2df(2 * x, 2 * center.Y));
 }
 
 Character::~Character() {
