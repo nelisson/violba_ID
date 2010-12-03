@@ -112,6 +112,7 @@ long MainCharacter::experienceCurve(int level) {
 }
 
 void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
+   // if (getSceneManager()->getTerrainSceneNode()-> )
     node->setFrameLoop(IDLE);
     state_ = STOPPING;
 }
@@ -184,7 +185,7 @@ agility_(agility),
 jumpHeight_(jumpHeight) {
 
     equippedWeapon_ = new Weapon("Espada");
-
+    
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setFrameLoop(IDLE);

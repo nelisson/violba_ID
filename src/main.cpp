@@ -35,6 +35,9 @@ int main() {
 
     u32 then = device->getTimer()->getTime();
 
+    cout << "Char size X: " << game.getMainCharacter()->getSize().Width << " Y:" << game.getMainCharacter()->getSize().Height << endl;
+
+
     while (device->run()) {
         game.doActions();
 
@@ -50,3 +53,5 @@ int main() {
     device->drop();
     return 0;
 }
+
+

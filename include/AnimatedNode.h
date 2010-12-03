@@ -6,12 +6,12 @@
 using namespace irr;
 using namespace irr::scene;
 
-class Node {
+class AnimatedNode {
     private:
         IAnimatedMeshSceneNode * node_;
 
     protected:
-        Node();
+        AnimatedNode();
 
     public:
         IAnimatedMeshSceneNode * getAnimatedNode() { return node_; };
@@ -26,7 +26,7 @@ class Node {
         void setLoopMode (bool playAnimationLooped) { node_->setLoopMode(playAnimationLooped); }
         // Wrapper node
 
-        virtual ~Node();
+        virtual ~AnimatedNode();
 };
 
 #endif // NODE_H
