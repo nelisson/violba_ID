@@ -44,12 +44,19 @@ void Game::doActions() {
     cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
     cameras_[0]->setTarget(mainCharacter_->getPosition());
 
-    mainCharacter_->refresh();
+    if(mainCharacter_->isAlive())
+        mainCharacter_->refresh();
 
     if (mainCharacter_->tryHitCheck())
         cout << "Hits: " << attackMonsters();
 
-    tryGeneratingMonster(DEFAULT_MONSTER_GENERATION_CHANCE_PER_FRAME);
+    time_t currentTime;
+    time(&currentTime);
+    if (difftime(currentTime, lastSpawn_) >= DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS) {
+        tryGeneratingMonster(DEFAULT_MONSTER_GENERATION_CHANCE);
+        lastSpawn_ = currentTime;
+    }
+
     runMonstersAI();
 }
 
@@ -59,6 +66,26 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 
     if (!(*monster)->isAlive()) {
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
+
+        try {
+            cout<<"Vo dropa."<<endl;
+            Item droppedItem = itemGenerator_.dropItem(100);
+            cout<<"DropedItem OK."<<endl;
+            Item * item = new Item(droppedItem,
+                                   level_, getSceneManager());
+            
+            cout<<"ItemCopy OK."<<endl;
+
+            position2di position = (*monster)->getGridPosition();
+            cout<<"PositionGridGet OK."<<endl;
+
+            grid_.fillCell((*monster)->getGridPosition(), item);
+            cout<<"CellFill OK."<<endl;
+        }
+        catch (exception e) {
+            cout << "catch" << endl;
+        }
+
         delete (*monster);
         return --(removeMonster(monster));
     }
@@ -66,7 +93,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
     return monster;
 }
 
-void Game::attackMainCharacter(float damage){
+void Game::attackMainCharacter(float damage) {
     cout << "Main Character damage: " << mainCharacter_->hurt(damage) <<endl;
 }
 
@@ -131,19 +158,59 @@ void Game::runMonstersAI() {
     }
 }
 
+vector<Weapon> Game::loadWeapons(){
+    vector<Weapon> weapons;
+
+    weapons.push_back(Weapon(NULL, NULL, "Arma 1"));
+    weapons.push_back(Weapon(NULL, NULL, "Arma 2"));
+    weapons.push_back(Weapon(NULL, NULL, "Arma 3"));
+    weapons.push_back(Weapon(NULL, NULL, "Arma 4"));
+    
+    return weapons;
+}
+
+vector<Armor> Game::loadArmors(){
+    vector<Armor> armors;
+    
+    armors.push_back(Armor(NULL, NULL, "Armor 1"));
+    armors.push_back(Armor(NULL, NULL, "Armor 2"));
+    armors.push_back(Armor(NULL, NULL, "Armor 3"));
+
+    return armors;
+}
+
+vector<Item> Game::createItems() {
+    vector<Item> result;
+
+    vector<Weapon> weapons = loadWeapons();
+    vector<Armor> armors = loadArmors();
+
+    result.insert(result.end(), weapons.begin(), weapons.end());
+    result.insert(result.end(), armors.begin(), armors.end());
+
+    return result;
+}
+
 Game::Game(ISceneManager * sceneManager) {
     sceneManager_ = sceneManager;
     level_ = new Level(sceneManager);
+    cout << "Level created." << endl;
     controller_ = new XBOX360Controller();
+    cout << "Controller created." << endl;
     mainCharacter_ = new MainCharacter(level_, sceneManager);
+    cout << "Char created." << endl;
+    grid_ = Grid(level_);
 
-    
+    cout << "Grid Created." << endl;
+
+    time(&lastSpawn_);
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
     cameras_.push_back(getSceneManager()->addCameraSceneNode(0, DEFAULT_CAMERA_POSITION));
     cameras_[0]->setTarget(mainCharacter_->getPosition());
 
     setCallbacks();
+    itemGenerator_.loadItems(createItems());
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 

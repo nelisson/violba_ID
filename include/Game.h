@@ -6,14 +6,18 @@
 #include "Level.h"
 #include "Grid.h"
 #include "XBOX360Controller.h"
+#include "ItemGenerator.h"
 #include <iostream>
+#include <ctime>
 
 #define DEFAULT_CAMERA_X 0
 #define DEFAULT_CAMERA_Y 35
 #define DEFAULT_CAMERA_Z -40
 #define DEFAULT_CAMERA_POSITION vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)
+#define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 10
 
-#define DEFAULT_MONSTER_GENERATION_CHANCE_PER_FRAME 1
+#define DEFAULT_MONSTER_GENERATION_CHANCE 100
+#define DEFAULT_ITEM_GENERATION_CHANCE 60
 
 using namespace std;
 using namespace irr::scene;
@@ -22,6 +26,7 @@ using namespace irr::core;
 class Game {
     private:
         ISceneManager * sceneManager_;
+        ItemGenerator itemGenerator_;
         Grid grid_;
 
         Level * level_;
@@ -33,6 +38,7 @@ class Game {
         vector<ILightSceneNode*> lights_;
 
         f32 elapsedTime_;
+        time_t lastSpawn_;
 
     protected:
 
@@ -52,6 +58,10 @@ class Game {
         vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
 
 
+        vector<Weapon> loadWeapons();
+        vector<Armor> loadArmors();
+        vector<Item> createItems();
+        
         void setCallbacks();
         void doActions();
         vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);

@@ -9,6 +9,19 @@ bool Monster::walk(vector3df delta) {
     setRotation( vector3df(0.0, -angle, 0.0));
 }
 
+void Monster::die() {
+    if (getState() != DYING) {
+        setFrameLoop(ANIM_1);
+        setState(DYING);
+    }
+}
+
+void Monster::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
+    if (getState() == DYING) {
+        setFrameLoop(ANIM_1);
+    }
+}
+
 bool Monster::canAttack() {
 
     time_t currentTime;

@@ -1,13 +1,18 @@
 #include "Weapon.h"
 
-Weapon::Weapon(string name,
-               int level,
+Weapon::Weapon(ISceneNode * parent,
+               ISceneManager * manager,
+               std::string name,
+               char * modelPath,
                float minDamage,
                float maxDamage,
                int range,
                float attackSpeed,
                float attackAngle)
-    : Item(name, level) {
+    : Item(parent,
+           manager,
+           name,
+           modelPath) {
 
     minDamage_ = minDamage;
     maxDamage_ = maxDamage;

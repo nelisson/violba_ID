@@ -23,7 +23,7 @@ bool MainCharacter::walk(vector3df desl) {
 
 void MainCharacter::slash(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(SLASH);
         thisptr->setAnimationSpeed(thisptr->getEquippedWeapon()->getAttackSpeed());
         thisptr->setState(ATTACK_STARTING);
@@ -32,7 +32,7 @@ void MainCharacter::slash(void * userData) {
 
 void MainCharacter::kick(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(KICK);
         thisptr->setState(ATTACK_STARTING);
     }
@@ -40,7 +40,7 @@ void MainCharacter::kick(void * userData) {
 
 void MainCharacter::spin(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(SPIN);
         thisptr->setAnimationSpeed(thisptr->getEquippedWeapon()->getAttackSpeed());
         thisptr->setState(ATTACK_STARTING);
@@ -55,7 +55,7 @@ void MainCharacter::stop(void *userData, vector2df direction) {
 
 void MainCharacter::jump(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(JUMP);
         thisptr->setState(JUMPING);
     }
@@ -72,6 +72,13 @@ void MainCharacter::levelUp() {
     }
 }
 
+void MainCharacter::die() {
+    if (getState() != DYING) {
+        setFrameLoop(DEATH_BACKWARDS);
+        setState(DYING);
+    }
+}
+
 void MainCharacter::updateAttributes() {
     strength_++;
     vitality_++;
@@ -83,10 +90,6 @@ void MainCharacter::updateAttributes() {
     //speed_ += 3;
     //jumpHeight_ += 5;
     fillHP();
-}
-
-void MainCharacter::setState(State state) {
-    state_ = state;
 }
 
 float MainCharacter::getDamage() {
@@ -112,9 +115,14 @@ long MainCharacter::experienceCurve(int level) {
 }
 
 void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
-   // if (getSceneManager()->getTerrainSceneNode()-> )
-    node->setFrameLoop(IDLE);
-    state_ = STOPPING;
+    if (getState() == DYING) {
+        cout << "GameOver" << endl;
+        exit(1);
+    }
+    else {
+        node->setFrameLoop(IDLE);
+        state_ = STOPPING;
+    }
 }
 
 void MainCharacter::refresh() {
@@ -127,23 +135,31 @@ void MainCharacter::refresh() {
     irr::core::list<ISceneNodeAnimator*>::ConstIterator animIt = getAnimators().getLast();
     ISceneNodeAnimatorCollisionResponse* anim = (ISceneNodeAnimatorCollisionResponse*) * animIt;
 
-    if (getState() == JUMPING) {
-        if (getFrameNr() < middleFrame) {
-            anim->setGravity(vector3df(0, 0, 0));
-            moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
-            lastFrameNumber = getFrameNr();
-            anim->setGravity(vector3df(0, -10.0f, 0));
-        } else {
-            //anim->setGravity(vector3df(0,-10.0f,0));
-            //if(middleFrame - lastFrameNumber > 0)
-            moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
-            lastFrameNumber = middleFrame;
+    switch (getState()) {
+        case JUMPING: {
+            if (getFrameNr() < middleFrame) {
+                anim->setGravity(vector3df(0, 0, 0));
+                moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
+                lastFrameNumber = getFrameNr();
+                anim->setGravity(vector3df(0, -10.0f, 0));
+            }         
+            else {
+                //anim->setGravity(vector3df(0,-10.0f,0));
+                //if(middleFrame - lastFrameNumber > 0)
+                moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
+                lastFrameNumber = middleFrame;
+            }
+            //lastFrameNumber = getFrameNr();
+            //        cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
+            cout << "Height: " << getPosition().Y << endl;
+
+            break;
         }
-        //lastFrameNumber = getFrameNr();
-        //        cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
-        cout << "Height: " << getPosition().Y << endl;
-    } else
-        lastFrameNumber = 102;
+
+        default: {
+            lastFrameNumber = 102;
+        }
+    }
 
 //    vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
 
@@ -184,8 +200,10 @@ strength_(strength),
 agility_(agility),
 jumpHeight_(jumpHeight) {
 
-    equippedWeapon_ = new Weapon("Espada");
-    
+    cout<<"CreatingSword"<<endl;
+    equippedWeapon_ = new Weapon(NULL, NULL, "Espada");
+    cout<<"CreatedSword"<<endl;
+
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setFrameLoop(IDLE);

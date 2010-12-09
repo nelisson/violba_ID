@@ -8,12 +8,14 @@
 #include "Utils.h"
 #include "Weapon.h"
 
-#define WALK 0,14
-#define IDLE 205,250
-#define SPIN 45,59
+#define WALK  0,14
+#define IDLE  205,250
+#define SPIN  45,59
 #define PUNCH 31,45
-#define KICK 73,83
+#define KICK  73,83
 #define SLASH 58,68
+#define DEATH_BACKWARDS 165,172
+#define DEATH_FORWARDS  173,182
 //#define JUMP 94,102 // with height
 #define JUMP 102,111  // without height
 
@@ -34,9 +36,7 @@ using namespace std;
 using namespace irr;
 using namespace irr::scene;
 
-enum State{
-    MOVING, STOPPING, ATTACK_STARTING, ATTACK_ENDING, JUMPING, DIEING
-};
+
 
 
 class MainCharacter : public Character, public IAnimationEndCallBack {
@@ -47,7 +47,6 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         int vitality_, strength_, agility_;
         long currentExperience_;
         long experienceToLevelUp_;
-        State state_;
         f32 speed_;
         float jumpHeight_;
 
@@ -64,9 +63,6 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
 
         virtual void levelUp();
 
-        State getState() { return state_; }
-        void setState(State state);
-
         float getJumpHeight() {return jumpHeight_; }
         void earnExperience(int experience);
 
@@ -76,6 +72,7 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         Weapon * getEquippedWeapon() { return equippedWeapon_; }
         virtual float getDamage();
         virtual bool walk(vector3df desl);
+        virtual void die();
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual void refresh();
 

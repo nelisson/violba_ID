@@ -2,6 +2,8 @@
 #define WEAPON_H
 #include "Item.h"
 #include "Utils.h"
+
+#include <irrlicht/irrlicht.h>
 #include <cstdlib>
 
 #define DEFAULT_WEAPON_MINDAMAGE 10
@@ -9,6 +11,10 @@
 #define DEFAULT_WEAPON_RANGE 10
 #define DEFAULT_WEAPON_ATTACKSPEED 30
 #define DEFAULT_WEAPON_ATTACKANGLE 60
+#define DEFAULT_WEAPON_MESH_PATH "./models/sword.x"
+
+using namespace irr;
+using namespace irr::scene;
 
 class Weapon : public Item {
     private:
@@ -26,10 +32,12 @@ class Weapon : public Item {
         float getDamage() { return randomBetween(minDamage_, maxDamage_); }
         float getRange() { return range_; }
         float getAttackSpeed() { return attackSpeed_; }
-        float getAttackAngle() { return attackAngle_;}
+        float getAttackAngle() { return attackAngle_; }
 
-        Weapon(std::string name,
-               int level = DEFAULT_ITEM_LEVEL,
+        Weapon(ISceneNode * parent,
+               ISceneManager * manager,
+               std::string name,
+               char * modelPath = DEFAULT_WEAPON_MESH_PATH,
                float minDamage = DEFAULT_WEAPON_MINDAMAGE,
                float maxDamage = DEFAULT_WEAPON_MAXDAMAGE,
                int range = DEFAULT_WEAPON_RANGE,

@@ -15,6 +15,8 @@ enum CellAttributes {
 class Grid {
     private:
         Cell** grid_;
+        int sizeX_;
+        int sizeY_;
 
     protected:
 
@@ -25,8 +27,8 @@ class Grid {
         void fillCell(position2di position, Item* item);
         void fillCell(position2di position, bool occupied, Item* item);
 
-        Grid();
-        Grid(const Grid& orig);
+        Grid() {};
+        Grid(Level* level);
         virtual ~Grid();
 
 

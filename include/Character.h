@@ -13,11 +13,21 @@
 using namespace std;
 using namespace irr::scene;
 
+enum State{
+    MOVING, 
+    STOPPING,
+    ATTACK_STARTING,
+    ATTACK_ENDING,
+    JUMPING,
+    DYING,
+};
+
 class Character : public AnimatedNode, public ISceneNode {
     private:
 
     protected:
 
+        State state_;
         std::string name_;
         dimension2df size_;
         int level_;
@@ -27,6 +37,11 @@ class Character : public AnimatedNode, public ISceneNode {
         Bar * healthBar_;
 
     public:
+
+        State getState() { return state_; }
+        void setState(State state) { state_ = state; }
+
+        position2di getGridPosition();
 
         void setSize(dimension2df size) { size_ = size; }
         dimension2df getSize() { return size_; } 
@@ -44,8 +59,6 @@ class Character : public AnimatedNode, public ISceneNode {
         void setMaxHP(int maxHP) { maxHP_ = maxHP; }
         void increaseMaxHP(int maxHPIncrease) { maxHP_ += maxHPIncrease; }
 
-        float chp() {return currentHP_; } 
-
         int getLevel() { return level_; }
         void setLevel(int level) { level_ = level; }
         void addLevels(int levels) { level_+= levels; }
@@ -56,6 +69,7 @@ class Character : public AnimatedNode, public ISceneNode {
         virtual float getDamage() = 0;
         virtual void levelUp() = 0;
         virtual bool walk(vector3df delta) = 0;
+        virtual void die() = 0;
         virtual void refresh() = 0;
 
         virtual void render();

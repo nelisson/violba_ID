@@ -6,6 +6,14 @@ void Grid::fillCell(position2di position, bool occupied) {
 }
 
 void Grid::fillCell(position2di position, Item* item) {
+    
+
+    position+=position2di(sizeX_, sizeY_);
+
+    cout<<"X: "<<position.X<<" Y: "<< position.Y<<endl;
+
+    cout<<"XSize: "<<sizeX_<<" YSize: "<< sizeY_<<endl;
+
     grid_[position.X][position.Y].putItem(item);
 }
 
@@ -15,15 +23,16 @@ void Grid::fillCell(position2di position, bool occupied, Item* item){
 }
 
 void Grid::mapTerrain(Level* level) {
-    int sizeY = level->getSize().Height;
-    int sizeX = level->getSize().Width;
+    sizeY_ = level->getSize().Height;
+    sizeX_ = level->getSize().Width;
 
-    grid_ = new Cell*[sizeY];
-    for (int i = 0; i < sizeY; i++)
-        grid_[i] = new Cell[sizeX];
+    grid_ = new Cell*[sizeY_];
+    for (int i = 0; i < sizeY_; i++)
+        grid_[i] = new Cell[sizeX_];
 }
 
-Grid::Grid() {
+Grid::Grid(Level* level) {
+    mapTerrain(level);
 }
 
 Grid::~Grid() {

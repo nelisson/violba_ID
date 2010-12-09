@@ -16,7 +16,7 @@ Level::Level(ISceneManager * manager)
     terrain_ = getSceneManager()->addTerrainSceneNode("./models/heightmap.bmp",
                                                       getSceneManager()->getRootSceneNode(),					// parent node
                                                       -1,					// node id
-                                                      core::vector3df(-1000.f, -10.f,   -800.f),		// position
+                                                      core::vector3df(-2000.f, -100.f, -2000.f),		// position
                                                       core::vector3df(0.f, 0.f, 0.f),		// rotation
                                                       core::vector3df(40.f, 3.0f, 40.f),	// scale
                                                       video::SColor ( 255, 255, 255, 255 ),	// vertexColor
@@ -33,8 +33,8 @@ Level::Level(ISceneManager * manager)
     cout << "Terrain X :" << terrain_->getTerrainCenter().X << " Z: " << terrain_->getTerrainCenter().Z << endl;
     cout << "Pos X :" << terrain_->getPosition().X << " Z: " << terrain_->getPosition().Z << endl;
 
-
-    size_ = dimension2df(getPosition().X + terrain_->getTerrainCenter().X, getPosition().Z + terrain_->getTerrainCenter().Z);
+    vector3df size = 2* (terrain_->getTerrainCenter() - terrain_->getPosition());
+    size_ = dimension2df(size.X, size.Z);
     selector_ = getSceneManager()->createTerrainTriangleSelector(getTerrain());
 
     setAutomaticCulling(irr::scene::EAC_OFF);

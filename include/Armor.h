@@ -1,9 +1,15 @@
 #ifndef ARMOR_H
 #define ARMOR_H
 
+#define DEFAULT_ARMOR_MESH_PATH "./models/sword.x"
+
+#include <irrlicht/irrlicht.h>
 #include "Item.h"
 
 enum weightClass{light, normal, heavy};
+
+using namespace irr;
+using namespace irr::scene;
 
 class Armor : public Item {
     private:
@@ -13,8 +19,11 @@ class Armor : public Item {
     protected:
 
     public:
+        Armor(ISceneNode * parent,
+              ISceneManager * manager,
+              std::string name,
+              char * modelPath = DEFAULT_ARMOR_MESH_PATH);
 
-        Armor(string name, int level = DEFAULT_ITEM_LEVEL);
         virtual ~Armor();
 };
 
