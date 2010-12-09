@@ -9,6 +9,21 @@ bool Monster::walk(vector3df delta) {
     setRotation( vector3df(0.0, -angle, 0.0));
 }
 
+bool Monster::canAttack() {
+
+    time_t currentTime;
+    time(&currentTime);
+
+    //cout << "Difftime: " << difftime(currentTime, attackStart_) << endl;
+
+    return (difftime(currentTime, attackStart_) >= 2);
+}
+
+void Monster::attack() {
+
+    time(&attackStart_);
+}
+
 Monster::Monster(ISceneNode * parent,
                  ISceneManager * manager,
                  std::string name,
@@ -17,11 +32,18 @@ Monster::Monster(ISceneNode * parent,
                  int maxHP,
                  int range,
                  int level,
-                 float moveSpeed)
+                 float moveSpeed,
+                 float attackSpeed,
+                 float minDamage,
+                 float maxDamage)
     : Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
       experienceGiven_(experienceGiven),
       range_(range) {
 
+    time(&attackStart_);
+    minDamage_ = minDamage;
+    maxDamage_ = maxDamage;
+    attackSpeed_ = attackSpeed;
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setAnimationSpeed(30);
     setLoopMode(false);

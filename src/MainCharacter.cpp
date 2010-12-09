@@ -178,7 +178,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
         int agility,
         float moveSpeed,
         float jumpHeight)
-: Character(parent, manager, name, modelPath, level, maxHP, moveSpeed),
+: Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
 vitality_(vitality),
 strength_(strength),
 agility_(agility),

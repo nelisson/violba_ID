@@ -13,7 +13,7 @@
 #define DEFAULT_CAMERA_Z -40
 #define DEFAULT_CAMERA_POSITION vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)
 
-#define DEFAULT_MONSTER_GENERATION_CHANCE_PER_FRAME 2
+#define DEFAULT_MONSTER_GENERATION_CHANCE_PER_FRAME 1
 
 using namespace std;
 using namespace irr::scene;
@@ -55,6 +55,7 @@ class Game {
         void setCallbacks();
         void doActions();
         vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);
+        void attackMainCharacter(float damage);
         int attackMonsters();
         void tryGeneratingMonster(int chancePercent);
         void runMonstersAI();
@@ -63,6 +64,7 @@ class Game {
         void setElapsedTime(f32 elapsedTime) { elapsedTime_ = elapsedTime; }
 
         static void moveCharacter(void*, core::vector2df desl);
+
 
         Game(ISceneManager * sceneManager);
         virtual ~Game();

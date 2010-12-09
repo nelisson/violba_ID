@@ -15,6 +15,9 @@ using namespace irr::scene;
 
 class Character : public AnimatedNode, public ISceneNode {
     private:
+
+    protected:
+
         std::string name_;
         dimension2df size_;
         int level_;
@@ -22,8 +25,6 @@ class Character : public AnimatedNode, public ISceneNode {
         float currentHP_;
         float moveSpeed_;
         Bar * healthBar_;
-
-    protected:
 
     public:
 
@@ -42,6 +43,8 @@ class Character : public AnimatedNode, public ISceneNode {
         float getMaxHP() { return maxHP_; }
         void setMaxHP(int maxHP) { maxHP_ = maxHP; }
         void increaseMaxHP(int maxHPIncrease) { maxHP_ += maxHPIncrease; }
+
+        float chp() {return currentHP_; } 
 
         int getLevel() { return level_; }
         void setLevel(int level) { level_ = level; }

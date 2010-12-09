@@ -66,6 +66,10 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
     return monster;
 }
 
+void Game::attackMainCharacter(float damage){
+    cout << "Main Character damage: " << mainCharacter_->hurt(damage) <<endl;
+}
+
 int Game::attackMonsters() {
     int hitCounter = 0;
     vector3df characterRotation = mainCharacter_->getRotation();
@@ -117,6 +121,13 @@ void Game::runMonstersAI() {
             vetor.normalize();
             (*monster)->walk(vetor * getElapsedTime());
         }
+        else{
+            if((*monster)->canAttack()) {
+                attackMainCharacter((*monster)->getDamage());
+                (*monster)->attack();
+            }
+        }
+
     }
 }
 

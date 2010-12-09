@@ -23,7 +23,7 @@
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
 
 #define STARTING_EXPERIENCE  0
-#define STARTING_HP          1
+#define STARTING_HP          100
 #define STARTING_STRENGTH    1
 #define STARTING_VITALITY    1
 #define STARTING_AGILITY     1
@@ -35,7 +35,7 @@ using namespace irr;
 using namespace irr::scene;
 
 enum State{
-    MOVING, STOPPING, ATTACK_STARTING, ATTACK_ENDING, JUMPING,
+    MOVING, STOPPING, ATTACK_STARTING, ATTACK_ENDING, JUMPING, DIEING
 };
 
 
