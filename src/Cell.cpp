@@ -1,7 +1,6 @@
 #include "Cell.h"
 
-Cell::Cell() {
-    disoccupy();
+Cell::Cell() {    
     removeItem();
 }
 

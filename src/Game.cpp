@@ -126,7 +126,7 @@ Game::Game(ISceneManager * sceneManager) {
     controller_ = new XBOX360Controller();
     mainCharacter_ = new MainCharacter(level_, sceneManager);
 
-    grid_.fillCell()
+    
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
     cameras_.push_back(getSceneManager()->addCameraSceneNode(0, DEFAULT_CAMERA_POSITION));
