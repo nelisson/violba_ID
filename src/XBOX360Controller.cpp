@@ -134,6 +134,38 @@ bool XBOX360Controller::OnEvent(const SEvent& event) {
 
         return true;
     }
+    if (event.EventType == EET_GUI_EVENT)
+		{
+			s32 id = event.GUIEvent.Caller->getID();
+			//IGUIEnvironment* env = device_->getGUIEnvironment();
+
+			switch(event.GUIEvent.EventType)
+			{
+
+			case EGET_BUTTON_CLICKED:
+				switch(id)
+				{
+				case GUI_ID_QUIT_BUTTON:
+                                    printf("QUITclicked\n");
+					device_->closeDevice();
+					return true;
+
+				case GUI_ID_PLAY_DEMO_BUTTON:
+					{
+                                            *mainScreen = false;
+					}
+					return true;
+
+				default:
+					return false;
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+
     else
         return false;
 }

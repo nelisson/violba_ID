@@ -9,17 +9,20 @@ bool Monster::walk(vector3df delta) {
     setRotation( vector3df(0.0, -angle, 0.0));
 }
 
-void Monster::die() {
+void Monster::die(ISoundEngine * sound) {
     if (getState() != DYING) {
-        setFrameLoop(ANIM_1);
+        setFrameLoop(MONSTER_DIE);
         setState(DYING);
+        sound->play2D("./sounds/falld1.wav");
     }
 }
 
 void Monster::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
     if (getState() == DYING) {
-        setFrameLoop(ANIM_1);
+        setState(DEAD);
     }
+    else
+        setFrameLoop(MONSTER_IDLE);
 }
 
 bool Monster::canAttack() {
@@ -60,6 +63,8 @@ Monster::Monster(ISceneNode * parent,
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setAnimationSpeed(30);
     setLoopMode(false);
+    setAnimationEndCallback(this);
+    setState(STOPPING);
     setScale(core::vector3df(0.1, 0.1, 0.1));
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 }

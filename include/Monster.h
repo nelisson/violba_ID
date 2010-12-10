@@ -6,17 +6,37 @@
 #include "ctime"
 
 #define DEFAULT_MONSTER_NAME "DwarfDaMorte"
-#define DEFAULT_MONSTER_MESH "./models/teste.md2"
+#define DEFAULT_MONSTER_MESH "./models/dwarf.x"
 #define DEFAULT_EXPERIENCE_GIVEN 1000
 #define DEFAULT_MONSTER_HP 50
 #define DEFAULT_MONSTER_RANGE 10
 #define DEFAULT_MONSTER_LEVEL 1
-#define DEFAULT_MONSTER_MIN_DAMAGE 0
-#define DEFAULT_MONSTER_MAX_DAMAGE 0
+#define DEFAULT_MONSTER_MIN_DAMAGE 5
+#define DEFAULT_MONSTER_MAX_DAMAGE 10
 #define DEFAULT_MONSTER_ATTACK_SPEED 2
 
-#define ANIM_1 0,12
-#define ANIM_2 13,15
+#define MONSTER_WALK 2,14
+#define MONSTER_RUN 16,26
+#define MONSTER_IDLE 75,88
+//#define MONSTER_IDLE2 90,110
+
+#define MONSTER_ATTACK 112,126
+/*
+128-142	Attack 2 - Jump and overhead whack attack
+144-160	Attack 3 - 360 spin Back hander
+162-180	Attack 4 - 2 Swipes left and right
+182-192	Attack 5 - Stab
+194-210	Block
+*/
+#define MONSTER_DIE 212,227
+/*230-251	Die 2 - Backwards
+
+253-272	Nod YES
+274-290	Shake head NO
+
+292-325	Idle 1
+327-360	Idle 2
+*/
 
 class Monster : public Character, public IAnimationEndCallBack {
     private:
@@ -38,7 +58,7 @@ class Monster : public Character, public IAnimationEndCallBack {
         virtual float getDamage() { return randomBetween(minDamage_, maxDamage_); };
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual bool walk(vector3df delta);
-        virtual void die();
+        virtual void die(ISoundEngine * sound);
         virtual void refresh() {}
 
         bool canAttack();

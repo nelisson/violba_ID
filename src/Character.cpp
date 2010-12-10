@@ -17,12 +17,12 @@ void Character::fillHP() {
     currentHP_ = maxHP_;
 }
 
-float Character::hurt(float value) {
+float Character::hurt(float value, ISoundEngine * sound) {
 
     currentHP_ -= value;
     if (!isAlive()) {
         currentHP_ = 0;
-        die();
+        die(sound);
     }
 
     healthBar_->fillPercentage = getHPPercentual();

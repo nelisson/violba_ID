@@ -6,6 +6,7 @@
 #include "Character.h"
 #include <iostream>
 #include "Utils.h"
+#include <irrklang/irrKlang.h>
 #include "Weapon.h"
 
 #define WALK  0,14
@@ -35,8 +36,7 @@
 using namespace std;
 using namespace irr;
 using namespace irr::scene;
-
-
+using namespace irrklang;
 
 
 class MainCharacter : public Character, public IAnimationEndCallBack {
@@ -67,12 +67,12 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         void earnExperience(int experience);
 
         void updateAttributes();
-        bool tryHitCheck();
+        bool tryHitCheck(ISoundEngine * sound);
 
         Weapon * getEquippedWeapon() { return equippedWeapon_; }
         virtual float getDamage();
         virtual bool walk(vector3df desl);
-        virtual void die();
+        virtual void die(ISoundEngine * sound);
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual void refresh();
 

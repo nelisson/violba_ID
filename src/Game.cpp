@@ -1,5 +1,13 @@
 #include "Game.h"
 
+char * Game::music_[3] = {"./music/01-intro.mp3",
+                         "./music/02-town.mp3",
+                         "./music/03-dungeon.mp3"} ;
+
+char * Game::sounds_[3] = {"./sounds/dead.wav",
+                           "./sounds/swing.wav",
+                           "./sounds/swing2.wav"} ;
+
 void Game::addMonster(Monster * monster) {
     monsters_.push_back(monster);
 
@@ -47,8 +55,9 @@ void Game::doActions() {
     if(mainCharacter_->isAlive())
         mainCharacter_->refresh();
 
-    if (mainCharacter_->tryHitCheck())
+    if (mainCharacter_->tryHitCheck(sound_)) {
         cout << "Hits: " << attackMonsters();
+    }
 
     time_t currentTime;
     time(&currentTime);
@@ -62,11 +71,12 @@ void Game::doActions() {
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
 
-    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage()) << endl;
+    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage(), sound_) << endl;
 
     if (!(*monster)->isAlive()) {
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
-
+        (*monster)->die(sound_);
+        /*
         try {
             cout<<"Vo dropa."<<endl;
             Item droppedItem = itemGenerator_.dropItem(100);
@@ -85,16 +95,19 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
         catch (exception e) {
             cout << "catch" << endl;
         }
-
+        */
+        /*
         delete (*monster);
         return --(removeMonster(monster));
+        */
+        return monster;
     }
 
     return monster;
 }
 
 void Game::attackMainCharacter(float damage) {
-    cout << "Main Character damage: " << mainCharacter_->hurt(damage) <<endl;
+    cout << "Main Character damage: " << mainCharacter_->hurt(damage, sound_) <<endl;
 }
 
 int Game::attackMonsters() {
@@ -139,22 +152,35 @@ void Game::tryGeneratingMonster(int chancePercent) {
 void Game::runMonstersAI() {
     vector<Monster*>::iterator monster;
     for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
-        vector3df ninjaPosition = mainCharacter_->getAbsolutePosition();
-        vector3df monsterPosition = (*monster)->getPosition();
+        if((*monster)->isAlive()) {
+            vector3df ninjaPosition = mainCharacter_->getAbsolutePosition();
+            vector3df monsterPosition = (*monster)->getPosition();
 
-        if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
+            if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
 
-            vector3df vetor = ninjaPosition - monsterPosition;
-            vetor.normalize();
-            (*monster)->walk(vetor * getElapsedTime());
-        }
-        else{
-            if((*monster)->canAttack()) {
-                attackMainCharacter((*monster)->getDamage());
-                (*monster)->attack();
+                vector3df vetor = ninjaPosition - monsterPosition;
+                vetor.normalize();
+                (*monster)->walk(vetor * getElapsedTime());
+                if ((*monster)->getState() == STOPPING) {
+                    (*monster)->setFrameLoop(MONSTER_WALK);
+                    (*monster)->setState(MOVING);
+                }
+            }
+            else{
+                if((*monster)->canAttack()) {
+                    attackMainCharacter((*monster)->getDamage());
+                    (*monster)->attack();
+
+                    if ((*monster)->getState() != ATTACK_STARTING) {
+                        (*monster)->setFrameLoop(MONSTER_ATTACK);
+                        (*monster)->setState(ATTACK_STARTING);
+                    }
+                }
             }
         }
-
+        else
+            if ((*monster)->getState() == DEAD)
+                monsters_.erase(monster);
     }
 }
 
@@ -191,15 +217,28 @@ vector<Item> Game::createItems() {
     return result;
 }
 
+void Game::playMusic(Music music) {
+    sound_->play2D(music_[music], true);
+}
+
+void Game::playSound(Sound sound) {
+    sound_->play2D(sounds_[sound]);
+}
+
 Game::Game(ISceneManager * sceneManager) {
+    mainScreen = true;
     sceneManager_ = sceneManager;
     level_ = new Level(sceneManager);
     cout << "Level created." << endl;
     controller_ = new XBOX360Controller();
+    controller_->mainScreen = &mainScreen;
     cout << "Controller created." << endl;
     mainCharacter_ = new MainCharacter(level_, sceneManager);
     cout << "Char created." << endl;
     grid_ = Grid(level_);
+
+    sound_ = createIrrKlangDevice();
+    playMusic(TOWN);
 
     cout << "Grid Created." << endl;
 

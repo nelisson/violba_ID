@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <irrlicht/irrlicht.h>
+#include <cstdio>
 
 #define BUTTON_COUNT 14
 #define ANALOG_COUNT  5
@@ -12,6 +13,8 @@
 #define DEFAULT_DEADZONE 6000.f
 
 using namespace irr;
+using namespace gui;
+
 
 enum Button {
     A,
@@ -45,12 +48,20 @@ enum Trigger {
     RT,// = SEvent::SJoystickEvent::AXIS_Z,
 };
 
+// Define some values that we'll use to identify individual GUI controls.
+enum
+{
+	GUI_ID_QUIT_BUTTON = 101,
+	GUI_ID_PLAY_DEMO_BUTTON,
+};
+
 class XBOX360Controller : public IEventReceiver {
 
     private:
         SEvent::SJoystickEvent joystickState_;
         float triggers_[TRIGGER_COUNT];
         core::vector2df analogs_[ANALOG_COUNT];
+        
 
         //bool isIdle;
         float deadZone_;
@@ -72,6 +83,8 @@ class XBOX360Controller : public IEventReceiver {
     protected:
 
     public:
+        IrrlichtDevice* device_;
+        bool * mainScreen;
         float getDeadZone();
         void setDeadZone(float deadZone);
 

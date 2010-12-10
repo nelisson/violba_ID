@@ -72,8 +72,9 @@ void MainCharacter::levelUp() {
     }
 }
 
-void MainCharacter::die() {
+void MainCharacter::die(ISoundEngine * sound) {
     if (getState() != DYING) {
+        sound->play2D("./sounds/dead.wav");
         setFrameLoop(DEATH_BACKWARDS);
         setState(DYING);
     }
@@ -168,12 +169,14 @@ void MainCharacter::refresh() {
     //cout << "Size X: " << (center.X)*2 << " Z:" << (center.Z)*2 << endl;
 }
 
-bool MainCharacter::tryHitCheck() {
+bool MainCharacter::tryHitCheck(ISoundEngine * sound) {
     f32 middleFrame = (getEndFrame() + getStartFrame()) / 2.0;
 
     if (getState() == ATTACK_STARTING) {
         if ((int) getFrameNr() == (int) middleFrame) {
             setState(ATTACK_ENDING);
+            sound->play2D("./sounds/swing.wav");
+            
             return true;
         }
 

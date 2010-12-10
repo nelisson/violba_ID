@@ -16,7 +16,7 @@ Level::Level(ISceneManager * manager)
     terrain_ = getSceneManager()->addTerrainSceneNode("./models/heightmap.bmp",
                                                       getSceneManager()->getRootSceneNode(),					// parent node
                                                       -1,					// node id
-                                                      core::vector3df(-2000.f, -100.f, -2000.f),		// position
+                                                      core::vector3df(-4800.f, -1000.f, -4800.f),		// position
                                                       core::vector3df(0.f, 0.f, 0.f),		// rotation
                                                       core::vector3df(40.f, 3.0f, 40.f),	// scale
                                                       video::SColor ( 255, 255, 255, 255 ),	// vertexColor

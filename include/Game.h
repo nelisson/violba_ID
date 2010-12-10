@@ -9,6 +9,7 @@
 #include "ItemGenerator.h"
 #include <iostream>
 #include <ctime>
+#include <irrklang/irrKlang.h>
 
 #define DEFAULT_CAMERA_X 0
 #define DEFAULT_CAMERA_Y 35
@@ -22,12 +23,29 @@
 using namespace std;
 using namespace irr::scene;
 using namespace irr::core;
+using namespace irrklang;
+
+enum Music {
+    INTRO,
+    TOWN,
+    DUNGEON,
+};
+
+enum Sound {
+    DEAD_SOUND,
+    SWING1_SOUND,
+    SWING2_SOUND,
+};
 
 class Game {
     private:
         ISceneManager * sceneManager_;
         ItemGenerator itemGenerator_;
         Grid grid_;
+        static char * music_[3];
+        static char * sounds_[3];
+
+        ISoundEngine * sound_;
 
         Level * level_;
         XBOX360Controller * controller_;
@@ -43,7 +61,10 @@ class Game {
     protected:
 
     public:
+        bool mainScreen;
         ISceneManager * getSceneManager() { return sceneManager_; }
+        void playMusic(Music music);
+        void playSound(Sound sound);
 
         Level * getLevel() { return level_; }
         XBOX360Controller * getController() { return controller_; }
