@@ -61,12 +61,11 @@ Monster::Monster(ISceneNode * parent,
     maxDamage_ = maxDamage;
     attackSpeed_ = attackSpeed;
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
-    setAnimationSpeed(30);
+    setAnimationSpeed(300);
     setLoopMode(false);
     setAnimationEndCallback(this);
     setState(STOPPING);
     setScale(core::vector3df(0.1, 0.1, 0.1));
-    getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 }
 
 Monster::~Monster() {}

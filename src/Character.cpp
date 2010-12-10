@@ -10,11 +10,13 @@ float Character::heal(float value) {
     if (currentHP_ > maxHP_)
         currentHP_ = maxHP_;
 
+    healthBar_->fillPercentage = getHPPercentual();
+    
     return value;
 }
 
 void Character::fillHP() {
-    currentHP_ = maxHP_;
+    heal(maxHP_);
 }
 
 float Character::hurt(float value, ISoundEngine * sound) {
