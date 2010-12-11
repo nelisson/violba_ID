@@ -40,8 +40,15 @@ using namespace irr;
 using namespace irr::scene;
 using namespace irrklang;
 
+namespace CharSounds {
+    enum Sounds {
+        SWING,
+        DEAD,
+    };
+}
 
-class MainCharacter : public Character, public IAnimationEndCallBack {
+class MainCharacter : public Character {
+    
     private:
         Inventory inventory_;
         Weapon * equippedWeapon_;
@@ -70,17 +77,18 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         void earnExperience(int experience);
 
         void updateAttributes();
-        bool tryHitCheck(ISoundEngine * sound);
+        bool tryHitCheck();
 
         Weapon * getEquippedWeapon() { return equippedWeapon_; }
         virtual float getDamage();
         virtual bool walk(vector3df desl);
-        virtual void die(ISoundEngine * sound);
+        virtual void die();
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual void refresh();
 
         MainCharacter(ISceneNode* parent,
                       ISceneManager* manager,
+                      ISoundEngine * soundEngine,
                       char * name = DEFAULT_CHARACTER_NAME,
                       char * meshPath = DEFAULT_CHARACTER_MESH,
                       int level = STARTING_LEVEL,

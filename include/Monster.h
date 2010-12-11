@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Utils.h"
 #include "ctime"
+#include <irrklang/irrKlang.h>
 
 #define DEFAULT_MONSTER_NAME "DwarfDaMorte"
 #define DEFAULT_MONSTER_MESH "./models/dwarf1.b3d"
@@ -38,7 +39,17 @@
 327-360	Idle 2
 */
 
-class Monster : public Character, public IAnimationEndCallBack {
+using namespace irrklang;
+
+namespace MonsterSound {
+    enum Sound {
+        SWING,
+        DEAD,
+    };
+}
+
+class Monster : public Character {
+
     private:
         int experienceGiven_;
         int range_;
@@ -58,7 +69,7 @@ class Monster : public Character, public IAnimationEndCallBack {
         virtual float getDamage() { return randomBetween(minDamage_, maxDamage_); };
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual bool walk(vector3df delta);
-        virtual void die(ISoundEngine * sound);
+        virtual void die();
         virtual void refresh() {}
 
         bool canAttack();
@@ -66,6 +77,7 @@ class Monster : public Character, public IAnimationEndCallBack {
 
         Monster(ISceneNode * parent,
                 ISceneManager * manager,
+                ISoundEngine * soundEngine,
                 std::string name = DEFAULT_MONSTER_NAME,
                 char * modelPath = DEFAULT_MONSTER_MESH,
                 int experienceGiven = DEFAULT_EXPERIENCE_GIVEN,

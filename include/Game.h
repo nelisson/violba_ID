@@ -9,7 +9,7 @@
 #include "ItemGenerator.h"
 #include <iostream>
 #include <ctime>
-#include <irrklang/irrKlang.h>
+#include "SoundEmmitter.h"
 
 #define DEFAULT_CAMERA_X 0
 #define DEFAULT_CAMERA_Y 35
@@ -23,30 +23,20 @@
 using namespace std;
 using namespace irr::scene;
 using namespace irr::core;
-using namespace irrklang;
 
-enum Music {
-    INTRO,
-    TOWN,
-    DUNGEON,
-};
+namespace GameMusic {
+    enum Music {
+        INTRO,
+        TOWN,
+        DUNGEON,
+    };
+}
 
-enum Sound {
-    DEAD_SOUND,
-    SWING1_SOUND,
-    SWING2_SOUND,
-};
-
-class Game {
+class Game : public SoundEmmitter {
     private:
         ISceneManager * sceneManager_;
         ItemGenerator itemGenerator_;
         Grid grid_;
-        static char * music_[3];
-        static char * sounds_[3];
-        Music musicPlaying_;
-
-        ISoundEngine * sound_;
 
         Level * level_;
         XBOX360Controller * controller_;
@@ -64,8 +54,6 @@ class Game {
     public:
         bool mainScreen;
         ISceneManager * getSceneManager() { return sceneManager_; }
-        void playMusic(Music music);
-        void playSound(Sound sound);
 
         Level * getLevel() { return level_; }
         XBOX360Controller * getController() { return controller_; }
@@ -79,11 +67,10 @@ class Game {
         void addMonster(Monster * monster);
         vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
 
-
         vector<Weapon> loadWeapons();
         vector<Armor> loadArmors();
         vector<Item> createItems();
-        
+
         void setCallbacks();
         void doActions();
         vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);
@@ -98,7 +85,7 @@ class Game {
         static void moveCharacter(void*, core::vector2df desl);
 
 
-        Game(ISceneManager * sceneManager);
+        Game(ISceneManager * sceneManager, ISoundEngine * soundEngine);
         virtual ~Game();
 };
 

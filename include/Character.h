@@ -6,7 +6,7 @@
 #include <iostream>
 #include "AnimatedNode.h"
 #include "Bar.h"
-#include <irrklang/irrKlang.h>
+#include "SoundEmmitter.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
 #define DEFAULT_CHARACTER_MOVESPEED 60
@@ -15,22 +15,27 @@ using namespace std;
 using namespace irr::scene;
 using namespace irrklang;
 
-enum State{
-    MOVING, 
-    STOPPING,
-    ATTACK_STARTING,
-    ATTACK_ENDING,
-    JUMPING,
-    DYING,
-    DEAD,
-};
+namespace State {
+    enum State{
+        MOVING,
+        STOPPING,
+        ATTACK_STARTING,
+        ATTACK_ENDING,
+        JUMPING,
+        DYING,
+        DEAD,
+    };
+}
 
-class Character : public AnimatedNode, public ISceneNode {
+class Character : public AnimatedNode,
+                  public ISceneNode,
+                  public SoundEmmitter,
+                  public IAnimationEndCallBack {
     private:
 
     protected:
 
-        State state_;
+        State::State state_;
         std::string name_;
         dimension2df size_;
         int level_;
@@ -41,8 +46,8 @@ class Character : public AnimatedNode, public ISceneNode {
 
     public:
 
-        State getState() { return state_; }
-        void setState(State state) { state_ = state; }
+        State::State getState() { return state_; }
+        void setState(State::State state) { state_ = state; }
 
         position2di getGridPosition();
 
@@ -50,7 +55,7 @@ class Character : public AnimatedNode, public ISceneNode {
         dimension2df getSize() { return size_; } 
         void fillHP();
         float heal(float value);
-        float hurt(float value, ISoundEngine * sound);
+        float hurt(float value);
         float getHPPercentual() { return 100 * currentHP_/(float)maxHP_; }
         bool isAlive();
 
@@ -72,14 +77,16 @@ class Character : public AnimatedNode, public ISceneNode {
         virtual float getDamage() = 0;
         virtual void levelUp() = 0;
         virtual bool walk(vector3df delta) = 0;
-        virtual void die(ISoundEngine * sound) = 0;
+        virtual void die() = 0;
         virtual void refresh() = 0;
+        virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node) = 0;
 
         virtual void render();
         virtual const core::aabbox3d<f32>& getBoundingBox() const { }
 
         Character(ISceneNode * parent,
                   ISceneManager * manager,
+                  ISoundEngine * soundEngine,
                   std::string name,
                   char * modelPath,
                   int maxHP,

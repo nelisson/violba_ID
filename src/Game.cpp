@@ -1,12 +1,7 @@
 #include "Game.h"
 
-char * Game::music_[3] = {"./music/01-intro.mp3",
-                         "./music/02-town.mp3",
-                         "./music/03-dungeon.mp3"} ;
-
-char * Game::sounds_[3] = {"./sounds/dead.wav",
-                           "./sounds/swing.wav",
-                           "./sounds/swing2.wav"} ;
+using namespace GameMusic;
+using namespace State;
 
 void Game::addMonster(Monster * monster) {
     monsters_.push_back(monster);
@@ -50,13 +45,14 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 }
 
 void Game::doActions() {
+    refreshSounds();
     cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
     cameras_[0]->setTarget(mainCharacter_->getPosition());
 
     if(mainCharacter_->isAlive()) {
         mainCharacter_->refresh();
 
-        if (mainCharacter_->tryHitCheck(sound_)) {
+        if (mainCharacter_->tryHitCheck()) {
             cout << "Hits: " << attackMonsters();
         }
 
@@ -77,11 +73,11 @@ void Game::doActions() {
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
 
-    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage(), sound_) << endl;
+    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage()) << endl;
 
     if (!(*monster)->isAlive()) {
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
-        (*monster)->die(sound_);
+        (*monster)->die();
         (*monster)->setState(DEAD);
         /*
         try {
@@ -114,7 +110,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 }
 
 void Game::attackMainCharacter(float damage) {
-    cout << "Main Character damage: " << mainCharacter_->hurt(damage, sound_) <<endl;
+    cout << "Main Character damage: " << mainCharacter_->hurt(damage) <<endl;
 }
 
 int Game::attackMonsters() {
@@ -148,7 +144,7 @@ int Game::attackMonsters() {
 
 void Game::tryGeneratingMonster(int chancePercent) {
     if (randomBetween(0, 100) <= chancePercent) {
-        Monster * newMonster = new Monster(level_, sceneManager_, "Dwarf da morte", "./models/dwarf.x");
+        Monster * newMonster = new Monster(level_, sceneManager_, getSoundEngine(), "Dwarf da morte", "./models/dwarf.x");
         addMonster(newMonster);
         newMonster->setPosition(vector3df(randomBetween(-150, 150),
                 0.0,
@@ -176,7 +172,7 @@ void Game::runMonstersAI() {
             else{
                 if((*monster)->canAttack()) {
                     attackMainCharacter((*monster)->getDamage());
-                    playSound(SWING2_SOUND);
+                    (*monster)->playSoundEffect(MonsterSound::SWING);
                     (*monster)->attack();
 
                     if ((*monster)->getState() != ATTACK_STARTING) {
@@ -227,19 +223,8 @@ vector<Item> Game::createItems() {
     return result;
 }
 
-void Game::playMusic(Music music) {
-    if (musicPlaying_ != music) {
-        sound_->stopAllSounds();
-        sound_->play2D(music_[music], true);
-        musicPlaying_ = music;
-    }
-}
-
-void Game::playSound(Sound sound) {
-    sound_->play2D(sounds_[sound]);
-}
-
-Game::Game(ISceneManager * sceneManager) {
+Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
+    : SoundEmmitter(soundEngine) {
     mainScreen = true;
     sceneManager_ = sceneManager;
     level_ = new Level(sceneManager);
@@ -247,12 +232,19 @@ Game::Game(ISceneManager * sceneManager) {
     controller_ = new XBOX360Controller();
     controller_->mainScreen = &mainScreen;
     cout << "Controller created." << endl;
-    mainCharacter_ = new MainCharacter(level_, sceneManager);
+    mainCharacter_ = new MainCharacter(level_, sceneManager, soundEngine);
     cout << "Char created." << endl;
     //grid_ = Grid(level_);
 
-    sound_ = createIrrKlangDevice();
-    playMusic(TOWN);
+    vector<std::string> music;
+    music.push_back("./music/01-intro.mp3");
+    music.push_back("./music/02-town.mp3");
+    music.push_back("./music/03-dungeon.mp3");
+
+    loadMusic(music);
+    cout << "Loaded game Music" <<endl;
+
+   // playMusic(TOWN);
 
     cout << "Grid Created." << endl;
 

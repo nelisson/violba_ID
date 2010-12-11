@@ -19,12 +19,12 @@ void Character::fillHP() {
     heal(maxHP_);
 }
 
-float Character::hurt(float value, ISoundEngine * sound) {
+float Character::hurt(float value) {
 
     currentHP_ -= value;
     if (!isAlive()) {
         currentHP_ = 0;
-        die(sound);
+        die();
     }
 
     healthBar_->fillPercentage = getHPPercentual();
@@ -41,12 +41,15 @@ void Character::render() {}
 
 Character::Character(ISceneNode * parent,
                      ISceneManager * manager,
+                     ISoundEngine * soundEngine,
                      std::string name,
                      char * modelPath,
                      int maxHP,
                      int level,
                      float moveSpeed)
-    : AnimatedNode(), ISceneNode(parent, manager) {
+    : AnimatedNode(), 
+      ISceneNode(parent, manager),
+      SoundEmmitter(soundEngine) {
 
     cout<<"To entrando em char"<<endl;
 

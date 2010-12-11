@@ -1,5 +1,7 @@
 #include "Monster.h"
 
+using namespace State;
+
 void Monster::levelUp() {}
 
 bool Monster::walk(vector3df delta) {
@@ -9,11 +11,11 @@ bool Monster::walk(vector3df delta) {
     setRotation( vector3df(0.0, -angle, 0.0));
 }
 
-void Monster::die(ISoundEngine * sound) {
+void Monster::die() {
     if (getState() != DYING) {
         setFrameLoop(MONSTER_DIE);
         setState(DYING);
-        sound->play2D("./sounds/falld1.wav");
+        playSoundEffect(MonsterSound::DEAD);
     }
 }
 
@@ -42,6 +44,7 @@ void Monster::attack() {
 
 Monster::Monster(ISceneNode * parent,
                  ISceneManager * manager,
+                 ISoundEngine * soundEngine,
                  std::string name,
                  char * modelPath,
                  int experienceGiven,
@@ -52,7 +55,14 @@ Monster::Monster(ISceneNode * parent,
                  float attackSpeed,
                  float minDamage,
                  float maxDamage)
-    : Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
+    : Character(parent,
+                manager,
+                soundEngine,
+                name,
+                modelPath,
+                maxHP,
+                level,
+                moveSpeed),
       experienceGiven_(experienceGiven),
       range_(range) {
 
@@ -60,6 +70,14 @@ Monster::Monster(ISceneNode * parent,
     minDamage_ = minDamage;
     maxDamage_ = maxDamage;
     attackSpeed_ = attackSpeed;
+
+    vector<std::string> sounds;
+
+    sounds.push_back("./sounds/swing2.wav");
+    sounds.push_back("./sounds/falld1.wav");
+
+    loadSoundEffects(sounds);
+
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setAnimationSpeed(300);
     setLoopMode(false);

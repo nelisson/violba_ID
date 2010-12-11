@@ -1,5 +1,7 @@
 #include "MainCharacter.h"
 
+using namespace State;
+
 void MainCharacter::drinkPotion(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
 
@@ -78,9 +80,9 @@ void MainCharacter::levelUp() {
     }
 }
 
-void MainCharacter::die(ISoundEngine * sound) {
+void MainCharacter::die() {
     if (getState() != DYING && getState() != DEAD) {
-        sound->play2D("./sounds/dead.wav");
+        playSoundEffect(CharSounds::DEAD);
         setFrameLoop(DEATH_BACKWARDS);
         setState(DYING);
     }
@@ -177,13 +179,13 @@ void MainCharacter::refresh() {
     //cout << "Size X: " << (center.X)*2 << " Z:" << (center.Z)*2 << endl;
 }
 
-bool MainCharacter::tryHitCheck(ISoundEngine * sound) {
+bool MainCharacter::tryHitCheck() {
     f32 middleFrame = (getEndFrame() + getStartFrame()) / 2.0;
 
     if (getState() == ATTACK_STARTING) {
         if ((int) getFrameNr() == (int) middleFrame) {
             setState(ATTACK_ENDING);
-            sound->play2D("./sounds/swing.wav");
+            playSoundEffect(CharSounds::SWING);
             
             return true;
         }
@@ -195,6 +197,7 @@ bool MainCharacter::tryHitCheck(ISoundEngine * sound) {
 
 MainCharacter::MainCharacter(ISceneNode * parent,
         ISceneManager * manager,
+        ISoundEngine * soundEngine,
         char * name,
         char * modelPath,
         int level,
@@ -205,7 +208,14 @@ MainCharacter::MainCharacter(ISceneNode * parent,
         int agility,
         float moveSpeed,
         float jumpHeight)
-    : Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
+    : Character(parent, 
+                manager,
+                soundEngine,
+                name,
+                modelPath,
+                maxHP,
+                level,
+                moveSpeed),
     vitality_(vitality),
     strength_(strength),
     agility_(agility),
@@ -214,6 +224,13 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     cout<<"CreatingSword"<<endl;
     equippedWeapon_ = new Weapon(NULL, NULL, "Espada");
     cout<<"CreatedSword"<<endl;
+
+    vector<std::string> sounds;
+
+    sounds.push_back("./sounds/swing.wav");
+    sounds.push_back("./sounds/dead.wav");
+
+    loadSoundEffects(sounds);
 
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
