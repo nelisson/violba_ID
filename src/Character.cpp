@@ -1,6 +1,6 @@
 #include "Character.h"
 
-position2di Character::getGridPosition() {
+position2di Character::getGridPosition() const {
     return position2di(getPosition().X, getPosition().Z);
 }
 
@@ -32,18 +32,14 @@ float Character::hurt(float value) {
     return value;
 }
 
-bool Character::isAlive() {
-    return currentHP_ > 0;
-}
-
 void Character::render() {}
 
 
 Character::Character(ISceneNode * parent,
                      ISceneManager * manager,
                      ISoundEngine * soundEngine,
-                     std::string name,
-                     char * modelPath,
+                     const std::string name,
+                     const char * modelPath,
                      int maxHP,
                      int level,
                      float moveSpeed)

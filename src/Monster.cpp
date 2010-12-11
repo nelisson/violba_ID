@@ -45,8 +45,8 @@ void Monster::attack() {
 Monster::Monster(ISceneNode * parent,
                  ISceneManager * manager,
                  ISoundEngine * soundEngine,
-                 std::string name,
-                 char * modelPath,
+                 const std::string name,
+                 const char * modelPath,
                  int experienceGiven,
                  int maxHP,
                  int range,
@@ -55,14 +55,10 @@ Monster::Monster(ISceneNode * parent,
                  float attackSpeed,
                  float minDamage,
                  float maxDamage)
-    : Character(parent,
-                manager,
-                soundEngine,
-                name,
-                modelPath,
-                maxHP,
-                level,
-                moveSpeed),
+    : Character(parent, manager,
+                soundEngine, name,
+                modelPath, maxHP,
+                level, moveSpeed),
       experienceGiven_(experienceGiven),
       range_(range) {
 
@@ -76,7 +72,7 @@ Monster::Monster(ISceneNode * parent,
     sounds.push_back("./sounds/swing2.wav");
     sounds.push_back("./sounds/falld1.wav");
 
-    loadSoundEffects(sounds);
+    addSoundEffects(sounds);
 
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setAnimationSpeed(300);

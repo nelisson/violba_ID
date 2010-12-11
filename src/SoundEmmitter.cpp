@@ -1,122 +1,123 @@
 #include "SoundEmmitter.h"
+#include "Utils.h"
 
 bool FadeInfo::fade() {
-    cout << "Entered fading" << endl;
+    cout << "Entered fading\n---------------" << endl;
 
-    time_t currentTime;
-    time(&currentTime);
+    clock_t currentTime = clock();
+    
     cout << "CurrentTime = " << currentTime <<  endl;
-    time_t elapsedTimeFromLastUpdate = difftime(currentTime, lastTime_);
+    float elapsedTimeFromLastUpdate = timeDifference(lastTime_, currentTime);
     cout << "ElapsedTimeFromLastUpdate = " << elapsedTimeFromLastUpdate <<  endl;
 
-    lastTime_ = currentTime;
     cout << "LastTIme = " << lastTime_ <<  endl;
+    lastTime_ = currentTime;
 
-    time_t elapsedTimeFromStart = difftime(lastTime_, startTime_);
+    float elapsedTimeFromStart = timeDifference(startTime_, lastTime_);
     cout << "ElapsedTimeFromStart = " << elapsedTimeFromStart <<  endl;
+    cout << "FadeTime = " << fadeTime_ <<  endl;
 
-    cout <<"Will try to set volume" << endl;
-
-    if ( elapsedTimeFromStart > fadeTimeMilliseconds_ / 1000.f ) {
+    if ( elapsedTimeFromStart > fadeTime_ ) {
         cout <<"Needs to finish sound" << endl;
         sound_->setVolume(fadeType_);
-        cout <<"Set volume to limit" << endl;
+        cout <<"Set volume to limit = " << fadeType_ << endl;
+
+
+        if (fadeType_ == OUT);
+            sound_->stop();
+
         return false;
     }
     else {
-        int volumeDelta = (fadeType_ == IN) ? 1 : -1;
-        volumeDelta *= elapsedTimeFromLastUpdate / (float) (fadeTimeMilliseconds_ / 1000.f);
+        float volume = (fadeType_ == IN) ? 1 : -1;
+        volume *= elapsedTimeFromStart / (float)fadeTime_;
 
-        cout <<"Volume delta: " << volumeDelta << endl;
+        cout <<"Volume delta: " << volume << endl;
+                
+        sound_->setVolume(volume);
 
-        sound_->setVolume(sound_->getVolume() + volumeDelta);
         return true;
     }
 }
 
-
-void SoundEmmitter::loadSound(std::string soundPath, SoundType type) {
-    sounds_[type].push_back(soundEngine_->getSoundSource(soundPath.data(), true));
-}
-
-void SoundEmmitter::loadSounds(vector<std::string> soundPaths, SoundType type){
-    vector<string>::iterator i;
-    for (i = soundPaths.begin(); i < soundPaths.end(); i++)
-        loadSound(*i, type);
-}
-
-ISound* SoundEmmitter::playSound(int sound, SoundType type, bool looped, bool track) {
-    std::cout<<"Attempting to play sound" << endl;
-    return soundEngine_->play2D(sounds_[type].at(sound), looped, false, track);
-}
-
 void SoundEmmitter::refreshSounds() {
-    vector<FadeInfo>::iterator i;
-    for (i = fading_.begin(); i < fading_.end(); i++)
-        if (i->fade())
-            i = (fading_.erase(i))--;
+    cout<<"Refreshing Sounds"<<endl;
+    if (fading_[IN]) {
+        cout<<"Start Fading In"<<endl;
+        if (!fading_[IN]->fade()) {
+            cout<<"Ended Fading"<<endl;
+            fading_[IN] = NULL;
+        }
+    }
+    if (fading_[OUT])
+        if (!fading_[OUT]->fade())
+            fading_[OUT] = NULL;
 }
 
-void SoundEmmitter::loadSoundEffect(std::string soundEffect) {
-    loadSound(soundEffect, SFX);
-}
-
-void SoundEmmitter::loadSoundEffects(vector<std::string> soundEffects) {
+void SoundEmmitter::addSounds(vector<std::string> sounds, SoundType type) {
     vector<std::string>::iterator i;
-    for (i = soundEffects.begin(); i < soundEffects.end(); i++)
-        loadSoundEffect(*i);
+    for (i = sounds.begin(); i < sounds.end(); i++)
+        addSound(*i, type);
 }
 
-void SoundEmmitter::playSoundEffect(int sound) {
-    playSound(sound, SFX, false, false);
+void SoundEmmitter::playSoundEffect(int sound, bool looped) {
+    soundEngine_->play2D(sounds_[SFX].at(sound).data(), looped, false, false);
 }
 
-void SoundEmmitter::loadMusic(std::string music) {
-    loadSound(music, MUSIC);
-}
-
-void SoundEmmitter::loadMusic(vector<std::string> music) {
-    vector<std::string>::iterator i;
-    for (i = music.begin(); i < music.end(); i++)
-        loadMusic(*i);
+void SoundEmmitter::stopSoundEffect(int sound) {
+    soundEngine_->removeSoundSource(sounds_[SFX].at(sound).data());
 }
 
 void SoundEmmitter::playMusic(int music, bool fading, bool loop,
-                              int fadeTimeMilliseconds) {
+                              int fadeTime) {
 
-    if (!soundEngine_->isCurrentlyPlaying(sounds_[MUSIC].at(music))) {
+    const char * musicString = sounds_[MUSIC].at(music).data();
 
-        time_t startTime;
-        time(&startTime);
+    cout<<"Current Music: " << musicString << endl;
 
-        //stopMusic(true, 3000);
-        musicPlaying_ = playSound(music, MUSIC, loop, fading ? true : false);
+    if(musicPlaying_)
+        cout << "Music returned: " << musicPlaying_->getSoundSource()->getName() << endl;
+
+    if ( currentMusic_ != musicString ) {
+
+        cout<<"Trying to play a different music"<<endl;
+        
+        if (musicPlaying_) {
+            delete fading_[OUT];
+            fading_[OUT] = new FadeInfo(musicPlaying_, fadeTime, IN);
+        }
+
+        currentMusic_.assign(musicString);
+        musicPlaying_ = soundEngine_->play2D(musicString, loop, false, loop);
+
+        cout<<"Playing music..."<<endl;
 
         if (fading) {
+            delete fading_[IN];
             musicPlaying_->setVolume(0);
-            fading_.push_back(FadeInfo(musicPlaying_, fadeTimeMilliseconds, IN));
+            fading_[IN] = new FadeInfo(musicPlaying_, fadeTime, IN);
         }
     }
 }
 
 void SoundEmmitter::stopMusic(bool fading, int fadeTimeMilliseconds) {
-    if (fading)
-        fading_.push_back(FadeInfo(musicPlaying_,
-                                   fadeTimeMilliseconds, OUT));
-    else
-        soundEngine_->removeSoundSource(musicPlaying_->getSoundSource());
+    if (musicPlaying_) {
+        if (fading)
+            fading_[OUT] = new FadeInfo(musicPlaying_, fadeTimeMilliseconds, OUT);
+        else
+            musicPlaying_->stop();
+
+        musicPlaying_ = NULL;
+    }
 }
 
-SoundEmmitter::SoundEmmitter(ISoundEngine* soundEngine,
-                             vector<std::string> sounds,
-                             vector<std::string> music)
+SoundEmmitter::SoundEmmitter(ISoundEngine* soundEngine)
     : soundEngine_(soundEngine) {
 
     musicPlaying_ = NULL;
-    loadSoundEffects(sounds);
-    loadMusic(music);
+    fading_[IN]   = NULL;
+    fading_[OUT]  = NULL;
 }
 
-SoundEmmitter::~SoundEmmitter() {
-}
+SoundEmmitter::~SoundEmmitter() {}
 

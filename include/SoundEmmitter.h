@@ -7,45 +7,41 @@
 #include <iostream>
 #include <ctime>
 #include <vector>
+#include <set>
 
-#define DEFAULT_FADE_TIME_MILLISECONDS 2000
+#define DEFAULT_FADE_TIME 5
 
 using namespace irrklang;
 using namespace std;
 
+enum FadeType {
+    OUT, IN,
+};
 
 enum SoundType {
-    SFX,
-    MUSIC,
+    SFX, MUSIC,
 };
-
-
-enum FadeType {
-    OUT,
-    IN,
-};
-
 
 class FadeInfo {
     private:
         ISound* sound_;
-        time_t startTime_;
-        time_t lastTime_;
-        int fadeTimeMilliseconds_;
+        clock_t startTime_;
+        clock_t lastTime_;
+        int fadeTime_;
         FadeType fadeType_;
 
     public:
         bool fade();
 
         FadeInfo(ISound* sound,
-                 int fadeTimeMilliseconds,
+                 int fadeTime,
                  FadeType fadeType)
             : sound_(sound),
-              fadeTimeMilliseconds_(fadeTimeMilliseconds),
+              fadeTime_(fadeTime),
               fadeType_(fadeType) {
 
-            time(&startTime_);
-            time(&lastTime_);
+            startTime_ = clock();
+            lastTime_ = clock();
         }
 };
 
@@ -54,43 +50,41 @@ class SoundEmmitter {
     private:
         ISoundEngine* soundEngine_;
 
-        vector<ISoundSource*> sounds_[2];
+        vector<std::string> sounds_[2];
 
-        vector<FadeInfo> fading_;
+        void addSound(std::string sound, SoundType type) { sounds_[type].push_back(sound); }
+        void addSounds(vector<std::string> sounds, SoundType type);
+
+        FadeInfo* fading_[2];
         ISound* musicPlaying_;
-
-        ISound* playSound(int sound, SoundType type,
-                          bool looped = false, bool track = false);
+        std::string currentMusic_;
 
     protected:
 
     public:
-        ISoundEngine * getSoundEngine() { return soundEngine_; }
+        ISound * getCurrentMusic() const { return musicPlaying_; }
 
-        ISound * getCurrentMusic() { return musicPlaying_; }
-
-        void loadSound(std::string soundPath, SoundType type);
-        void loadSounds(vector<std::string> soundPaths, SoundType type);
+        ISoundEngine* getSoundEngine() const { return soundEngine_; }
 
         void refreshSounds();
 
-        void loadSoundEffect(std::string soundEffect);
-        void loadSoundEffects(vector<std::string> soundEffects);
-        void playSoundEffect(int sound);
+        void addSoundEffect(std::string sound)           { addSound(sound, SFX); }
+        void addSoundEffects(vector<std::string> sounds) { addSounds(sounds, SFX); }
 
-        void loadMusic(std::string music);
-        void loadMusic(vector<std::string> music);
+        void addMusic(std::string music)         { addSound(music, MUSIC); }
+        void addMusic(vector<std::string> music) { addSounds(music, MUSIC); }
+
+        void playSoundEffect(int sound, bool looped = false);
+        void stopSoundEffect(int sound);
+
         void playMusic(int music, bool fading = false, bool loop = true,
-                       int fadeTimeMilliseconds = DEFAULT_FADE_TIME_MILLISECONDS);
+                       int fadeTime = DEFAULT_FADE_TIME);
 
-        void stopMusic(bool fading, int fadeTimeMilliseconds);
+        void stopMusic(bool fading = true,
+                       int fadeTime = DEFAULT_FADE_TIME);
         
-        SoundEmmitter(ISoundEngine* soundEngine,
-                      vector<std::string> sounds = vector<std::string>(),
-                      vector<std::string> music  = vector<std::string>());
+        SoundEmmitter(ISoundEngine* soundEngine);
 
         virtual ~SoundEmmitter();
 };
-
 #endif	/* SOUNDEMMITTER_H */
-

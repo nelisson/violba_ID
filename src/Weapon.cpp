@@ -3,7 +3,7 @@
 Weapon::Weapon(ISceneNode * parent,
                ISceneManager * manager,
                std::string name,
-               char * modelPath,
+               const char * modelPath,
                float minDamage,
                float maxDamage,
                int range,

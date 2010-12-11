@@ -101,7 +101,7 @@ void MainCharacter::updateAttributes() {
     fillHP();
 }
 
-float MainCharacter::getDamage() {
+float MainCharacter::getDamage() const {
     return getEquippedWeapon()->getDamage() * strength_;
 }
 
@@ -119,12 +119,6 @@ void MainCharacter::earnExperience(int experience) {
     }
 }
 
-long MainCharacter::experienceCurve(int level) {
-    return 980 + 200 * level*level;
-}
-
-
-
 void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
     if (getState() == DYING || getState() == DEAD) {
         cout << "GameOver" << endl;
@@ -132,7 +126,7 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
     }
     else {
         node->setFrameLoop(IDLE);
-        state_ = STOPPING;
+        setState(STOPPING);
     }
 }
 
@@ -198,24 +192,16 @@ bool MainCharacter::tryHitCheck() {
 MainCharacter::MainCharacter(ISceneNode * parent,
         ISceneManager * manager,
         ISoundEngine * soundEngine,
-        char * name,
-        char * modelPath,
-        int level,
-        int currentExperience,
-        int maxHP,
-        int vitality,
-        int strength,
-        int agility,
-        float moveSpeed,
-        float jumpHeight)
-    : Character(parent, 
-                manager,
-                soundEngine,
-                name,
-                modelPath,
-                maxHP,
-                level,
-                moveSpeed),
+        const char * name,
+        const char * modelPath,
+        int level, int currentExperience,
+        int maxHP, int vitality,
+        int strength, int agility,
+        float moveSpeed, float jumpHeight)
+    : Character(parent, manager,
+                soundEngine, name,
+                modelPath, maxHP,
+                level, moveSpeed),
     vitality_(vitality),
     strength_(strength),
     agility_(agility),
@@ -230,7 +216,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     sounds.push_back("./sounds/swing.wav");
     sounds.push_back("./sounds/dead.wav");
 
-    loadSoundEffects(sounds);
+    addSoundEffects(sounds);
 
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
@@ -241,7 +227,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     experienceToLevelUp_ += experienceCurve(level);
     earnExperience(currentExperience);
 
-    state_ = STOPPING;
+    setState(STOPPING);
 }
 
 MainCharacter::~MainCharacter() {

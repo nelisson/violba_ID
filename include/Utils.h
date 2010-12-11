@@ -10,4 +10,10 @@ int randomBetween(int first, int second);
 
 void sleep(int seconds);
 
+float startClock();
+
+float timeDifference();
+
+float timeDifference(clock_t start, clock_t end);
+
 #endif // UTILS_H_INCLUDED

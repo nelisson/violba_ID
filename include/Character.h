@@ -31,10 +31,8 @@ class Character : public AnimatedNode,
                   public ISceneNode,
                   public SoundEmmitter,
                   public IAnimationEndCallBack {
+
     private:
-
-    protected:
-
         State::State state_;
         std::string name_;
         dimension2df size_;
@@ -44,37 +42,39 @@ class Character : public AnimatedNode,
         float moveSpeed_;
         Bar * healthBar_;
 
-    public:
+    protected:
 
-        State::State getState() { return state_; }
+    public:
+        State::State getState() const     { return state_; }
         void setState(State::State state) { state_ = state; }
 
-        position2di getGridPosition();
+        position2di getGridPosition() const;
 
         void setSize(dimension2df size) { size_ = size; }
-        dimension2df getSize() { return size_; } 
+        dimension2df getSize() const    { return size_; }
+
         void fillHP();
         float heal(float value);
         float hurt(float value);
-        float getHPPercentual() { return 100 * currentHP_/(float)maxHP_; }
-        bool isAlive();
+        float getHPPercentual() const { return 100 * currentHP_/(float)maxHP_; }
+        bool isAlive() const          { return currentHP_ > 0; }
 
-        float getMoveSpeed() { return moveSpeed_; }
-        void setMoveSpeed(float moveSpeed) { moveSpeed_ = moveSpeed; }
+        float getMoveSpeed() const              { return moveSpeed_; }
+        void setMoveSpeed(float moveSpeed)      { moveSpeed_ = moveSpeed; }
         void increaseMoveSpeed(float moveSpeed) { moveSpeed_ += moveSpeed; }
 
-        float getMaxHP() { return maxHP_; }
-        void setMaxHP(int maxHP) { maxHP_ = maxHP; }
+        float getMaxHP() const                { return maxHP_; }
+        void setMaxHP(int maxHP)              { maxHP_ = maxHP; }
         void increaseMaxHP(int maxHPIncrease) { maxHP_ += maxHPIncrease; }
 
-        int getLevel() { return level_; }
-        void setLevel(int level) { level_ = level; }
+        int getLevel() const       { return level_; }
+        void setLevel(int level)   { level_ = level; }
         void addLevels(int levels) { level_+= levels; }
 
         void moveDelta(core::vector3df delta) { setPosition(getPosition() + delta); }
         void moveTo(core::vector3df position) { setPosition(position); }
 
-        virtual float getDamage() = 0;
+        virtual float getDamage() const = 0;
         virtual void levelUp() = 0;
         virtual bool walk(vector3df delta) = 0;
         virtual void die() = 0;
@@ -87,8 +87,8 @@ class Character : public AnimatedNode,
         Character(ISceneNode * parent,
                   ISceneManager * manager,
                   ISoundEngine * soundEngine,
-                  std::string name,
-                  char * modelPath,
+                  const std::string name,
+                  const char * modelPath,
                   int maxHP,
                   int level = DEFAULT_CHARACTER_LEVEL,
                   float moveSpeed = DEFAULT_CHARACTER_MOVESPEED);

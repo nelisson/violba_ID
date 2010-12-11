@@ -62,11 +62,11 @@ class Monster : public Character {
     protected:
 
     public:
-        int getExperienceGiven()  { return experienceGiven_; }
-        int getRange() { return range_; };
+        int getExperienceGiven() const { return experienceGiven_; }
+        int getRange() const { return range_; };
 
         virtual void levelUp();
-        virtual float getDamage() { return randomBetween(minDamage_, maxDamage_); };
+        virtual float getDamage() const { return randomBetween(minDamage_, maxDamage_); };
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual bool walk(vector3df delta);
         virtual void die();
@@ -78,8 +78,8 @@ class Monster : public Character {
         Monster(ISceneNode * parent,
                 ISceneManager * manager,
                 ISoundEngine * soundEngine,
-                std::string name = DEFAULT_MONSTER_NAME,
-                char * modelPath = DEFAULT_MONSTER_MESH,
+                const std::string name = DEFAULT_MONSTER_NAME,
+                const char * modelPath = DEFAULT_MONSTER_MESH,
                 int experienceGiven = DEFAULT_EXPERIENCE_GIVEN,
                 int maxHP = DEFAULT_MONSTER_HP,
                 int range = DEFAULT_MONSTER_RANGE,

@@ -59,7 +59,7 @@ class MainCharacter : public Character {
         f32 speed_;
         float jumpHeight_;
 
-        long experienceCurve(int level);
+        long experienceCurve(int level) const { return 980 + 200 * level*level; };
 
     protected:
 
@@ -73,14 +73,14 @@ class MainCharacter : public Character {
 
         virtual void levelUp();
 
-        float getJumpHeight() {return jumpHeight_; }
+        float getJumpHeight() const { return jumpHeight_; }
         void earnExperience(int experience);
 
         void updateAttributes();
         bool tryHitCheck();
 
-        Weapon * getEquippedWeapon() { return equippedWeapon_; }
-        virtual float getDamage();
+        Weapon * getEquippedWeapon() const { return equippedWeapon_; }
+        virtual float getDamage() const;
         virtual bool walk(vector3df desl);
         virtual void die();
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
@@ -89,8 +89,8 @@ class MainCharacter : public Character {
         MainCharacter(ISceneNode* parent,
                       ISceneManager* manager,
                       ISoundEngine * soundEngine,
-                      char * name = DEFAULT_CHARACTER_NAME,
-                      char * meshPath = DEFAULT_CHARACTER_MESH,
+                      const char * name = DEFAULT_CHARACTER_NAME,
+                      const char * meshPath = DEFAULT_CHARACTER_MESH,
                       int level = STARTING_LEVEL,
                       int currentExperience = STARTING_EXPERIENCE,
                       int maxHP = STARTING_HP,

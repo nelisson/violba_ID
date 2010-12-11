@@ -241,7 +241,7 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
     music.push_back("./music/02-town.mp3");
     music.push_back("./music/03-dungeon.mp3");
 
-    loadMusic(music);
+    addMusic(music);
     cout << "Loaded game Music" <<endl;
 
    // playMusic(TOWN);

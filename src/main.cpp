@@ -75,10 +75,11 @@ int main() {
         device->getVideoDriver()->beginScene();
         if(game.mainScreen){
             env->drawAll();
-            game.playMusic(GameMusic::TOWN, true, true, 10000);
+            game.playMusic(GameMusic::TOWN, true, true, 2);
+            game.refreshSounds();
         }
         else{
-            game.playMusic(GameMusic::DUNGEON, true, true, 1000);
+            game.playMusic(GameMusic::DUNGEON, true);
             game.doActions();
             game.getSceneManager()->drawAll();
         }

@@ -4,8 +4,6 @@
 #include "AnimatedNode.h"
 #include <irrlicht/irrlicht.h>
 
-
-
 #define DEFAULT_ITEM_LEVEL 1
 
 using namespace std;
@@ -18,14 +16,14 @@ class Item : public AnimatedNode, public ISceneNode {
         int ID_;
         string name_;
         static int id_;
-        int generateID();
+        int generateID() { return id_++; }
 
     protected:
 
     public:
-        int getLevel();
-        int getID();
-        string getName();
+        int getLevel() const { return level_; }
+        int getID() const { return ID_; }
+        const string getNamex() const {  return name_; }
 
         virtual void render() {}
         virtual const core::aabbox3d<f32>& getBoundingBox() const { }
@@ -36,8 +34,8 @@ class Item : public AnimatedNode, public ISceneNode {
 
         Item(ISceneNode * parent,
              ISceneManager * manager,
-             string name,
-             char * modelPath,
+             const string name,
+             const char * modelPath,
              int level = DEFAULT_ITEM_LEVEL);
         virtual ~Item();
 
