@@ -156,8 +156,6 @@ void MainCharacter::refresh() {
             }
             //lastFrameNumber = getFrameNr();
             //        cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
-            cout << "Height: " << getPosition().Y << endl;
-
             break;
         }
 

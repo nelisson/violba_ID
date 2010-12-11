@@ -2,53 +2,37 @@
 #include "Utils.h"
 
 bool FadeInfo::fade() {
-    cout << "Entered fading\n---------------" << endl;
-
     clock_t currentTime = clock();
-    
-    cout << "CurrentTime = " << currentTime <<  endl;
-    float elapsedTimeFromLastUpdate = timeDifference(lastTime_, currentTime);
-    cout << "ElapsedTimeFromLastUpdate = " << elapsedTimeFromLastUpdate <<  endl;
 
-    cout << "LastTIme = " << lastTime_ <<  endl;
     lastTime_ = currentTime;
 
     float elapsedTimeFromStart = timeDifference(startTime_, lastTime_);
-    cout << "ElapsedTimeFromStart = " << elapsedTimeFromStart <<  endl;
-    cout << "FadeTime = " << fadeTime_ <<  endl;
 
     if ( elapsedTimeFromStart > fadeTime_ ) {
-        cout <<"Needs to finish sound" << endl;
         sound_->setVolume(fadeType_);
-        cout <<"Set volume to limit = " << fadeType_ << endl;
 
-
-        if (fadeType_ == OUT);
+        if (fadeType_ == OUT)
             sound_->stop();
 
         return false;
     }
     else {
-        float volume = (fadeType_ == IN) ? 1 : -1;
-        volume *= elapsedTimeFromStart / (float)fadeTime_;
+        float volume = elapsedTimeFromStart / (float)fadeTime_;
 
-        cout <<"Volume delta: " << volume << endl;
-                
-        sound_->setVolume(volume);
+        if (fadeType_ == IN)
+            sound_->setVolume(volume);
+        else
+            sound_->setVolume(1-volume);
 
         return true;
     }
 }
 
 void SoundEmmitter::refreshSounds() {
-    cout<<"Refreshing Sounds"<<endl;
-    if (fading_[IN]) {
-        cout<<"Start Fading In"<<endl;
-        if (!fading_[IN]->fade()) {
-            cout<<"Ended Fading"<<endl;
+    if (fading_[IN])
+        if (!fading_[IN]->fade())
             fading_[IN] = NULL;
-        }
-    }
+        
     if (fading_[OUT])
         if (!fading_[OUT]->fade())
             fading_[OUT] = NULL;
@@ -73,18 +57,13 @@ void SoundEmmitter::playMusic(int music, bool fading, bool loop,
 
     const char * musicString = sounds_[MUSIC].at(music).data();
 
-    cout<<"Current Music: " << musicString << endl;
-
-    if(musicPlaying_)
-        cout << "Music returned: " << musicPlaying_->getSoundSource()->getName() << endl;
-
     if ( currentMusic_ != musicString ) {
 
         cout<<"Trying to play a different music"<<endl;
         
         if (musicPlaying_) {
             delete fading_[OUT];
-            fading_[OUT] = new FadeInfo(musicPlaying_, fadeTime, IN);
+            fading_[OUT] = new FadeInfo(musicPlaying_, fadeTime, OUT);
         }
 
         currentMusic_.assign(musicString);
