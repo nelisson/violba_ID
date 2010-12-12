@@ -1,11 +1,16 @@
 #include "Character.h"
 
+using namespace Sounds;
+
 position2di Character::getGridPosition() const {
     return position2di(getPosition().X, getPosition().Z);
 }
 
-float Character::heal(float value) {
+float Character::heal(float value,  bool playSound) {
     currentHP_ += value;
+
+    if (playSound)
+        playSoundEffect(POTION);
 
     if (currentHP_ > maxHP_)
         currentHP_ = maxHP_;
@@ -16,7 +21,7 @@ float Character::heal(float value) {
 }
 
 void Character::fillHP() {
-    heal(maxHP_);
+    heal(maxHP_, false);
 }
 
 float Character::hurt(float value) {
@@ -26,6 +31,8 @@ float Character::hurt(float value) {
         currentHP_ = 0;
         die();
     }
+    else
+        playSoundEffect(HURT);
 
     healthBar_->fillPercentage = getHPPercentual();
 
@@ -38,13 +45,14 @@ void Character::render() {}
 Character::Character(ISceneNode * parent,
                      ISceneManager * manager,
                      ISoundEngine * soundEngine,
+                     vector3df offset,
                      const std::string name,
                      const char * modelPath,
                      int maxHP,
                      int level,
                      float moveSpeed)
     : AnimatedNode(), 
-      ISceneNode(parent, manager),
+      ISceneNode(parent, manager, 0, offset),
       SoundEmmitter(soundEngine) {
 
     cout<<"To entrando em char"<<endl;

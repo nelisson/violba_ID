@@ -16,12 +16,12 @@
 #define DEFAULT_MONSTER_MAX_DAMAGE 10
 #define DEFAULT_MONSTER_ATTACK_SPEED 2
 
-#define MONSTER_WALK 2,14
-#define MONSTER_RUN 16,26
-#define MONSTER_IDLE 75,88
+#define MONSTER_WALK 1,13
+#define MONSTER_RUN 15,25
+#define MONSTER_IDLE 74,87
 //#define MONSTER_IDLE2 90,110
 
-#define MONSTER_ATTACK 112,126
+#define MONSTER_ATTACK 111,125
 /*
 128-142	Attack 2 - Jump and overhead whack attack
 144-160	Attack 3 - 360 spin Back hander
@@ -29,7 +29,8 @@
 182-192	Attack 5 - Stab
 194-210	Block
 */
-#define MONSTER_DIE 212,227
+#define MONSTER_DIE 211,226
+#define MONSTER_DEAD 226,226
 /*230-251	Die 2 - Backwards
 
 253-272	Nod YES
@@ -40,13 +41,6 @@
 */
 
 using namespace irrklang;
-
-namespace MonsterSound {
-    enum Sound {
-        SWING,
-        DEAD,
-    };
-}
 
 class Monster : public Character {
 

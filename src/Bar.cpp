@@ -2,25 +2,27 @@
 #include <iostream>
 
 void Bar::render() {
-    IVideoDriver * driver = getSceneManager()->getVideoDriver();
-    ISceneCollisionManager * collision = getSceneManager()->getSceneCollisionManager();
+    if (fillPercentage > 0) {
+        IVideoDriver * driver = getSceneManager()->getVideoDriver();
+        ISceneCollisionManager * collision = getSceneManager()->getSceneCollisionManager();
 
-    position2di center = collision->getScreenCoordinatesFrom3DPosition(getAbsolutePosition());
-    position2di upperLeft = center - position2di(width/2, height/2);
-    dimension2di size(width, height);
+        position2di center = collision->getScreenCoordinatesFrom3DPosition(getAbsolutePosition());
+        position2di upperLeft = center - position2di(width/2, height/2);
+        dimension2di size(width, height);
 
-    rect<int> outterRectangle(upperLeft, size);
+        rect<int> outterRectangle(upperLeft, size);
 
-    upperLeft += position2di(horizontalOffset, verticalOffset);
-    size -= position2di(horizontalOffset, verticalOffset);
-    rect<int> innerRectangle(upperLeft, size);
+        upperLeft += position2di(horizontalOffset, verticalOffset);
+        size -= position2di(horizontalOffset, verticalOffset);
+        rect<int> innerRectangle(upperLeft, size);
 
-    size.Width *= fillPercentage / 100;
-    rect<int> fillRectangle(upperLeft, size);
+        size.Width *= fillPercentage / 100;
+        rect<int> fillRectangle(upperLeft, size);
 
-    driver->draw2DRectangleOutline(outterRectangle, borderColor);
-    driver->draw2DRectangle(emptyColor, innerRectangle);
-    driver->draw2DRectangle(fillRectangle, fillColor[0], fillColor[1], fillColor[0], fillColor[1]);
+        driver->draw2DRectangleOutline(outterRectangle, borderColor);
+        driver->draw2DRectangle(emptyColor, innerRectangle);
+        driver->draw2DRectangle(fillRectangle, fillColor[0], fillColor[1], fillColor[0], fillColor[1]);
+    }
 }
 
 void Bar::OnRegisterSceneNode() {

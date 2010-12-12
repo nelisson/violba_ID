@@ -13,6 +13,7 @@
 
 #define RESOLUTION core::dimension2d<u32>(1024, 683)
 #define PROGRAM_NAME "Violba_ID"
+#define CURSOR_IMAGE_PATH "./misc/cursor.bmp"
 
 using namespace irr;
 using namespace scene;
@@ -67,12 +68,19 @@ int main() {
     env->addButton(rect<s32 > (x0, y1, x0 + deslocX, y1 + deslocY), 0, GUI_ID_QUIT_BUTTON,
             L"Quit");   
 
+    IVideoDriver* driver = device->getVideoDriver();
+
+    video::ITexture* cursor = driver->getTexture(CURSOR_IMAGE_PATH);
+    driver->makeColorKeyTexture(cursor, SColor(255, 255, 255, 255));
+
+    device->getCursorControl()->setVisible(false);
+
     while (device->run()) {
         u32 now = device->getTimer()->getTime();
         game.setElapsedTime((f32) (now - then) / 1000.f);
         then = now;
 
-        device->getVideoDriver()->beginScene();
+        driver->beginScene();
         if(game.mainScreen){
             env->drawAll();
             game.playMusic(GameMusic::TOWN, true, true, 2);
@@ -83,7 +91,12 @@ int main() {
             game.doActions();
             game.getSceneManager()->drawAll();
         }
-        device->getVideoDriver()->endScene();
+
+        recti imageRect(0,0,cursor->getSize().Width, cursor->getSize().Height);
+        driver->draw2DImage(cursor, device->getCursorControl()->getPosition(),
+                            imageRect, 0, SColor(255, 255, 255, 255), true);
+
+        driver->endScene();
     }
 
     device->drop();

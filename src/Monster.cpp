@@ -5,26 +5,35 @@ using namespace State;
 void Monster::levelUp() {}
 
 bool Monster::walk(vector3df delta) {
-    moveDelta(delta * getMoveSpeed());
+    float moveHorizontal = delta.X;
+    float moveVertical = delta.Z;
+    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+    if (ang >= 180)
+        ang = 179;
 
-    float angle = 180/PI * acos(delta.normalize().dotProduct(vector3df(1.0, 0.0, 0.0)));
-    setRotation( vector3df(0.0, -angle, 0.0));
+    setRotation(vector3df(0, ang, 0));
+
+    moveDelta(delta * getMoveSpeed());
 }
 
 void Monster::die() {
     if (getState() != DYING) {
         setFrameLoop(MONSTER_DIE);
         setState(DYING);
-        playSoundEffect(MonsterSound::DEAD);
+        playSoundEffect(Sounds::DEAD);
     }
 }
 
 void Monster::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
-    if (getState() == DYING) {
-        setState(DEAD);
+    switch (getState()) {
+        case DYING :
+        case DEAD :
+            setState(DEAD);
+            break;
+
+        default :
+            setFrameLoop(MONSTER_IDLE);
     }
-    else
-        setFrameLoop(MONSTER_IDLE);
 }
 
 bool Monster::canAttack() {
@@ -56,7 +65,7 @@ Monster::Monster(ISceneNode * parent,
                  float minDamage,
                  float maxDamage)
     : Character(parent, manager,
-                soundEngine, name,
+                soundEngine, vector3df(0,0,0), name,
                 modelPath, maxHP,
                 level, moveSpeed),
       experienceGiven_(experienceGiven),
@@ -67,15 +76,14 @@ Monster::Monster(ISceneNode * parent,
     maxDamage_ = maxDamage;
     attackSpeed_ = attackSpeed;
 
-    vector<std::string> sounds;
-
-    sounds.push_back("./sounds/swing2.wav");
-    sounds.push_back("./sounds/falld1.wav");
-
-    addSoundEffects(sounds);
+    addSoundEffect("./sounds/potion.wav");
+    addSoundEffect("./sounds/monsterHit.wav");
+    addSoundEffect("./sounds/levelUp.wav");
+    addSoundEffect("./sounds/monsterSwing.wav");
+    addSoundEffect("./sounds/monsterDead.wav");
 
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
-    setAnimationSpeed(300);
+    setAnimationSpeed(30);
     setLoopMode(false);
     setAnimationEndCallback(this);
     setState(STOPPING);

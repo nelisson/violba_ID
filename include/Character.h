@@ -18,12 +18,38 @@ using namespace irrklang;
 namespace State {
     enum State{
         MOVING,
+        RUNNING,
         STOPPING,
         ATTACK_STARTING,
         ATTACK_ENDING,
         JUMPING,
+        DOUBLE_JUMPING,
+        BLOCKING,
+        CROUCHING,
         DYING,
         DEAD,
+    };
+}
+
+namespace Sounds {
+    enum Sounds {
+        POTION,
+        HURT,
+        LEVEL_UP,
+
+        SWING1,
+        DEAD,
+
+        SWING2,
+        TIME_TO_DIE,
+        WALK1,
+        KICK,
+        SPIN,
+        JUMP,
+        BLOCK,
+        ITEM_DROP = 0,
+        SELECTION = 1,
+        GOLD_DROP = 2,
     };
 }
 
@@ -54,7 +80,7 @@ class Character : public AnimatedNode,
         dimension2df getSize() const    { return size_; }
 
         void fillHP();
-        float heal(float value);
+        float heal(float value, bool playSound = true);
         float hurt(float value);
         float getHPPercentual() const { return 100 * currentHP_/(float)maxHP_; }
         bool isAlive() const          { return currentHP_ > 0; }
@@ -87,6 +113,7 @@ class Character : public AnimatedNode,
         Character(ISceneNode * parent,
                   ISceneManager * manager,
                   ISoundEngine * soundEngine,
+                  vector3df offset,
                   const std::string name,
                   const char * modelPath,
                   int maxHP,
