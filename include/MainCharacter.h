@@ -10,16 +10,26 @@
 #include <irrklang/irrKlang.h>
 #include "Weapon.h"
 
-#define WALK  0,13
-#define IDLE  205,250
-#define SPIN  45,59
-#define PUNCH 31,45
-#define KICK  73,83
-#define SLASH 58,68
-#define DEATH_BACKWARDS 165,172
-#define DEATH_FORWARDS  173,182
+#define ANIM_WALK  0,13
+#define ANIM_SLOW_WALK  14,29
+#define ANIM_PUNCH 31,43
+#define ANIM_SPIN  44,58
+#define ANIM_SLASH 59,67
+#define ANIM_BLOCK 68,71
+#define ANIM_UNBLOCK 71,68
+#define ANIM_KICK  72,82
+#define ANIM_BLOCKFREEZE 71,71
+#define ANIM_PICK_ITEM 83,92
+#define ANIM_CROUCH 83,86
+#define ANIM_GET_UP 86,92
+#define ANIM_CROUCHFREEZE 86,86
 //#define JUMP 94,102 // with height
-#define JUMP 102,111  // without height
+#define ANIM_JUMP 102,110  // without height
+#define ANIM_BACKFLIP 145,157
+#define ANIM_FRONTFLIP 157,145
+#define ANIM_DEATH_BACKWARDS 165,172
+#define ANIM_DEATH_FORWARDS  173,181
+#define ANIM_IDLE  205,249
 
 #define DEFAULT_CHARACTER_NAME "Violba"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
@@ -40,8 +50,8 @@ using namespace irr;
 using namespace irr::scene;
 using namespace irrklang;
 
-
-class MainCharacter : public Character, public IAnimationEndCallBack {
+class MainCharacter : public Character {
+    
     private:
         Inventory inventory_;
         Weapon * equippedWeapon_;
@@ -52,7 +62,7 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         f32 speed_;
         float jumpHeight_;
 
-        long experienceCurve(int level);
+        long experienceCurve(int level) const { return 980 + 200 * level*level; };
 
     protected:
 
@@ -62,27 +72,34 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         static void kick(void *userData);
         static void stop(void *userData, vector2df direction);
         static void jump(void *userData);
+        static void doubleJump(void *userData);
+        static void crouch(void *userData);
+        static void getUp(void *userData);
+        static void block(void *userData, float empty);
+        static void unblock(void *userData, float empty);
         static void drinkPotion(void *userData);
 
         virtual void levelUp();
 
-        float getJumpHeight() {return jumpHeight_; }
+        float getJumpHeight() const { return jumpHeight_; }
         void earnExperience(int experience);
 
         void updateAttributes();
-        bool tryHitCheck(ISoundEngine * sound);
+        bool tryHitCheck();
 
-        Weapon * getEquippedWeapon() { return equippedWeapon_; }
-        virtual float getDamage();
+        Weapon * getEquippedWeapon() const { return equippedWeapon_; }
+        virtual float getDamage() const;
         virtual bool walk(vector3df desl);
-        virtual void die(ISoundEngine * sound);
+        virtual void die();
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual void refresh();
 
         MainCharacter(ISceneNode* parent,
                       ISceneManager* manager,
-                      char * name = DEFAULT_CHARACTER_NAME,
-                      char * meshPath = DEFAULT_CHARACTER_MESH,
+                      ISoundEngine * soundEngine,
+                      vector3df offset = vector3df(),
+                      const char * name = DEFAULT_CHARACTER_NAME,
+                      const char * meshPath = DEFAULT_CHARACTER_MESH,
                       int level = STARTING_LEVEL,
                       int currentExperience = STARTING_EXPERIENCE,
                       int maxHP = STARTING_HP,

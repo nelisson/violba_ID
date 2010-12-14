@@ -14,7 +14,7 @@ Item ItemGenerator::dropItem(int chance) {
     }
     else {
         cout << "vo larga excecao" << endl;
-        throw new exception;
+        throw 1;
     }
 }
 

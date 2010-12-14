@@ -13,16 +13,16 @@ using namespace irr::scene;
 
 class Armor : public Item {
     private:
-        int amount;
-        weightClass type;
+        int amount_;
+        weightClass type_;
 
     protected:
 
     public:
-        Armor(ISceneNode * parent,
-              ISceneManager * manager,
-              std::string name,
-              char * modelPath = DEFAULT_ARMOR_MESH_PATH);
+        Armor(ISceneNode* parent,
+              ISceneManager* manager,
+              const std::string name,
+              const char* modelPath = DEFAULT_ARMOR_MESH_PATH);
 
         virtual ~Armor();
 };

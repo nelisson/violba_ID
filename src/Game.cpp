@@ -1,17 +1,15 @@
 #include "Game.h"
 
-char * Game::music_[3] = {"./music/01-intro.mp3",
-                         "./music/02-town.mp3",
-                         "./music/03-dungeon.mp3"} ;
-
-char * Game::sounds_[3] = {"./sounds/dead.wav",
-                           "./sounds/swing.wav",
-                           "./sounds/swing2.wav"} ;
+using namespace GameMusic;
+using namespace State;
 
 void Game::addMonster(Monster * monster) {
     monsters_.push_back(monster);
 
-    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), monster, core::vector3df(5, 5, 5));
+    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(),
+                                                                              monster, core::vector3df(5, 5, 5),
+                                                                              core::vector3df(0,-10.0f, 0),
+                                                                              core::vector3df(0, 0, 0), 0);
     monster->addAnimator(anim);
 
     anim->drop();
@@ -23,12 +21,17 @@ vector<Monster*>::iterator Game::removeMonster(vector<Monster*>::iterator monste
 
 void Game::setCallbacks() {
     controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
-    controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
+    controller_->setCallBack(A, RELEASED, mainCharacter_->jump, mainCharacter_);
     controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
     controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
-    controller_->setCallBack(R, PRESSED, mainCharacter_->drinkPotion, mainCharacter_);
+    controller_->setCallBack(R, RELEASED, mainCharacter_->drinkPotion, mainCharacter_);
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
+    controller_->setCallBack(RT, PRESSED, mainCharacter_->block, mainCharacter_);
+    controller_->setCallBack(RT, RELEASED, mainCharacter_->unblock, mainCharacter_);
+    controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
+    controller_->setCallBack(L, RELEASED, mainCharacter_->getUp, mainCharacter_);
+
 }
 
 void Game::moveCharacter(void* userData, vector2df desl) {
@@ -50,13 +53,26 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 }
 
 void Game::doActions() {
-    cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
-    cameras_[0]->setTarget(mainCharacter_->getPosition());
+    refreshSounds();
+    
+    if (mainCharacter_->getState() != JUMPING) {
+        cameras_[0]->setTarget(mainCharacter_->getPosition());
+        cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
+    }
+    else {
+        cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
+                                         getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                         mainCharacter_->getPosition().Z));
+
+        cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
+                                           getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                           mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
+    }
 
     if(mainCharacter_->isAlive()) {
         mainCharacter_->refresh();
 
-        if (mainCharacter_->tryHitCheck(sound_)) {
+        if (mainCharacter_->tryHitCheck()) {
             cout << "Hits: " << attackMonsters();
         }
 
@@ -77,36 +93,34 @@ void Game::doActions() {
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
 
-    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage(), sound_) << endl;
+    cout << "Damage given: " << (*monster)->hurt(mainCharacter_->getDamage()) << endl;
 
     if (!(*monster)->isAlive()) {
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
-        (*monster)->die(sound_);
+        (*monster)->die();
         (*monster)->setState(DEAD);
-        /*
+        
         try {
             cout<<"Vo dropa."<<endl;
-            Item droppedItem = itemGenerator_.dropItem(100);
+            Item droppedItem = itemGenerator_.dropItem(60);
+            playSoundEffect(Sounds::GOLD_DROP);
             cout<<"DropedItem OK."<<endl;
+
             Item * item = new Item(droppedItem,
                                    level_, getSceneManager());
             
             cout<<"ItemCopy OK."<<endl;
 
-            position2di position = (*monster)->getGridPosition();
-            cout<<"PositionGridGet OK."<<endl;
-
             grid_.fillCell((*monster)->getGridPosition(), item);
             cout<<"CellFill OK."<<endl;
         }
-        catch (exception e) {
-            cout << "catch" << endl;
+        catch (int i) {
+            cout << "catch" << i <<  endl;
         }
-        */
-        /*
-        delete (*monster);
+
+        //delete (*monster);
         return --(removeMonster(monster));
-        */
+        
         return monster;
     }
 
@@ -114,7 +128,10 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 }
 
 void Game::attackMainCharacter(float damage) {
-    cout << "Main Character damage: " << mainCharacter_->hurt(damage, sound_) <<endl;
+    if (mainCharacter_->getState() != BLOCKING)
+        cout << "Main Character damage: " << mainCharacter_->hurt(damage) <<endl;
+    else
+        mainCharacter_->playSoundEffect(Sounds::BLOCK);
 }
 
 int Game::attackMonsters() {
@@ -135,7 +152,7 @@ int Game::attackMonsters() {
 
             characterToMonster = monsterPosition - characterPosition;
             if (rightAttackLimit.crossProduct(characterToMonster).Y > 0 &&
-                    leftAttackLimit.crossProduct(characterToMonster).Y < 0) {
+                leftAttackLimit.crossProduct(characterToMonster).Y < 0) {
 
                 monster = attackMonster(monster);
                 hitCounter++;
@@ -148,11 +165,16 @@ int Game::attackMonsters() {
 
 void Game::tryGeneratingMonster(int chancePercent) {
     if (randomBetween(0, 100) <= chancePercent) {
-        Monster * newMonster = new Monster(level_, sceneManager_, "Dwarf da morte", "./models/dwarf.x");
+        Monster * newMonster = new Monster(level_, sceneManager_, getSoundEngine());
         addMonster(newMonster);
-        newMonster->setPosition(vector3df(randomBetween(-150, 150),
-                0.0,
-                randomBetween(-150, 150)));
+
+        dimension2df size = getLevel()->getSize();
+        
+        float randomX = randomBetween(0, size.Width);
+        float randomZ = randomBetween(0, size.Height);
+        float Y = getLevel()->getTerrain()->getHeight(randomX, randomZ);
+
+        newMonster->setPosition(vector3df(randomX, Y, randomZ));
     }
 }
 
@@ -163,26 +185,36 @@ void Game::runMonstersAI() {
             vector3df ninjaPosition = mainCharacter_->getAbsolutePosition();
             vector3df monsterPosition = (*monster)->getPosition();
 
-            if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
+            if (ninjaPosition.getDistanceFrom(monsterPosition) > 10 * (*monster)->getRange()) {
+
+                vector3df vetor = ninjaPosition - monsterPosition;
+                vetor.normalize();
+                (*monster)->walk(vetor * getElapsedTime() * 4);
+                if ((*monster)->getState() == STOPPING) {
+                    (*monster)->setFrameLoop(MONSTER_RUN);
+                    (*monster)->setLoopMode(true);
+                    (*monster)->setState(RUNNING);
+                }
+            }
+
+            else if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
 
                 vector3df vetor = ninjaPosition - monsterPosition;
                 vetor.normalize();
                 (*monster)->walk(vetor * getElapsedTime());
-                if ((*monster)->getState() == STOPPING) {
+                if ((*monster)->getState() == RUNNING) {
                     (*monster)->setFrameLoop(MONSTER_WALK);
+                    (*monster)->setLoopMode(true);
                     (*monster)->setState(MOVING);
                 }
             }
             else{
                 if((*monster)->canAttack()) {
                     attackMainCharacter((*monster)->getDamage());
-                    playSound(SWING2_SOUND);
+                    (*monster)->playSoundEffect(Sounds::SWING1);
                     (*monster)->attack();
-
-                    if ((*monster)->getState() != ATTACK_STARTING) {
-                        (*monster)->setFrameLoop(MONSTER_ATTACK);
-                        (*monster)->setState(ATTACK_STARTING);
-                    }
+                    (*monster)->setFrameLoop(MONSTER_ATTACK);
+                    (*monster)->setLoopMode(false);
                 }
             }
         }
@@ -227,19 +259,8 @@ vector<Item> Game::createItems() {
     return result;
 }
 
-void Game::playMusic(Music music) {
-    if (musicPlaying_ != music) {
-        sound_->stopAllSounds();
-        sound_->play2D(music_[music], true);
-        musicPlaying_ = music;
-    }
-}
-
-void Game::playSound(Sound sound) {
-    sound_->play2D(sounds_[sound]);
-}
-
-Game::Game(ISceneManager * sceneManager) {
+Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
+    : SoundEmmitter(soundEngine) {
     mainScreen = true;
     sceneManager_ = sceneManager;
     level_ = new Level(sceneManager);
@@ -247,19 +268,33 @@ Game::Game(ISceneManager * sceneManager) {
     controller_ = new XBOX360Controller();
     controller_->mainScreen = &mainScreen;
     cout << "Controller created." << endl;
-    mainCharacter_ = new MainCharacter(level_, sceneManager);
-    cout << "Char created." << endl;
-    //grid_ = Grid(level_);
 
-    sound_ = createIrrKlangDevice();
-    playMusic(TOWN);
+    dimension2df terrainSize = getLevel()->getSize();
+    float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width/2, terrainSize.Height/2);
+
+    vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
+
+    mainCharacter_ = new MainCharacter(level_, sceneManager, soundEngine, levelCenter);
+    cout << "Char created." << endl;
+    grid_ = Grid(level_);
+
+    addMusic("./music/01-intro.mp3");
+    addMusic("./music/02-town.mp3");
+    addMusic("./music/03-dungeon.mp3");
+
+    addSoundEffect("./sounds/itemDrop.wav");
+    addSoundEffect("./sounds/selectItem.wav");
+    addSoundEffect("./sounds/goldDrop.wav");
+    cout << "Loaded game Music" <<endl;
+
+   // playMusic(TOWN);
 
     cout << "Grid Created." << endl;
 
     time(&lastSpawn_);
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
-    cameras_.push_back(getSceneManager()->addCameraSceneNode(0, DEFAULT_CAMERA_POSITION));
+    cameras_.push_back(getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION));
     cameras_[0]->setTarget(mainCharacter_->getPosition());
 
     setCallbacks();
@@ -267,7 +302,12 @@ Game::Game(ISceneManager * sceneManager) {
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(), mainCharacter_, vector3df(5, 5, 5));
+    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(),
+                                                                              mainCharacter_,
+                                                                              vector3df(5, 5, 5),
+                                                                              core::vector3df(0,-2.0f, 0),
+                                                                              core::vector3df(0, 0, 0), 0);
+
     mainCharacter_->addAnimator(anim);
 
     anim->drop();

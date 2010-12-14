@@ -1,28 +1,39 @@
 #include "Monster.h"
 
+using namespace State;
+
 void Monster::levelUp() {}
 
 bool Monster::walk(vector3df delta) {
-    moveDelta(delta * getMoveSpeed());
+    float moveHorizontal = delta.X;
+    float moveVertical = delta.Z;
+    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+    if (ang >= 180)
+        ang = 179;
 
-    float angle = 180/PI * acos(delta.normalize().dotProduct(vector3df(1.0, 0.0, 0.0)));
-    setRotation( vector3df(0.0, -angle, 0.0));
+    setRotation(vector3df(0, ang, 0));
+
+    moveDelta(delta * getMoveSpeed());
 }
 
-void Monster::die(ISoundEngine * sound) {
+void Monster::die() {
     if (getState() != DYING) {
         setFrameLoop(MONSTER_DIE);
         setState(DYING);
-        sound->play2D("./sounds/falld1.wav");
+        playSoundEffect(Sounds::DEAD);
     }
 }
 
 void Monster::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
-    if (getState() == DYING) {
-        setState(DEAD);
+    switch (getState()) {
+        case DYING :
+        case DEAD :
+            setState(DEAD);
+            break;
+
+        default :
+            setFrameLoop(MONSTER_IDLE);
     }
-    else
-        setFrameLoop(MONSTER_IDLE);
 }
 
 bool Monster::canAttack() {
@@ -42,8 +53,9 @@ void Monster::attack() {
 
 Monster::Monster(ISceneNode * parent,
                  ISceneManager * manager,
-                 std::string name,
-                 char * modelPath,
+                 ISoundEngine * soundEngine,
+                 const std::string name,
+                 const char * modelPath,
                  int experienceGiven,
                  int maxHP,
                  int range,
@@ -52,7 +64,10 @@ Monster::Monster(ISceneNode * parent,
                  float attackSpeed,
                  float minDamage,
                  float maxDamage)
-    : Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
+    : Character(parent, manager,
+                soundEngine, vector3df(0,0,0), name,
+                modelPath, maxHP,
+                level, moveSpeed),
       experienceGiven_(experienceGiven),
       range_(range) {
 
@@ -60,6 +75,13 @@ Monster::Monster(ISceneNode * parent,
     minDamage_ = minDamage;
     maxDamage_ = maxDamage;
     attackSpeed_ = attackSpeed;
+
+    addSoundEffect("./sounds/potion.wav");
+    addSoundEffect("./sounds/monsterHit.wav");
+    addSoundEffect("./sounds/levelUp.wav");
+    addSoundEffect("./sounds/monsterSwing.wav");
+    addSoundEffect("./sounds/monsterDead.wav");
+
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
     setAnimationSpeed(20);
     setLoopMode(false);

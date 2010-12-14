@@ -13,11 +13,11 @@ class Cell {
     public:
         void occupy(bool occupation) { occupied_ = occupation; }
 
-        bool isOccupied() { return occupied_; }
-        bool hasItem() { return item_; }
-        bool isEmpty() { return !isOccupied() && !hasItem(); }
+        bool isOccupied() const { return occupied_; }
+        bool hasItem() const { return item_; }
+        bool isEmpty() const { return !isOccupied() && !hasItem(); }
 
-        Item* getItem() { return item_; }
+        Item* getItem() const { return item_; }
         void putItem(Item* item) { item_ = item; }
         void removeItem() { item_ = NULL; }
 

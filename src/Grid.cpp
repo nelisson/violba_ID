@@ -6,14 +6,11 @@ void Grid::fillCell(position2di position, bool occupied) {
 }
 
 void Grid::fillCell(position2di position, Item* item) {
-    
-
-    position+=position2di(sizeX_, sizeY_);
-
     cout<<"X: "<<position.X<<" Y: "<< position.Y<<endl;
 
     cout<<"XSize: "<<sizeX_<<" YSize: "<< sizeY_<<endl;
 
+    item->setPosition( vector3df(position.X, 10, position.Y) ) ;
     grid_[position.X][position.Y].putItem(item);
 }
 

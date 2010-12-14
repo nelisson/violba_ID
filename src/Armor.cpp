@@ -1,9 +1,9 @@
 #include "Armor.h"
 
-Armor::Armor(ISceneNode * parent,
-             ISceneManager * manager,
-             std::string name,
-             char * modelPath)
+Armor::Armor(ISceneNode* parent,
+             ISceneManager* manager,
+             const std::string name,
+             const char* modelPath)
     : Item(parent,
            manager,
            name,

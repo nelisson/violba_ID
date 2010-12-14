@@ -27,17 +27,17 @@ class Weapon : public Item {
     protected:
 
     public:
-        int getMinDamage() { return minDamage_; }
-        int getMaxDamage() { return maxDamage_; }
-        float getDamage() { return randomBetween(minDamage_, maxDamage_); }
-        float getRange() { return range_; }
-        float getAttackSpeed() { return attackSpeed_; }
-        float getAttackAngle() { return attackAngle_; }
+        int getMinDamage() const { return minDamage_; }
+        int getMaxDamage() const { return maxDamage_; }
+        float getDamage() const { return randomBetween(minDamage_, maxDamage_); }
+        float getRange() const { return range_; }
+        float getAttackSpeed() const { return attackSpeed_; }
+        float getAttackAngle() const { return attackAngle_; }
 
         Weapon(ISceneNode * parent,
                ISceneManager * manager,
                std::string name,
-               char * modelPath = DEFAULT_WEAPON_MESH_PATH,
+               const char * modelPath = DEFAULT_WEAPON_MESH_PATH,
                float minDamage = DEFAULT_WEAPON_MINDAMAGE,
                float maxDamage = DEFAULT_WEAPON_MAXDAMAGE,
                int range = DEFAULT_WEAPON_RANGE,

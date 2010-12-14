@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Utils.h"
 #include "ctime"
+#include <irrklang/irrKlang.h>
 
 #define DEFAULT_MONSTER_NAME "DwarfDaMorte"
 #define DEFAULT_MONSTER_MESH "./models/dwarf1.b3d"
@@ -15,12 +16,12 @@
 #define DEFAULT_MONSTER_MAX_DAMAGE 10
 #define DEFAULT_MONSTER_ATTACK_SPEED 2
 
-#define MONSTER_WALK 2,14
-#define MONSTER_RUN 16,26
-#define MONSTER_IDLE 75,88
+#define MONSTER_WALK 1,13
+#define MONSTER_RUN 15,25
+#define MONSTER_IDLE 74,87
 //#define MONSTER_IDLE2 90,110
 
-#define MONSTER_ATTACK 112,126
+#define MONSTER_ATTACK 111,125
 /*
 128-142	Attack 2 - Jump and overhead whack attack
 144-160	Attack 3 - 360 spin Back hander
@@ -28,7 +29,8 @@
 182-192	Attack 5 - Stab
 194-210	Block
 */
-#define MONSTER_DIE 212,227
+#define MONSTER_DIE 211,226
+#define MONSTER_DEAD 226,226
 /*230-251	Die 2 - Backwards
 
 253-272	Nod YES
@@ -38,7 +40,10 @@
 327-360	Idle 2
 */
 
-class Monster : public Character, public IAnimationEndCallBack {
+using namespace irrklang;
+
+class Monster : public Character {
+
     private:
         int experienceGiven_;
         int range_;
@@ -51,14 +56,14 @@ class Monster : public Character, public IAnimationEndCallBack {
     protected:
 
     public:
-        int getExperienceGiven()  { return experienceGiven_; }
-        int getRange() { return range_; };
+        int getExperienceGiven() const { return experienceGiven_; }
+        int getRange() const { return range_; };
 
         virtual void levelUp();
-        virtual float getDamage() { return randomBetween(minDamage_, maxDamage_); };
+        virtual float getDamage() const { return randomBetween(minDamage_, maxDamage_); };
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual bool walk(vector3df delta);
-        virtual void die(ISoundEngine * sound);
+        virtual void die();
         virtual void refresh() {}
 
         bool canAttack();
@@ -66,8 +71,9 @@ class Monster : public Character, public IAnimationEndCallBack {
 
         Monster(ISceneNode * parent,
                 ISceneManager * manager,
-                std::string name = DEFAULT_MONSTER_NAME,
-                char * modelPath = DEFAULT_MONSTER_MESH,
+                ISoundEngine * soundEngine,
+                const std::string name = DEFAULT_MONSTER_NAME,
+                const char * modelPath = DEFAULT_MONSTER_MESH,
                 int experienceGiven = DEFAULT_EXPERIENCE_GIVEN,
                 int maxHP = DEFAULT_MONSTER_HP,
                 int range = DEFAULT_MONSTER_RANGE,
