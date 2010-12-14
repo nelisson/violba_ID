@@ -66,15 +66,17 @@ Monster::Monster(ISceneNode * parent,
                  float maxDamage)
     : Character(parent, manager,
                 soundEngine, vector3df(0,0,0), name,
-                modelPath, maxHP,
-                level, moveSpeed),
+                modelPath, level),
       experienceGiven_(experienceGiven),
-      range_(range) {
+      range_(range), corpseDelay_(DEFAULT_MONSTER_CORPSE_DELAY) {
 
     time(&attackStart_);
     minDamage_ = minDamage;
     maxDamage_ = maxDamage;
     attackSpeed_ = attackSpeed;
+
+    setMaxHP(DEFAULT_MONSTER_HP);
+    setMoveSpeed(DEFAULT_CHARACTER_MOVESPEED);
 
     addSoundEffect("./sounds/potion.wav");
     addSoundEffect("./sounds/monsterHit.wav");

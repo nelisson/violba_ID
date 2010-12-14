@@ -63,7 +63,7 @@ class MainCharacter : public Character {
         f32 speed_;
         float jumpHeight_;
 
-        long experienceCurve(int level) const { return 980 + 200 * level*level; };
+        long experienceCurve(int level) const { return (level == 0)? 0 : 980 + 200 * level*level; };
 
     protected:
 
@@ -101,14 +101,7 @@ class MainCharacter : public Character {
                       vector3df offset = vector3df(),
                       const char * name = DEFAULT_CHARACTER_NAME,
                       const char * meshPath = DEFAULT_CHARACTER_MESH,
-                      int level = STARTING_LEVEL,
-                      int currentExperience = STARTING_EXPERIENCE,
-                      int maxHP = STARTING_HP,
-                      int vitality = STARTING_VITALITY,
-                      int strength = STARTING_STRENGTH,
-                      int agility = STARTING_AGILITY,
-                      float moveSpeed = DEFAULT_CHARACTER_MOVESPEED,
-                      float jumpHeight = STARTING_JUMP_HEIGHT);
+                      int level = STARTING_LEVEL);
 
         ~MainCharacter();
 };

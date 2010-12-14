@@ -116,9 +116,7 @@ class Character : public AnimatedNode,
                   vector3df offset,
                   const std::string name,
                   const char * modelPath,
-                  int maxHP,
-                  int level = DEFAULT_CHARACTER_LEVEL,
-                  float moveSpeed = DEFAULT_CHARACTER_MOVESPEED);
+                  int level = DEFAULT_CHARACTER_LEVEL);
 
         virtual ~Character();
 };

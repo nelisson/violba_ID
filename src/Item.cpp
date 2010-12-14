@@ -24,7 +24,8 @@ Item* Item::copy(ISceneNode * parent, ISceneManager * manager) {
     cout<<"vo geta node"<<endl;
     item->getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 
-    item->setScale(core::vector3df(50,50,50));
+    item->setScale(core::vector3df(5,5,5));
+    item->setRotation(core::vector3df(0,45,0));
     return item;
 }
 

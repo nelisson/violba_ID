@@ -40,6 +40,8 @@
 327-360	Idle 2
 */
 
+#define DEFAULT_MONSTER_CORPSE_DELAY 2
+
 using namespace irrklang;
 
 class Monster : public Character {
@@ -51,11 +53,16 @@ class Monster : public Character {
         float minDamage_;
         float maxDamage_;
 
+        float corpseDelay_;
+
         time_t attackStart_;
 
     protected:
 
     public:
+        float getCorspeDelay() const { return corpseDelay_; }
+        void decreaseCorspeDelay(float amount) { corpseDelay_ -= amount; }
+
         int getExperienceGiven() const { return experienceGiven_; }
         int getRange() const { return range_; };
 

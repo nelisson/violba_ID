@@ -11,12 +11,14 @@
 #include <ctime>
 #include "SoundEmmitter.h"
 
+
 #define DEFAULT_CAMERA_X 0
 #define DEFAULT_CAMERA_Y 35
 #define DEFAULT_CAMERA_Z -40
 #define DEFAULT_CAMERA_POSITION vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)
 #define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 1
 
+#define GRAVITY 10
 #define DEFAULT_MONSTER_GENERATION_CHANCE 100
 #define DEFAULT_ITEM_GENERATION_CHANCE 60
 
@@ -33,15 +35,17 @@ namespace GameMusic {
     };
 }
 
-// Define some values that we'll use to identify individual GUI controls.
 enum
 {
 	GUI_ID_QUIT_BUTTON = 101,
 	GUI_ID_PLAY_DEMO_BUTTON,
 };
 
-class Game : public SoundEmmitter, public IEventReceiver {
+class Game : public SoundEmmitter, 
+             public IEventReceiver {
+
     private:
+        bool needsRestart_;
         bool mainScreen_;
         bool isRunning_;
         bool isStatusVisible_;
@@ -56,10 +60,11 @@ class Game : public SoundEmmitter, public IEventReceiver {
         vector<ICameraSceneNode*> cameras_;
         vector<ILightSceneNode*> lights_;
 
-        void createMainScreen();
-        void createStatusSreen();
         f32 elapsedTime_;
         time_t lastSpawn_;
+
+        void createMainScreen();
+        void createStatusSreen();
 
     protected:
 
@@ -81,9 +86,7 @@ class Game : public SoundEmmitter, public IEventReceiver {
         void addMonster(Monster * monster);
         vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
 
-        vector<Weapon> loadWeapons();
-        vector<Armor> loadArmors();
-        vector<Item> createItems();
+        void clearCorpses();
 
         void setCallbacks();
         bool doActions();
@@ -99,7 +102,9 @@ class Game : public SoundEmmitter, public IEventReceiver {
         static void moveCharacter(void*, core::vector2df desl);
 
         virtual bool OnEvent(const SEvent& event);
-        
+
+        void load();
+
         Game(ISceneManager * sceneManager, ISoundEngine * soundEngine);
         virtual ~Game();
 };

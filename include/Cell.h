@@ -21,6 +21,8 @@ class Cell {
         void putItem(Item* item) { item_ = item; }
         void removeItem() { item_ = NULL; }
 
+        void clear() { removeItem(); occupy(false); }
+
         Cell();
         virtual ~Cell();
 };

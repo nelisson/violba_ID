@@ -10,7 +10,7 @@ void Grid::fillCell(position2di position, Item* item) {
 
     cout<<"XSize: "<<sizeX_<<" YSize: "<< sizeY_<<endl;
 
-    item->setPosition( vector3df(position.X, 10, position.Y) ) ;
+    //item->setPosition( vector3df(position.X, 10, position.Y) ) ;
     grid_[position.X][position.Y].putItem(item);
 }
 
@@ -26,6 +26,12 @@ void Grid::mapTerrain(Level* level) {
     grid_ = new Cell*[sizeY_];
     for (int i = 0; i < sizeY_; i++)
         grid_[i] = new Cell[sizeX_];
+}
+
+void Grid::clear() {
+    for (int i = 0; i < sizeX_; i++)
+        for (int j = 0; j < sizeY_; j++)
+            grid_[i][j].clear();
 }
 
 Grid::Grid(Level* level) {

@@ -171,7 +171,6 @@ void MainCharacter::levelUp() {
     if (getLevel() < DEFAULT_CHARACTER_MAX_LEVEL) {
         addLevels(1);
         playSoundEffect(Sounds::LEVEL_UP);
-        experienceToLevelUp_ += experienceCurve(getLevel());
 
         cout << "Level Up! (current level " << getLevel() << ")" << endl;
 
@@ -188,15 +187,17 @@ void MainCharacter::die() {
 }
 
 void MainCharacter::updateAttributes() {
-    strength_++;
-    vitality_++;
-    agility_++;
+    strength_ = STARTING_STRENGTH + getLevel() * 1;
+    vitality_ = STARTING_VITALITY + getLevel() * 1;
+    agility_  = STARTING_AGILITY  + getLevel() * 1;
 
-    increaseMaxHP(5);
+    setMaxHP(STARTING_HP + getLevel() * 5);
     //increaseMoveSpeed(3);
+    speed_      = DEFAULT_CHARACTER_MOVESPEED;
+    jumpHeight_ = STARTING_JUMP_HEIGHT;
 
-    //speed_ += 3;
-    //jumpHeight_ += 5;
+    currentExperience_ = experienceCurve(getLevel() - 1);
+    experienceToLevelUp_ = experienceCurve(getLevel());
     fillHP();
 }
 
@@ -207,6 +208,9 @@ float MainCharacter::getDamage() const {
 void MainCharacter::earnExperience(int experience) {
     if (getLevel() < DEFAULT_CHARACTER_MAX_LEVEL) {
         currentExperience_ += experience;
+
+        cout<<"XP to level: " << experienceToLevelUp_;
+        cout<<"XP gained: " << experience;
 
         if (currentExperience_ >= experienceToLevelUp_) {
             int overflowExperience = currentExperience_ - experienceToLevelUp_;
@@ -302,19 +306,11 @@ MainCharacter::MainCharacter(ISceneNode * parent,
         vector3df offset,
         const char * name,
         const char * modelPath,
-        int level, int currentExperience,
-        int maxHP, int vitality,
-        int strength, int agility,
-        float moveSpeed, float jumpHeight)
+        int level)
     : Character(parent, manager,
                 soundEngine,
                 offset, name,
-                modelPath, maxHP,
-                level, moveSpeed),
-    vitality_(vitality),
-    strength_(strength),
-    agility_(agility),
-    jumpHeight_(jumpHeight) {
+                modelPath, level) {
 
     cout<<"CreatingSword"<<endl;
     equippedWeapon_ = new Weapon(NULL, NULL, "Espada");
@@ -333,7 +329,6 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     addSoundEffect("./sounds/jump.wav");
     addSoundEffect("./sounds/block.wav");
 
-
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
     cout << "CHAR KASLDSALD Height: " << center.Y * 2;
 
@@ -343,8 +338,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     setAnimationSpeed(20);
     setLoopMode(false);
 
-    experienceToLevelUp_ += experienceCurve(level);
-    earnExperience(currentExperience);
+    updateAttributes();
 
     setState(STOPPING);
 }

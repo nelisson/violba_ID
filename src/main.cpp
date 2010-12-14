@@ -31,7 +31,6 @@ int main() {
     ISoundEngine* sound = createIrrKlangDevice();
 
     Game game(device->getSceneManager(), sound);
-
     cout << "Created game" << endl;
 
     device->setEventReceiver(&game);
@@ -60,8 +59,10 @@ int main() {
         then = now;
 
         driver->beginScene();
-        if(!game.doActions())
+        if(!game.doActions()) {
             device->closeDevice();
+            sleep(1);
+        }
 
         recti imageRect(0,0,cursor->getOriginalSize().Width, cursor->getOriginalSize().Height);
         driver->draw2DImage(cursor, device->getCursorControl()->getPosition(),

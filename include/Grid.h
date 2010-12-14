@@ -27,6 +27,8 @@ class Grid {
         void fillCell(position2di position, Item* item);
         void fillCell(position2di position, bool occupied, Item* item);
 
+        void clear();
+
         Grid() {};
         Grid(Level* level);
         virtual ~Grid();
