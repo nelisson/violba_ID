@@ -6,7 +6,7 @@
 #include "ctime"
 
 #define DEFAULT_MONSTER_NAME "DwarfDaMorte"
-#define DEFAULT_MONSTER_MESH "./models/dwarf.x"
+#define DEFAULT_MONSTER_MESH "./models/dwarf1.b3d"
 #define DEFAULT_EXPERIENCE_GIVEN 1000
 #define DEFAULT_MONSTER_HP 50
 #define DEFAULT_MONSTER_RANGE 10

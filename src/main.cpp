@@ -87,8 +87,6 @@ int main() {
 
 
     while (device->run()) {
-        
-
         u32 now = device->getTimer()->getTime();
         game.setElapsedTime((f32) (now - then) / 1000.f);
         then = now;
@@ -96,8 +94,10 @@ int main() {
         device->getVideoDriver()->beginScene(true, true, 0);
         if(game.mainScreen){
             env->drawAll();
+            game.playMusic(TOWN);
         }
         else{
+            game.playMusic(DUNGEON);
             game.doActions();
             game.getSceneManager()->drawAll();
         }

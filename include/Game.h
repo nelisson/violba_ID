@@ -15,7 +15,7 @@
 #define DEFAULT_CAMERA_Y 35
 #define DEFAULT_CAMERA_Z -40
 #define DEFAULT_CAMERA_POSITION vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)
-#define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 10
+#define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 4
 
 #define DEFAULT_MONSTER_GENERATION_CHANCE 100
 #define DEFAULT_ITEM_GENERATION_CHANCE 60
@@ -44,6 +44,7 @@ class Game {
         Grid grid_;
         static char * music_[3];
         static char * sounds_[3];
+        Music musicPlaying_;
 
         ISoundEngine * sound_;
 

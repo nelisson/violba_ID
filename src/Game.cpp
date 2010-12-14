@@ -26,6 +26,7 @@ void Game::setCallbacks() {
     controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
     controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
     controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
+    controller_->setCallBack(R, PRESSED, mainCharacter_->drinkPotion, mainCharacter_);
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
 }
@@ -52,21 +53,26 @@ void Game::doActions() {
     cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
     cameras_[0]->setTarget(mainCharacter_->getPosition());
 
-    if(mainCharacter_->isAlive())
+    if(mainCharacter_->isAlive()) {
         mainCharacter_->refresh();
 
-    if (mainCharacter_->tryHitCheck(sound_)) {
-        cout << "Hits: " << attackMonsters();
-    }
+        if (mainCharacter_->tryHitCheck(sound_)) {
+            cout << "Hits: " << attackMonsters();
+        }
 
-    time_t currentTime;
-    time(&currentTime);
-    if (difftime(currentTime, lastSpawn_) >= DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS) {
-        tryGeneratingMonster(DEFAULT_MONSTER_GENERATION_CHANCE);
-        lastSpawn_ = currentTime;
-    }
+        time_t currentTime;
+        time(&currentTime);
+        if (difftime(currentTime, lastSpawn_) >= DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS) {
+            tryGeneratingMonster(DEFAULT_MONSTER_GENERATION_CHANCE);
+            lastSpawn_ = currentTime;
+        }
 
-    runMonstersAI();
+        runMonstersAI();
+    }
+    else if (mainCharacter_->getState() == DEAD) {
+        sleep(1);
+        mainScreen = true;
+    }
 }
 
 vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monster) {
@@ -76,6 +82,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
     if (!(*monster)->isAlive()) {
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         (*monster)->die(sound_);
+        (*monster)->setState(DEAD);
         /*
         try {
             cout<<"Vo dropa."<<endl;
@@ -169,6 +176,7 @@ void Game::runMonstersAI() {
             else{
                 if((*monster)->canAttack()) {
                     attackMainCharacter((*monster)->getDamage());
+                    playSound(SWING2_SOUND);
                     (*monster)->attack();
 
                     if ((*monster)->getState() != ATTACK_STARTING) {
@@ -179,8 +187,10 @@ void Game::runMonstersAI() {
             }
         }
         else
-            if ((*monster)->getState() == DEAD)
-                monsters_.erase(monster);
+            if ((*monster)->getState() == DEAD || (*monster)->getState() == DYING  ) {
+                delete (*monster);
+                removeMonster(monster);
+            }
     }
 }
 
@@ -218,7 +228,11 @@ vector<Item> Game::createItems() {
 }
 
 void Game::playMusic(Music music) {
-    sound_->play2D(music_[music], true);
+    if (musicPlaying_ != music) {
+        sound_->stopAllSounds();
+        sound_->play2D(music_[music], true);
+        musicPlaying_ = music;
+    }
 }
 
 void Game::playSound(Sound sound) {
@@ -235,7 +249,7 @@ Game::Game(ISceneManager * sceneManager) {
     cout << "Controller created." << endl;
     mainCharacter_ = new MainCharacter(level_, sceneManager);
     cout << "Char created." << endl;
-    grid_ = Grid(level_);
+    //grid_ = Grid(level_);
 
     sound_ = createIrrKlangDevice();
     playMusic(TOWN);

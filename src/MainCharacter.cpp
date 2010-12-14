@@ -1,5 +1,11 @@
 #include "MainCharacter.h"
 
+void MainCharacter::drinkPotion(void *userData) {
+    MainCharacter * thisptr = (MainCharacter*) userData;
+
+    thisptr->heal(DEFAULT_POTION_HEAL);
+}
+
 bool MainCharacter::walk(vector3df desl) {
 
     if (getState() == STOPPING || getState() == MOVING || getState() == JUMPING) {
@@ -23,7 +29,7 @@ bool MainCharacter::walk(vector3df desl) {
 
 void MainCharacter::slash(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(SLASH);
         thisptr->setAnimationSpeed(thisptr->getEquippedWeapon()->getAttackSpeed());
         thisptr->setState(ATTACK_STARTING);
@@ -32,7 +38,7 @@ void MainCharacter::slash(void * userData) {
 
 void MainCharacter::kick(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(KICK);
         thisptr->setState(ATTACK_STARTING);
     }
@@ -40,7 +46,7 @@ void MainCharacter::kick(void * userData) {
 
 void MainCharacter::spin(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(SPIN);
         thisptr->setAnimationSpeed(thisptr->getEquippedWeapon()->getAttackSpeed());
         thisptr->setState(ATTACK_STARTING);
@@ -55,7 +61,7 @@ void MainCharacter::stop(void *userData, vector2df direction) {
 
 void MainCharacter::jump(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(JUMP);
         thisptr->setState(JUMPING);
     }
@@ -73,7 +79,7 @@ void MainCharacter::levelUp() {
 }
 
 void MainCharacter::die(ISoundEngine * sound) {
-    if (getState() != DYING) {
+    if (getState() != DYING && getState() != DEAD) {
         sound->play2D("./sounds/dead.wav");
         setFrameLoop(DEATH_BACKWARDS);
         setState(DYING);
@@ -115,10 +121,12 @@ long MainCharacter::experienceCurve(int level) {
     return 980 + 200 * level*level;
 }
 
+
+
 void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
-    if (getState() == DYING) {
+    if (getState() == DYING || getState() == DEAD) {
         cout << "GameOver" << endl;
-        exit(1);
+        setState(DEAD);
     }
     else {
         node->setFrameLoop(IDLE);
@@ -197,11 +205,11 @@ MainCharacter::MainCharacter(ISceneNode * parent,
         int agility,
         float moveSpeed,
         float jumpHeight)
-: Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
-vitality_(vitality),
-strength_(strength),
-agility_(agility),
-jumpHeight_(jumpHeight) {
+    : Character(parent, manager, name, modelPath, maxHP, level, moveSpeed),
+    vitality_(vitality),
+    strength_(strength),
+    agility_(agility),
+    jumpHeight_(jumpHeight) {
 
     cout<<"CreatingSword"<<endl;
     equippedWeapon_ = new Weapon(NULL, NULL, "Espada");

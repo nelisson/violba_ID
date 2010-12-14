@@ -5,11 +5,12 @@
 #include <irrlicht/irrlicht.h>
 #include "Character.h"
 #include <iostream>
+#include <cstdlib>
 #include "Utils.h"
 #include <irrklang/irrKlang.h>
 #include "Weapon.h"
 
-#define WALK  0,14
+#define WALK  0,13
 #define IDLE  205,250
 #define SPIN  45,59
 #define PUNCH 31,45
@@ -24,6 +25,7 @@
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
 
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
+#define DEFAULT_POTION_HEAL 100
 
 #define STARTING_EXPERIENCE  0
 #define STARTING_HP          100
@@ -60,6 +62,7 @@ class MainCharacter : public Character, public IAnimationEndCallBack {
         static void kick(void *userData);
         static void stop(void *userData, vector2df direction);
         static void jump(void *userData);
+        static void drinkPotion(void *userData);
 
         virtual void levelUp();
 
