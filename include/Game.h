@@ -23,6 +23,7 @@
 using namespace std;
 using namespace irr::scene;
 using namespace irr::core;
+using namespace irr::gui;
 
 namespace GameMusic {
     enum Music {
@@ -32,8 +33,18 @@ namespace GameMusic {
     };
 }
 
-class Game : public SoundEmmitter {
+// Define some values that we'll use to identify individual GUI controls.
+enum
+{
+	GUI_ID_QUIT_BUTTON = 101,
+	GUI_ID_PLAY_DEMO_BUTTON,
+};
+
+class Game : public SoundEmmitter, public IEventReceiver {
     private:
+        bool mainScreen_;
+        bool isRunning_;
+        bool isStatusVisible_;
         ISceneManager * sceneManager_;
         ItemGenerator itemGenerator_;
         Grid grid_;
@@ -45,13 +56,17 @@ class Game : public SoundEmmitter {
         vector<ICameraSceneNode*> cameras_;
         vector<ILightSceneNode*> lights_;
 
+        void createMainScreen();
+        void createStatusSreen();
         f32 elapsedTime_;
         time_t lastSpawn_;
 
     protected:
 
     public:
-        bool mainScreen;
+
+        static void showStatus(void *userData);
+        static void hideStatus(void *userData);
         ISceneManager * getSceneManager() { return sceneManager_; }
 
         Level * getLevel() { return level_; }
@@ -71,7 +86,7 @@ class Game : public SoundEmmitter {
         vector<Item> createItems();
 
         void setCallbacks();
-        void doActions();
+        bool doActions();
         vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);
         void attackMainCharacter(float damage);
         int attackMonsters();
@@ -83,7 +98,8 @@ class Game : public SoundEmmitter {
 
         static void moveCharacter(void*, core::vector2df desl);
 
-
+        virtual bool OnEvent(const SEvent& event);
+        
         Game(ISceneManager * sceneManager, ISoundEngine * soundEngine);
         virtual ~Game();
 };

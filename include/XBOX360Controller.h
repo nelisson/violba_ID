@@ -23,8 +23,8 @@ enum Button {
     Y,
     L,
     R,
+    BACK,
     START,
-    SELECT,
     POV_UP,
     POV_DOWN,
     POV_LEFT,
@@ -46,13 +46,6 @@ enum Analog {
 enum Trigger {
     LT,// = SEvent::SJoystickEvent::AXIS_Z,
     RT,// = SEvent::SJoystickEvent::AXIS_Z,
-};
-
-// Define some values that we'll use to identify individual GUI controls.
-enum
-{
-	GUI_ID_QUIT_BUTTON = 101,
-	GUI_ID_PLAY_DEMO_BUTTON,
 };
 
 class XBOX360Controller : public IEventReceiver {
@@ -83,8 +76,6 @@ class XBOX360Controller : public IEventReceiver {
     protected:
 
     public:
-        IrrlichtDevice* device_;
-        bool * mainScreen;
         float getDeadZone();
         void setDeadZone(float deadZone);
 
