@@ -57,6 +57,7 @@ class Game : public SoundEmmitter, public IEventReceiver {
         vector<ILightSceneNode*> lights_;
 
         void createMainScreen();
+        void createStatusSreen();
         f32 elapsedTime_;
         time_t lastSpawn_;
 

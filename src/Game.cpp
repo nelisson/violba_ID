@@ -270,6 +270,7 @@ vector<Item> Game::createItems() {
 }
 
 void Game::createMainScreen() {
+    mainScreen_ = true;
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
     IGUISkin* skin = env->getSkin();
     IGUIFont* font = env->getFont("./models/diablo28.xml");
@@ -291,10 +292,11 @@ void Game::createMainScreen() {
 
 Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
 : SoundEmmitter(soundEngine) {
-    mainScreen_ = true;
-    isRunning_ = true;
+
     isStatusVisible_ = false;
+    isRunning_ = true;
     sceneManager_ = sceneManager;
+    createMainScreen();
     level_ = new Level(sceneManager);
     cout << "Level created." << endl;
     controller_ = new XBOX360Controller();
@@ -342,9 +344,7 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     mainCharacter_->addAnimator(anim);
 
-    anim->drop();
-
-    createMainScreen();
+    anim->drop(); 
 }
 
 Game::~Game() {
@@ -377,24 +377,33 @@ bool Game::OnEvent(const SEvent& event) {
         return false;
 }
 
+void Game::createStatusSreen() {
+    isStatusVisible_ = true;
+    IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
+    IGUISkin* skin = env->getSkin();
+    IGUIFont* font = env->getFont("./models/diablo28.xml");
+
+    int deslocX = 200, deslocY = 50;
+    int x0 = 70, y0 = 520, y1 = y0 + 60;
+
+    if (font)
+        skin->setFont(font);
+
+    skin->setFont(env->getBuiltInFont(), EGDF_TOOLTIP);
+    env->addImage(sceneManager_->getVideoDriver()->getTexture("./models/mainScreen.png"),
+            position2d<int>(0, 0));
+    env->addButton(rect<s32 > (x0, y0, x0 + deslocX, y0 + deslocY), 0, GUI_ID_PLAY_DEMO_BUTTON,
+            L"Play Demo");
+    env->addButton(rect<s32 > (x0, y1, x0 + deslocX, y1 + deslocY), 0, GUI_ID_QUIT_BUTTON,
+            L"Quit");
+}
+
 void Game::showStatus(void *userData) {
     Game * thisptr = (Game*) userData;
 
     if(!thisptr->mainScreen_){
-        thisptr->isStatusVisible_ = true;
-        IGUIEnvironment* env = thisptr->getSceneManager()->getGUIEnvironment();
-        IGUISkin* skin = env->getSkin();
-        IGUIFont* font = env->getFont("./models/diablo28.xml");
-        int deslocX = 200, deslocY = 50;
-        int x0 = 70, y0 = 520, y1 = y0 + 60;
-        if (font)
-            skin->setFont(font);
-        skin->setFont(env->getBuiltInFont(), EGDF_TOOLTIP);
-        env->addButton(rect<s32 > (x0, y0, x0 + deslocX, y0 + deslocY), 0, GUI_ID_PLAY_DEMO_BUTTON,
-                L"Play Demo");
-        env->addButton(rect<s32 > (x0, y1, x0 + deslocX, y1 + deslocY), 0, GUI_ID_QUIT_BUTTON,
-                L"Quit");
-        env->drawAll();
+        thisptr->createStatusSreen();
+        thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
     }
 }
 
