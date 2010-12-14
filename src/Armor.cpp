@@ -8,6 +8,8 @@ Armor::Armor(ISceneNode* parent,
            manager,
            name,
            modelPath) {
+
+    setScale(core::vector3df(50,50,50));
 }
 
 Armor::~Armor() {}

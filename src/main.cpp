@@ -92,7 +92,7 @@ int main() {
             game.getSceneManager()->drawAll();
         }
 
-        recti imageRect(0,0,cursor->getSize().Width, cursor->getSize().Height);
+        recti imageRect(0,0,cursor->getOriginalSize().Width, cursor->getOriginalSize().Height);
         driver->draw2DImage(cursor, device->getCursorControl()->getPosition(),
                             imageRect, 0, SColor(255, 255, 255, 255), true);
 

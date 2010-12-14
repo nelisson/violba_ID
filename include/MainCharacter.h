@@ -32,6 +32,7 @@
 #define ANIM_IDLE  205,249
 
 #define DEFAULT_CHARACTER_NAME "Violba"
+//#define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
 
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
@@ -75,8 +76,8 @@ class MainCharacter : public Character {
         static void doubleJump(void *userData);
         static void crouch(void *userData);
         static void getUp(void *userData);
-        static void block(void *userData, float empty);
-        static void unblock(void *userData, float empty);
+        static void block(void *userData);
+        static void unblock(void *userData);
         static void drinkPotion(void *userData);
 
         virtual void levelUp();

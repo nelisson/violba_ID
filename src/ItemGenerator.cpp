@@ -3,7 +3,7 @@
 #include "ItemGenerator.h"
 
 Item ItemGenerator::dropItem(int chance) {
-    if ( randomBetween(0,100) < chance ) {
+    if ( randomBetween(0,100) <= chance ) {
 
         cout << "VectorSize: " << items_.size() << endl;
 

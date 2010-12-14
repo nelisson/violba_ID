@@ -3,6 +3,7 @@
 #include <string>
 #include "AnimatedNode.h"
 #include <irrlicht/irrlicht.h>
+#include <iostream>
 
 #define DEFAULT_ITEM_LEVEL 1
 
@@ -15,7 +16,9 @@ class Item : public AnimatedNode, public ISceneNode {
         int level_;
         int ID_;
         string name_;
+        string modelPath_;
         static int id_;
+
         int generateID() { return id_++; }
 
     protected:
@@ -28,15 +31,15 @@ class Item : public AnimatedNode, public ISceneNode {
         virtual void render() {}
         virtual const core::aabbox3d<f32>& getBoundingBox() const { }
 
-        Item(const Item & oldItem,
-             ISceneNode * parent = NULL,
-             ISceneManager * manager = NULL);
-
         Item(ISceneNode * parent,
              ISceneManager * manager,
              const string name,
              const char * modelPath,
              int level = DEFAULT_ITEM_LEVEL);
+
+        Item* copy(ISceneNode * parent = NULL,
+                   ISceneManager * manager = NULL);
+        
         virtual ~Item();
 
 };

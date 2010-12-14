@@ -2,29 +2,30 @@
 
 int Item::id_ = 0;
 
-Item::Item(const Item & oldItem,
-           ISceneNode * parent,
-           ISceneManager * manager)
-    : level_(oldItem.level_),
-      ID_(oldItem.id_),
-      name_(oldItem.name_),
-      AnimatedNode(), ISceneNode(parent, manager) {}
-
 Item::Item(ISceneNode * parent,
            ISceneManager * manager,
            const string name,
            const char * modelPath,
            int level)
-    : AnimatedNode(), ISceneNode(parent, manager) {
-    
-    if(manager) {
-        IAnimatedMesh * mesh = getSceneManager()->getMesh(modelPath);
-        setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh, this));
-    }
+    : AnimatedNode(), ISceneNode(parent, manager),
+      modelPath_(modelPath), level_(level),
+      name_(name) {
 
-    level_ = level;
-    ID_    = generateID();
-    name_  = name;
+    ID_ = generateID();
+}
+
+Item* Item::copy(ISceneNode * parent, ISceneManager * manager) {
+    Item* item = new Item(parent, manager, getNamex(), modelPath_.data());
+
+    cout<<"vo loadamesh"<<endl;
+    IAnimatedMesh * mesh = item->getSceneManager()->getMesh(item->modelPath_.data());
+    cout<<"vo loada node"<<endl;
+    item->setNode(item->getSceneManager()->addAnimatedMeshSceneNode(mesh, item));
+    cout<<"vo geta node"<<endl;
+    item->getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
+
+    item->setScale(core::vector3df(50,50,50));
+    return item;
 }
 
 Item::~Item() {

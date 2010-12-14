@@ -27,10 +27,11 @@ void Game::setCallbacks() {
     controller_->setCallBack(R, RELEASED, mainCharacter_->drinkPotion, mainCharacter_);
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
-    controller_->setCallBack(RT, PRESSED, mainCharacter_->block, mainCharacter_);
-    controller_->setCallBack(RT, RELEASED, mainCharacter_->unblock, mainCharacter_);
     controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
     controller_->setCallBack(L, RELEASED, mainCharacter_->getUp, mainCharacter_);
+
+    controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
+    controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
 
 }
 
@@ -102,12 +103,11 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
         
         try {
             cout<<"Vo dropa."<<endl;
-            Item droppedItem = itemGenerator_.dropItem(60);
+            Item droppedItem = itemGenerator_.dropItem(DEFAULT_ITEM_GENERATION_CHANCE);
             playSoundEffect(Sounds::GOLD_DROP);
-            cout<<"DropedItem OK."<<endl;
+            cout<<"DropedItem OK." << endl;
 
-            Item * item = new Item(droppedItem,
-                                   level_, getSceneManager());
+            Item * item = droppedItem.copy(level_, getSceneManager());
             
             cout<<"ItemCopy OK."<<endl;
 
@@ -228,8 +228,9 @@ void Game::runMonstersAI() {
 
 vector<Weapon> Game::loadWeapons(){
     vector<Weapon> weapons;
-
+    cout<<"BLABLABLA111"<<endl;
     weapons.push_back(Weapon(NULL, NULL, "Arma 1"));
+    cout<<"BLABLABLA"<<endl;
     weapons.push_back(Weapon(NULL, NULL, "Arma 2"));
     weapons.push_back(Weapon(NULL, NULL, "Arma 3"));
     weapons.push_back(Weapon(NULL, NULL, "Arma 4"));
@@ -240,9 +241,9 @@ vector<Weapon> Game::loadWeapons(){
 vector<Armor> Game::loadArmors(){
     vector<Armor> armors;
     
-    armors.push_back(Armor(NULL, NULL, "Armor 1"));
-    armors.push_back(Armor(NULL, NULL, "Armor 2"));
-    armors.push_back(Armor(NULL, NULL, "Armor 3"));
+//    armors.push_back(Armor(NULL, NULL, "Armor 1"));
+//    armors.push_back(Armor(NULL, NULL, "Armor 2"));
+//    armors.push_back(Armor(NULL, NULL, "Armor 3"));
 
     return armors;
 }

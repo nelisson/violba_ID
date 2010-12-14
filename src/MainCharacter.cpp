@@ -151,7 +151,7 @@ void MainCharacter::getUp(void *userData) {
     }
 }
 
-void MainCharacter::block(void * userData, float empty) {
+void MainCharacter::block(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != BLOCKING && thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(ANIM_BLOCK);
@@ -159,7 +159,7 @@ void MainCharacter::block(void * userData, float empty) {
     }
 }
 
-void MainCharacter::unblock(void * userData, float empty) {
+void MainCharacter::unblock(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
         thisptr->setFrameLoop(ANIM_UNBLOCK);
