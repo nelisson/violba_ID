@@ -31,7 +31,8 @@ void Game::setCallbacks() {
     controller_->setCallBack(RT, RELEASED, mainCharacter_->unblock, mainCharacter_);
     controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
     controller_->setCallBack(L, RELEASED, mainCharacter_->getUp, mainCharacter_);
-
+    controller_->setCallBack(START, PRESSED, this->showStatus, this);
+    controller_->setCallBack(START, RELEASED, this->hideStatus, this);
 }
 
 void Game::moveCharacter(void* userData, vector2df desl) {
@@ -55,10 +56,15 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
+    if(isStatusVisible_)
+        return isRunning_;
+
     if (mainScreen_) {
         sceneManager_->getGUIEnvironment()->drawAll();
         playMusic(GameMusic::TOWN, true, true, 2);
+        return isRunning_;
     } else {
+        sceneManager_->getGUIEnvironment()->clear();
         playMusic(GameMusic::DUNGEON, true);
         getSceneManager()->drawAll();
     }
@@ -287,6 +293,7 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
 : SoundEmmitter(soundEngine) {
     mainScreen_ = true;
     isRunning_ = true;
+    isStatusVisible_ = false;
     sceneManager_ = sceneManager;
     level_ = new Level(sceneManager);
     cout << "Level created." << endl;
@@ -368,4 +375,34 @@ bool Game::OnEvent(const SEvent& event) {
         return true;
     } else
         return false;
+}
+
+void Game::showStatus(void *userData) {
+    Game * thisptr = (Game*) userData;
+
+    if(!thisptr->mainScreen_){
+        thisptr->isStatusVisible_ = true;
+        IGUIEnvironment* env = thisptr->getSceneManager()->getGUIEnvironment();
+        IGUISkin* skin = env->getSkin();
+        IGUIFont* font = env->getFont("./models/diablo28.xml");
+        int deslocX = 200, deslocY = 50;
+        int x0 = 70, y0 = 520, y1 = y0 + 60;
+        if (font)
+            skin->setFont(font);
+        skin->setFont(env->getBuiltInFont(), EGDF_TOOLTIP);
+        env->addButton(rect<s32 > (x0, y0, x0 + deslocX, y0 + deslocY), 0, GUI_ID_PLAY_DEMO_BUTTON,
+                L"Play Demo");
+        env->addButton(rect<s32 > (x0, y1, x0 + deslocX, y1 + deslocY), 0, GUI_ID_QUIT_BUTTON,
+                L"Quit");
+        env->drawAll();
+    }
+}
+
+void Game::hideStatus(void *userData) {
+    Game * thisptr = (Game*) userData;
+
+    if(!thisptr->mainScreen_){
+        thisptr->isStatusVisible_ = false;
+        thisptr->getSceneManager()->getGUIEnvironment()->clear();
+    }
 }

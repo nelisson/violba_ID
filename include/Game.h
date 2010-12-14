@@ -44,6 +44,7 @@ class Game : public SoundEmmitter, public IEventReceiver {
     private:
         bool mainScreen_;
         bool isRunning_;
+        bool isStatusVisible_;
         ISceneManager * sceneManager_;
         ItemGenerator itemGenerator_;
         Grid grid_;
@@ -62,7 +63,9 @@ class Game : public SoundEmmitter, public IEventReceiver {
     protected:
 
     public:
-        
+
+        static void showStatus(void *userData);
+        static void hideStatus(void *userData);
         ISceneManager * getSceneManager() { return sceneManager_; }
 
         Level * getLevel() { return level_; }
