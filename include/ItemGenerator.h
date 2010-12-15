@@ -15,8 +15,12 @@ class ItemGenerator {
 
     public:
         void loadItem(Item item) { items_.push_back(item); }
-        void loadItems(vector<Item> items) { items_.insert(items_.end(), items.begin(), items.end()); cout <<"Items count: " << items_.size() <<endl; }
+        void loadItems(vector<Item> items) { items_.insert(items_.end(), items.begin(), items.end()); }
         Item dropItem(int chance);
+
+        void createItems();
+        void loadWeapons();
+        void loadArmors();
 
         ItemGenerator();
         virtual ~ItemGenerator();

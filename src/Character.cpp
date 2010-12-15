@@ -48,9 +48,7 @@ Character::Character(ISceneNode * parent,
                      vector3df offset,
                      const std::string name,
                      const char * modelPath,
-                     int maxHP,
-                     int level,
-                     float moveSpeed)
+                     int level)
     : AnimatedNode(), 
       ISceneNode(parent, manager, 0, offset),
       SoundEmmitter(soundEngine) {
@@ -61,8 +59,8 @@ Character::Character(ISceneNode * parent,
     //size_  = dimension2df(getPosition().X + center.X, getPosition().Z + center.Z);
     name_  = name;
     level_ = level;
-    maxHP_ = maxHP;
-    moveSpeed_ = moveSpeed;
+    maxHP_ = 1;
+    moveSpeed_ = DEFAULT_CHARACTER_MOVESPEED;
     healthBar_ = new Bar(this, manager);
 
     fillHP();

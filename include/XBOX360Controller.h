@@ -8,7 +8,7 @@
 #define BUTTON_COUNT 14
 #define ANALOG_COUNT  5
 #define TRIGGER_COUNT 2
-#define STATE_COUNT   2
+#define STATE_COUNT   3
 
 #define DEFAULT_DEADZONE 6000.f
 
@@ -36,6 +36,7 @@ enum Button {
 enum ButtonState {
     PRESSED,
     RELEASED,
+    HOLD,
 };
 
 enum Analog {
@@ -72,6 +73,8 @@ class XBOX360Controller : public IEventReceiver {
         static bool triggerWasReleased[TRIGGER_COUNT];
         void (*onTrigger[STATE_COUNT][TRIGGER_COUNT])(void * classPointer, float value);
         void * onTriggerPointers[STATE_COUNT][TRIGGER_COUNT];
+
+        static bool buttonHeld[BUTTON_COUNT];
 
     protected:
 

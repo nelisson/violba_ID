@@ -13,7 +13,8 @@ Level::Level(ISceneManager * manager)
 
     IVideoDriver * driver = getSceneManager()->getVideoDriver();
 
-    terrain_ = getSceneManager()->addTerrainSceneNode("./models/heightmap.bmp",
+    //"./models/heightmap.bmp"
+    terrain_ = getSceneManager()->addTerrainSceneNode("./models/heightmapwow.bmp",
                                                       getSceneManager()->getRootSceneNode(),					// parent node
                                                       -1,					// node id
                                                       core::vector3df(0.f, 0.f, 0.f),		// position

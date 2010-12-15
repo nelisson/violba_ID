@@ -1,5 +1,6 @@
 #include "XBOX360Controller.h"
 
+bool XBOX360Controller::buttonHeld[BUTTON_COUNT] = {false};
 bool XBOX360Controller::buttonWasReleased[BUTTON_COUNT] = {false};
 bool XBOX360Controller::analogWasReleased[ANALOG_COUNT] = {false};
 bool XBOX360Controller::triggerWasReleased[TRIGGER_COUNT] = {false};
@@ -43,13 +44,21 @@ void XBOX360Controller::listenButtons() {
     for (int button = 0; button < BUTTON_COUNT; button++)
         if (GetJoystickState().IsButtonPressed(button)) {
 
-            if (onButton[PRESSED][button] != NULL)
-                (*onButton[PRESSED][button])(onButtonPointers[PRESSED][button]);
-
+            if (buttonHeld[button]) {
+                if (onButton[HOLD][button] != NULL)
+                    (*onButton[HOLD][button])(onButtonPointers[HOLD][button]);
+            }
+            else {
+                buttonHeld[button] = true;
+                if (onButton[PRESSED][button] != NULL)
+                    (*onButton[PRESSED][button])(onButtonPointers[PRESSED][button]);
+            }
             buttonWasReleased[button] = true;
         }
         else
             if (buttonWasReleased[button]) {
+
+                buttonHeld[button] = false;
 
                 if (onButton[RELEASED][button] != NULL)
                     (*onButton[RELEASED][button])(onButtonPointers[RELEASED][button]);
