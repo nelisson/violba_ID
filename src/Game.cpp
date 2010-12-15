@@ -33,8 +33,8 @@ void Game::setCallbacks() {
     controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
 
-    controller_->setCallBack(R_ANALOG_BUTTON, PRESSED, this->showStatus, this);
-    controller_->setCallBack(R_ANALOG_BUTTON, RELEASED, this->hideStatus, this);
+    controller_->setCallBack(START, PRESSED, this->showStatus, this);
+    controller_->setCallBack(START, RELEASED, this->hideStatus, this);
 
 }
 
@@ -59,9 +59,10 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
-    if(isStatusVisible_)
+    if(isStatusVisible_){
+        sceneManager_->getGUIEnvironment()->drawAll();
         return true;
-
+    }
     if (mainScreen_) {
         sceneManager_->getGUIEnvironment()->drawAll();
 
@@ -268,7 +269,7 @@ void Game::runMonstersAI() {
 void Game::createMainScreen() {
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
     IGUISkin* skin = env->getSkin();
-    IGUIFont* font = env->getFont("./models/diablo28.xml");
+    IGUIFont* font = env->getFont("./misc/diablo28.xml");
 
     int deslocX = 200, deslocY = 50;
     int x0 = 70, y0 = 520, y1 = y0 + 60;
@@ -316,30 +317,23 @@ bool Game::OnEvent(const SEvent& event) {
 }
 
 void Game::createStatusSreen() {
-    isStatusVisible_ = true;
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
     IGUISkin* skin = env->getSkin();
-    IGUIFont* font = env->getFont("./models/diablo28.xml");
-
-    int deslocX = 200, deslocY = 50;
-    int x0 = 70, y0 = 520, y1 = y0 + 60;
+    IGUIFont* font = env->getFont("./misc/diablo48.xml");
 
     if (font)
         skin->setFont(font);
 
     skin->setFont(env->getBuiltInFont(), EGDF_TOOLTIP);
-    env->addImage(sceneManager_->getVideoDriver()->getTexture("./models/mainScreen.png"),
-            position2d<int>(0, 0));
-    env->addButton(rect<s32 > (x0, y0, x0 + deslocX, y0 + deslocY), 0, GUI_ID_PLAY_DEMO_BUTTON,
-            L"Play Demo");
-    env->addButton(rect<s32 > (x0, y1, x0 + deslocX, y1 + deslocY), 0, GUI_ID_QUIT_BUTTON,
-            L"Quit");
-}
+    env->addStaticText(toWchar_t(mainCharacter_),rect<s32> (0, 0, 1024, 683),true,false,NULL,-1,true);
+    
+ }
 
 void Game::showStatus(void *userData) {
     Game * thisptr = (Game*) userData;
 
     if(!thisptr->mainScreen_){
+        thisptr->isStatusVisible_ = true;
         thisptr->createStatusSreen();
         thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
     }
