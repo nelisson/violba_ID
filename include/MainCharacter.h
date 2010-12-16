@@ -24,7 +24,8 @@
 #define ANIM_GET_UP 86,92
 #define ANIM_CROUCHFREEZE 86,86
 //#define JUMP 94,102 // with height
-#define ANIM_JUMP 102,110  // without height
+#define ANIM_JUMP_START 102,106  // without height
+#define ANIM_JUMP_END 106,110  // without height
 #define ANIM_BACKFLIP 145,157
 #define ANIM_FRONTFLIP 157,145
 #define ANIM_DEATH_BACKWARDS 165,172
@@ -45,6 +46,7 @@
 #define STARTING_AGILITY     1
 #define STARTING_LEVEL       1
 #define STARTING_JUMP_HEIGHT 30
+#define JUMP_ACCELERATION 30
 
 using namespace std;
 using namespace irr;
@@ -102,7 +104,7 @@ class MainCharacter : public Character {
         virtual bool walk(vector3df desl);
         virtual void die();
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
-        virtual void refresh();
+        virtual void refresh(f32 elapsedTime);
 
         MainCharacter(ISceneNode* parent,
                       ISceneManager* manager,

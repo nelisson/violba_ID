@@ -4,7 +4,7 @@
 #include <vector>
 #include "Slot.h"
 
-#define DEFAULT_MAX_ITEMS 50
+#define DEFAULT_MAX_ITEMS 2
 
 class Inventory {
     private:

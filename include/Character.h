@@ -20,9 +20,13 @@ namespace State {
         MOVING,
         RUNNING,
         STOPPING,
+
         ATTACK_STARTING,
         ATTACK_ENDING,
-        JUMPING,
+
+        JUMP_STARTING,
+        JUMP_ENDING,
+
         DOUBLE_JUMPING,
         BLOCKING,
         CROUCHING,
@@ -48,9 +52,13 @@ namespace Sounds {
         SPIN,
         JUMP,
         BLOCK,
+        
+
         ITEM_DROP = 0,
         SELECTION = 1,
         GOLD_DROP = 2,
+        INV_FULL = 3,
+        
     };
 }
 
@@ -108,7 +116,7 @@ class Character : public AnimatedNode,
         virtual void levelUp() = 0;
         virtual bool walk(vector3df delta) = 0;
         virtual void die() = 0;
-        virtual void refresh() = 0;
+        virtual void refresh(f32 elapsedTime) = 0;
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node) = 0;
 
         virtual void render();
