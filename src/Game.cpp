@@ -456,6 +456,21 @@ void Game::createStatusSreen() {
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
     
+    Temp="Experience:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30,(screen.Height/6)*2.25 - tamanho.getHeight()/2);
+    position += position2di(0,30);
+    text = env->addStaticText(L"Experience:",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%d",mainCharacter_->getCurrentExperience());
+    position += position2di(tamanho.getWidth()/1.5,0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getCurrentExperience()),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
     //exp -> current nextLevel
     //jumpHeight
     //moveSpeed

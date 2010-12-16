@@ -87,6 +87,8 @@ class MainCharacter : public Character {
         int getVitality() {return vitality_;}
         int getStrength() {return strength_;}
         int getAgility() {return agility_;}
+        long getCurrentExperience(){return currentExperience_;}
+        long getExperienceToLevelUp(){return experienceToLevelUp_;}
 
         Inventory* getInventory() const { return inventory_; }
 
