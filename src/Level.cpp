@@ -32,6 +32,9 @@ Level::Level(ISceneManager * manager)
     terrain_->getMaterial(0).TextureLayer[0].AnisotropicFilter = 16;
     terrain_->scaleTexture(2);
 
+    
+
+
     cout << "Terrain X :" << terrain_->getTerrainCenter().X << " Z: " << terrain_->getTerrainCenter().Z << endl;
     cout << "Pos X :" << terrain_->getPosition().X << " Z: " << terrain_->getPosition().Z << endl;
 
@@ -40,6 +43,7 @@ Level::Level(ISceneManager * manager)
     selector_ = getSceneManager()->createTerrainTriangleSelector(getTerrain());
 
     setAutomaticCulling(irr::scene::EAC_OFF);
+
 }
 
 Level::~Level() {

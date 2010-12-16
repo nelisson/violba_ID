@@ -48,7 +48,6 @@ namespace GameFonts {
     };
 }
 
-
 enum
 {
 	GUI_ID_QUIT_BUTTON = 101,
@@ -86,10 +85,11 @@ class Game : public SoundEmmitter,
 
     public:
 
-        static void startGame(void *userData);
 
+        static void startGame(void *userData);
+        
         static void showStatus(void *userData);
-        static void hideStatus(void *userData);
+        
         ISceneManager * getSceneManager() { return sceneManager_; }
 
         Level * getLevel() { return level_; }

@@ -84,7 +84,7 @@ vector<StateCost>* Grid::getNeighbors(position2di position) const {
                 result->push_back(bla);
             }
 
-        cout<<"Neigh size: " << result->size() << endl;
+        //cout<<"Neigh size: " << result->size() << endl;
 
     return result;
 }

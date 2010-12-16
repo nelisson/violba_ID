@@ -27,6 +27,8 @@ const wchar_t* toWchar_T(int value, bool bar = false);
 
 const wchar_t* toWchar_T(float value, bool bar = false);
 
+const wchar_t* toWchar_T(vector3df position);
+
 recti getStringSize(const char* value, int font);
 
 recti getStringSize(char* value, int font);

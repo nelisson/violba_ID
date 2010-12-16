@@ -33,8 +33,8 @@
 #define ANIM_IDLE  205,249
 
 #define DEFAULT_CHARACTER_NAME "Violba"
-//#define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
+
 
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
 #define DEFAULT_POTION_HEAL 100
@@ -64,7 +64,7 @@ class MainCharacter : public Character {
         int vitality_, strength_, agility_;
         long currentExperience_;
         long experienceToLevelUp_;
-        f32 speed_;
+        
         float jumpHeight_;
         float timeToFall_;
 
@@ -92,6 +92,8 @@ class MainCharacter : public Character {
         int getVitality() {return vitality_;}
         int getStrength() {return strength_;}
         int getAgility() {return agility_;}
+        long getCurrentExperience(){return currentExperience_;}
+        long getExperienceToLevelUp(){return experienceToLevelUp_;}
 
         Inventory* getInventory() const { return inventory_; }
 

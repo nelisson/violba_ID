@@ -37,8 +37,7 @@ void Game::setCallbacks() {
     controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
 
-    controller_->setCallBack(START, PRESSED, this->showStatus, this);
-    controller_->setCallBack(START, RELEASED, this->hideStatus, this);
+    controller_->setCallBack(START, PRESSED, this->showStatus, this);    
 
 }
 
@@ -63,8 +62,11 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
-    if(isStatusVisible_){
-        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120),rect<s32> (0, 0,1024, 683));
+    if (isStatusVisible_) {
+        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32 > (0, 0, 1024, 683));
+
+        mainCharacter_->getInventory()->drawInventory();
+
         sceneManager_->getGUIEnvironment()->drawAll();
         return true;
     }
@@ -106,8 +108,10 @@ bool Game::doActions() {
                 vector<Cell*> items = grid_.getItemCells(mainCharacter_->getGridRectangle());
 
                 int counter = 0;
+
                 vector<Cell*>::iterator i;
                 for (i = items.begin(); i < items.end(); i++) {
+                    
                     try {
                         mainCharacter_->getInventory()->putItem((*i)->getItem());
                         (*i)->getItem()->setVisible(false);
@@ -117,13 +121,17 @@ bool Game::doActions() {
                     catch(int j) {
                         cout << "Inventory is full." <<endl;
                         playSoundEffect(Sounds::INV_FULL);
+
                     }
                 }
 
-                cout << "Got " << counter << " items."<<endl;
+                cout << "Got " << counter << " items." << endl;
+            }            catch (int i) {
             }
+
             catch(int) {}
             
+
             mainCharacter_->setState(CROUCHING);
         }
 
@@ -149,10 +157,10 @@ bool Game::doActions() {
 void Game::clearCorpses() {
     vector<Monster*>::iterator i;
     for (i = monsters_.begin(); i < monsters_.end(); i++)
-        if ( (*i)->getState() == DEAD) {
+        if ((*i)->getState() == DEAD) {
             (*i)->decreaseCorspeDelay(elapsedTime_);
 
-            if ( (*i)->getCorspeDelay() < 0) {
+            if ((*i)->getCorspeDelay() < 0) {
                 delete (*i);
                 i = monsters_.erase(i)--;
             }
@@ -170,26 +178,26 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 
         try {
 
-            cout<<"Vo dropa."<<endl;
+            cout << "Vo dropa." << endl;
             Item droppedItem = itemGenerator_.dropItem(DEFAULT_ITEM_GENERATION_CHANCE);
             playSoundEffect(Sounds::GOLD_DROP);
-            
-            cout<<"DropedItem OK." << endl;
+
+            cout << "DropedItem OK." << endl;
 
             Item * item = droppedItem.copy(level_, getSceneManager());
-            
-            cout<<"ItemCopy OK."<<endl;
+
+            cout << "ItemCopy OK." << endl;
 
             vector3df position = vector3df((*monster)->getGridPosition().X,
-                                            0,
-                                           (*monster)->getGridPosition().Y);
-            
+                    0,
+                    (*monster)->getGridPosition().Y);
+
             position.Y = getLevel()->getTerrain()->getHeight(position.X, position.Z);
             item->setPosition(position);
-//            item->setLoopMode(false);
+            //            item->setLoopMode(false);
             item->setFrameLoop(DROP_ANIMATION);
             item->setAnimationSpeed(20);
-            
+
 
             grid_.fillCell((*monster)->getGridPosition(), item);
             cout << "CellFill OK." << endl;
@@ -225,7 +233,7 @@ int Game::attackMonsters() {
     vector<Monster*>::iterator monster;
     for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
 
-        if ( (*monster)->isAlive() ) {
+        if ((*monster)->isAlive()) {
 
             monsterPosition = (*monster)->getAbsolutePosition();
             if (monsterPosition.getDistanceFrom(characterPosition) <= mainCharacter_->getEquippedWeapon()->getRange()) {
@@ -277,7 +285,6 @@ void Game::runMonstersAI() {
             vector3df monsterPosition = (*monster)->getPosition();
 
             if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
-
                 vector3df vetor = ninjaPosition - monsterPosition;
                 vetor.normalize();
                 (*monster)->walk(vetor * getElapsedTime());
@@ -318,7 +325,7 @@ void Game::createMainScreen() {
     env->addButton(rect<s32 > (x0, y1, x0 + deslocX, y1 + deslocY), 0, GUI_ID_QUIT_BUTTON,
             L"Quit");
 
-    cout<<"VO playa"<<endl;
+    cout << "VO playa" << endl;
     playMusic(GameMusic::TOWN, true, true, 2);
 }
 
@@ -353,133 +360,211 @@ void Game::createStatusSreen() {
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
     IGUIStaticText* text;
     const char* Temp;
-    char* num = (char*)malloc(15);
+    char* num = (char*) malloc(30);
     rect<s32> tamanho;
     position2di position;
     dimension2d<u32> screen = RESOLUTION_SCREEN;
 
-    Temp="Status";
+    Temp = "Status";
     tamanho = getStringSize(Temp, 48);
-    position = position2di((screen.Width - tamanho.getWidth())/2,0);
-    text = env->addStaticText(L"Status",tamanho);
+    position = position2di((screen.Width - tamanho.getWidth()) / 2, 0);
+    text = env->addStaticText(L"Status", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO48));
     text->setRelativePosition(position);
 
-    Temp="HP:";
+    Temp = "HP:";
     tamanho = getStringSize(Temp, 28);
-    position = position2di(30,screen.Height/6 - tamanho.getHeight()/2);
-    text = env->addStaticText(L"HP:",tamanho);
+    position = position2di(30, screen.Height / 6 - tamanho.getHeight() / 2);
+    text = env->addStaticText(L"HP:", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    sprintf(num,"%.0f/",mainCharacter_->getCurrentHP());
-    position += position2di(tamanho.getWidth(),0);
+    sprintf(num, "%.0f/", mainCharacter_->getCurrentHP());
+    position += position2di(tamanho.getWidth(), 0);
     tamanho = getStringSize(num, 28);
-    text = env->addStaticText(toWchar_T(mainCharacter_->getCurrentHP(),true),tamanho);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getCurrentHP(), true), tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    sprintf(num,"%.0f",mainCharacter_->getMaxHP());
-    position += position2di(tamanho.getWidth()*(float)3/4,0);
+    sprintf(num, "%.0f", mainCharacter_->getMaxHP());
+    position += position2di(tamanho.getWidth()*(float) 3 / 4, 0);
     tamanho = getStringSize(num, 28);
-    text = env->addStaticText(toWchar_T(mainCharacter_->getMaxHP()),tamanho);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getMaxHP()), tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    Temp="Level:";
+    Temp = "Level:";
     tamanho = getStringSize(Temp, 28);
-    position = position2di(30,(screen.Height/6)*1.25 - tamanho.getHeight()/2);
-    text = env->addStaticText(L"Level:",tamanho);
+    position = position2di(30, (screen.Height / 6)*1.25 - tamanho.getHeight() / 2);
+    text = env->addStaticText(L"Level:", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    sprintf(num,"%d",mainCharacter_->getLevel());
-    position += position2di(tamanho.getWidth()/1.5,0);
+    sprintf(num, "%d", mainCharacter_->getLevel());
+    position += position2di(tamanho.getWidth() / 1.5, 0);
     tamanho = getStringSize(num, 28);
-    text = env->addStaticText(toWchar_T(mainCharacter_->getLevel()),tamanho);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getLevel()), tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    Temp="Vitality:";
+    Temp = "Vitality:";
     tamanho = getStringSize(Temp, 28);
-    position = position2di(30,(screen.Height/6)*1.5 - tamanho.getHeight()/2);
-    position += position2di(0,30);
-    text = env->addStaticText(L"Vitality:",tamanho);
+    position = position2di(30, (screen.Height / 6)*1.5 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"Vitality:", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    sprintf(num,"%d",mainCharacter_->getVitality());
-    position += position2di(tamanho.getWidth()/1.5,0);
+    sprintf(num, "%d", mainCharacter_->getVitality());
+    position += position2di(tamanho.getWidth() / 1.5, 0);
     tamanho = getStringSize(num, 28);
-    text = env->addStaticText(toWchar_T(mainCharacter_->getVitality()),tamanho);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getVitality()), tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    Temp="Agility:";
+    Temp = "Agility:";
     tamanho = getStringSize(Temp, 28);
-    position = position2di(30,(screen.Height/6)*1.75 - tamanho.getHeight()/2);
-    position += position2di(0,30);
-    text = env->addStaticText(L"Agility:",tamanho);
+    position = position2di(30, (screen.Height / 6)*1.75 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"Agility:", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    sprintf(num,"%d",mainCharacter_->getAgility());
-    position += position2di(tamanho.getWidth()/1.5,0);
+    sprintf(num, "%d", mainCharacter_->getAgility());
+    position += position2di(tamanho.getWidth() / 1.5, 0);
     tamanho = getStringSize(num, 28);
-    text = env->addStaticText(toWchar_T(mainCharacter_->getAgility()),tamanho);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getAgility()), tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    Temp="Strength:";
+    Temp = "Strength:";
     tamanho = getStringSize(Temp, 28);
-    position = position2di(30,(screen.Height/6)*2 - tamanho.getHeight()/2);
-    position += position2di(0,30);
-    text = env->addStaticText(L"Strength:",tamanho);
+    position = position2di(30, (screen.Height / 6)*2 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"Strength:", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    sprintf(num,"%d",mainCharacter_->getStrength());
-    position += position2di(tamanho.getWidth()/1.5,0);
+    sprintf(num, "%d", mainCharacter_->getStrength());
+    position += position2di(tamanho.getWidth() / 1.5, 0);
     tamanho = getStringSize(num, 28);
-    text = env->addStaticText(toWchar_T(mainCharacter_->getStrength()),tamanho);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getStrength()), tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp = "Experience:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30, (screen.Height / 6)*2.25 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"Experience:", tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num, "%ld/", mainCharacter_->getCurrentExperience());
+    position += position2di(tamanho.getWidth() / 1.5, 0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getCurrentExperience(), true), tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num, "%ld", mainCharacter_->getExperienceToLevelUp());
+    position += position2di(tamanho.getWidth(), 0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getExperienceToLevelUp()), tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp = "jumpHeight:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30, (screen.Height / 6)*2.50 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"JumpHeight:", tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num, "%.0f", mainCharacter_->getJumpHeight());
+    position += position2di(tamanho.getWidth() / 1.5, 0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getJumpHeight()), tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp = "MoveSpeed:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30, (screen.Height / 6)*2.75 - tamanho.getHeight() / 3);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"MoveSpeed:", tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num, "%.0f", mainCharacter_->getMoveSpeed());
+    position += position2di(tamanho.getWidth() / 1.4, 0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getMoveSpeed()), tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp = "Position:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30, (screen.Height / 6)*3.1 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    text = env->addStaticText(L"Position:", tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    vector3df mainPosition = mainCharacter_->getPosition();
+
+    sprintf(num, "X=%.0f Y=%.0f Z=%.0f", mainPosition.X, mainPosition.Y, mainPosition.Z);
+    position = position2di(30, (screen.Height / 6)*3.35 - tamanho.getHeight() / 2);
+    position += position2di(0, 30);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getPosition()), tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp = "Inventory";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(650, 100);
+    text = env->addStaticText(L"Inventory", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
     
     //exp -> current nextLevel
     //jumpHeight
+    //(500, 150,1000, 659)
     //moveSpeed
     //AttackSpeed
     //Position
- }
+}
 
 void Game::showStatus(void *userData) {
     Game * thisptr = (Game*) userData;
 
-    if(!thisptr->mainScreen_){
-        thisptr->isStatusVisible_ = true;
-        thisptr->createStatusSreen();
-        thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
+    if (!thisptr->mainScreen_) {
+
+        if (!thisptr->isStatusVisible_) {
+            thisptr->isStatusVisible_ = true;
+            thisptr->createStatusSreen();
+            thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
+        }
+        else{
+            thisptr->isStatusVisible_ = false;
+            thisptr->getSceneManager()->getGUIEnvironment()->clear();
+        }
     }
 }
-
-void Game::hideStatus(void *userData) {
-    Game * thisptr = (Game*) userData;
-
-    if(!thisptr->mainScreen_) {
-        thisptr->isStatusVisible_ = false;
-        thisptr->getSceneManager()->getGUIEnvironment()->clear();
-    }
-}
-
 void Game::load() {
     dimension2df terrainSize = getLevel()->getSize();
+
     float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
                                                             terrainSize.Height / 2);
-
     vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
+
+
     mainCharacter_->setPosition(levelCenter);
     mainCharacter_->fillHP();
     mainCharacter_->setLevel(1);
+    mainCharacter_->updateAttributes();
     mainCharacter_->setState(STOPPING);
 
     grid_.clear();
@@ -508,12 +593,14 @@ void Game::startGame(void *userData) {
 }
 
 Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
+
     : SoundEmmitter(soundEngine),
       isStatusVisible_(false),
       isRunning_(true),
       mainScreen_(true),
       sceneManager_(sceneManager),
       pather_(&grid_) {
+
 
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
 
@@ -555,9 +642,11 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     lights_.push_back(getSceneManager()->addLightSceneNode());
     cameras_.push_back(getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION));
+
     
     ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(
             level_->getTriangleSelector(),
+
             mainCharacter_,
             vector3df(5, 5, 5),
             core::vector3df(0, GRAVITY, 0),

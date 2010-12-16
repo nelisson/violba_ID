@@ -4,6 +4,7 @@ Weapon::Weapon(ISceneNode * parent,
                ISceneManager * manager,
                std::string name,
                const char * modelPath,
+               const char * imagePath,
                float minDamage,
                float maxDamage,
                int range,
@@ -12,7 +13,8 @@ Weapon::Weapon(ISceneNode * parent,
     : Item(parent,
            manager,
            name,
-           modelPath) {
+           modelPath,
+           imagePath) {
 
     minDamage_ = minDamage;
     maxDamage_ = maxDamage;

@@ -3,11 +3,13 @@
 Armor::Armor(ISceneNode* parent,
              ISceneManager* manager,
              const std::string name,
-             const char* modelPath)
+             const char* modelPath,
+             const char* imagePath)
     : Item(parent,
            manager,
            name,
-           modelPath) {
+           modelPath,
+           imagePath) {
 
     setScale(core::vector3df(50,50,50));
 }
