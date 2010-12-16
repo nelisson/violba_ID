@@ -23,7 +23,7 @@ Level::Level(ISceneManager * manager)
                                                       video::SColor ( 255, 255, 255, 255 ),	// vertexColor
                                                       50,					// maxLOD
                                                       scene::ETPS_17,				// patchSize
-                                                      50);				// smoothFactor
+                                                      1);				// smoothFactor
 
     terrain_->setMaterialFlag(video::EMF_LIGHTING, false);
     terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
