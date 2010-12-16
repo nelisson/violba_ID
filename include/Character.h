@@ -26,6 +26,7 @@ namespace State {
         DOUBLE_JUMPING,
         BLOCKING,
         CROUCHING,
+        GETTING_ITEM,
         DYING,
         DEAD,
     };
@@ -75,6 +76,7 @@ class Character : public AnimatedNode,
         void setState(State::State state) { state_ = state; }
 
         position2di getGridPosition() const;
+        recti getGridRectangle() const;
 
         void setSize(dimension2df size) { size_ = size; }
         dimension2df getSize() const    { return size_; }

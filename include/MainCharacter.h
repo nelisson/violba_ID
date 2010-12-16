@@ -54,8 +54,8 @@ using namespace irrklang;
 class MainCharacter : public Character {
     
     private:
-        Inventory inventory_;
-        Weapon * equippedWeapon_;
+        Inventory* inventory_;
+        Weapon* equippedWeapon_;
 
         int vitality_, strength_, agility_;
         long currentExperience_;
@@ -81,6 +81,8 @@ class MainCharacter : public Character {
         static void drinkPotion(void *userData);
 
         virtual void levelUp();
+
+        Inventory* getInventory() const { return inventory_; }
 
         float getJumpHeight() const { return jumpHeight_; }
         void earnExperience(int experience);

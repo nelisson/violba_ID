@@ -27,6 +27,13 @@ class Grid {
         void fillCell(position2di position, Item* item);
         void fillCell(position2di position, bool occupied, Item* item);
 
+        bool hasItem(position2di position) { return grid_[position.X][position.Y].hasItem(); }
+        Item* getItem(position2di position) { return grid_[position.X][position.Y].getItem(); }
+        Item* getItem(recti block) const;
+        vector<Item*> getItems(recti block) const;
+
+        void clearItems(recti block);
+
         void clear();
 
         Grid() {};

@@ -6,6 +6,10 @@ position2di Character::getGridPosition() const {
     return position2di(getPosition().X, getPosition().Z);
 }
 
+recti Character::getGridRectangle() const {
+    return recti(getGridPosition(), getSize());
+}
+
 float Character::heal(float value,  bool playSound) {
     currentHP_ += value;
 
