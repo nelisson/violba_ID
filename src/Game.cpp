@@ -577,6 +577,8 @@ void Game::load() {
     float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
                                                             terrainSize.Height / 2);
     vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
+
+
     mainCharacter_->setPosition(levelCenter);
     mainCharacter_->fillHP();
     mainCharacter_->setLevel(1);

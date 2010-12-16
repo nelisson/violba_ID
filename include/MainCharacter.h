@@ -33,8 +33,8 @@
 #define ANIM_IDLE  205,249
 
 #define DEFAULT_CHARACTER_NAME "Violba"
-//#define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
+
 
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
 #define DEFAULT_POTION_HEAL 100
