@@ -60,7 +60,7 @@ class MainCharacter : public Character {
         int vitality_, strength_, agility_;
         long currentExperience_;
         long experienceToLevelUp_;
-        f32 speed_;
+        
         float jumpHeight_;
 
         long experienceCurve(int level) const { return (level == 0)? 0 : 980 + 200 * level*level; };

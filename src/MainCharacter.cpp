@@ -193,7 +193,7 @@ void MainCharacter::updateAttributes() {
 
     setMaxHP(STARTING_HP + getLevel() * 5);
     //increaseMoveSpeed(3);
-    speed_      = DEFAULT_CHARACTER_MOVESPEED;
+    
     jumpHeight_ = STARTING_JUMP_HEIGHT;
 
     currentExperience_ = experienceCurve(getLevel() - 1);
@@ -316,7 +316,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     cout<<"CreatingSword"<<endl;
     equippedWeapon_ = new Weapon(NULL, NULL, "Espada");
     cout<<"CreatedSword"<<endl;
-    inventory_ = new Inventory();
+    inventory_ = new Inventory(getSceneManager());
     printf("%p\n", inventory_);
 
     addSoundEffect("./sounds/heal.wav");

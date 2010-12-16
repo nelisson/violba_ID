@@ -12,6 +12,8 @@
 #define DEFAULT_WEAPON_ATTACKSPEED 30
 #define DEFAULT_WEAPON_ATTACKANGLE 60
 #define DEFAULT_WEAPON_MESH_PATH "./models/sword7anim.x"
+#define DEFAULT_WEAPON_IMAGE_PATH "./misc/sword.bmp"
+
 
 using namespace irr;
 using namespace irr::scene;
@@ -38,6 +40,7 @@ class Weapon : public Item {
                ISceneManager * manager,
                std::string name,
                const char * modelPath = DEFAULT_WEAPON_MESH_PATH,
+               const char * imagePath = DEFAULT_WEAPON_IMAGE_PATH,
                float minDamage = DEFAULT_WEAPON_MINDAMAGE,
                float maxDamage = DEFAULT_WEAPON_MAXDAMAGE,
                int range = DEFAULT_WEAPON_RANGE,

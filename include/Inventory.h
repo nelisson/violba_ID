@@ -3,17 +3,24 @@
 
 #include <vector>
 #include "Slot.h"
+#include <irrlicht/irrlicht.h>
 
-#define DEFAULT_MAX_ITEMS 50
+#define DEFAULT_MAX_ITEMS 25
+using namespace irr;
+using namespace gui;
+using namespace core;
 
 class Inventory {
     private:
         vector<Slot*> slots_;
         int maxItems_;
+        ISceneManager* sceneManager_;
 
     protected:
 
     public:
+
+        void drawInventory();
         void setMaxItems(int maxItems);
         void increaseSize(int size);
         Item * removeItem(int index);
@@ -22,7 +29,7 @@ class Inventory {
 
         Slot* findEmptySlot() const;
 
-        Inventory(int maxItems = DEFAULT_MAX_ITEMS);
+        Inventory(ISceneManager* sceneManager, int maxItems = DEFAULT_MAX_ITEMS);
         virtual ~Inventory();
 };
 

@@ -77,6 +77,17 @@ const wchar_t* toWchar_T(float value, bool bar){
     return buffer;
 }
 
+const wchar_t* toWchar_T(core::vector3df position){
+    wchar_t* buffer = (wchar_t*)malloc(sizeof(wchar_t)*30);
+    char* buffer1 = (char*)malloc(sizeof(char)*30);
+
+
+    sprintf(buffer1, "X=%.0f Y=%.0f Z=%.0f", position.X, position.Y, position.Z);
+
+    mbstowcs(buffer, buffer1, strlen(buffer1)+1);
+
+    return buffer;
+}
 
 recti getStringSize(const char* value, int font){
 

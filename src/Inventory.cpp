@@ -47,15 +47,32 @@ Item * Inventory::putItem(Item *, int) {
 
 }
 
-Inventory::Inventory(int maxItems)
-    : maxItems_(maxItems) {
+Inventory::Inventory(ISceneManager* sceneManager, int maxItems)
+    : sceneManager_(sceneManager), maxItems_(maxItems) {
 
     for (int i = 0; i < maxItems_; i++) {
         slots_.push_back(new Slot());
         printf("%p\n", slots_[i]);
     }
+
 }
 
 Inventory::~Inventory() {
     //dtor
+}
+
+void Inventory::drawInventory(){
+    gui::IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
+    sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 50, 50, 50), rect<s32 > (500, 150, 1000, 650));
+
+    for(int i=1;i<5;i++){
+        sceneManager_->getVideoDriver()->draw2DLine(position2di(500+(100*i),150),position2di(500+(100*i),650));
+        sceneManager_->getVideoDriver()->draw2DLine(position2di(500,150+(100*i)),position2di(1000,150+(100*i)));
+    }
+
+    vector<Slot*>::const_iterator i;
+    printf("Antes de desenhar imagens\n");
+    for(i = slots_.begin(); i< slots_.end();i++){
+        env->addImage((*i)->getItem()->getImage(), position2di(500,150));
+    }
 }

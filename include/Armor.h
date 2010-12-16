@@ -2,6 +2,7 @@
 #define ARMOR_H
 
 #define DEFAULT_ARMOR_MESH_PATH "./models/sword.x"
+#define DEFAULT_ARMOR_IMAGE_PATH "./misc/sword.bmp"
 
 #include <irrlicht/irrlicht.h>
 #include "Item.h"
@@ -22,7 +23,8 @@ class Armor : public Item {
         Armor(ISceneNode* parent,
               ISceneManager* manager,
               const std::string name,
-              const char* modelPath = DEFAULT_ARMOR_MESH_PATH);
+              const char* modelPath = DEFAULT_ARMOR_MESH_PATH,
+              const char* imagePath = DEFAULT_ARMOR_IMAGE_PATH);
 
         virtual ~Armor();
 };

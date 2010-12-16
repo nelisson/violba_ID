@@ -11,6 +11,8 @@
 using namespace std;
 using namespace irr;
 using namespace irr::scene;
+using namespace irr::video;
+
 
 class Item : public AnimatedNode, public ISceneNode {
     private:
@@ -18,7 +20,9 @@ class Item : public AnimatedNode, public ISceneNode {
         int ID_;
         std::string name_;
         std::string modelPath_;
+        std::string imagePath_;
         static int id_;
+        ITexture* image_;
 
         int generateID() { return id_++; }
 
@@ -28,6 +32,7 @@ class Item : public AnimatedNode, public ISceneNode {
         int getLevel() const { return level_; }
         int getID() const { return ID_; }
         const std::string getNamex() const {  return name_; }
+        ITexture* getImage() {return image_; }
 
         virtual void render() {}
         virtual const core::aabbox3d<f32>& getBoundingBox() const { }
@@ -36,7 +41,9 @@ class Item : public AnimatedNode, public ISceneNode {
              ISceneManager * manager,
              const std::string name,
              const char * modelPath,
-             int level = DEFAULT_ITEM_LEVEL);
+             const char* imagePath,
+             int level = DEFAULT_ITEM_LEVEL
+             );
 
         Item* copy(ISceneNode * parent = NULL,
                    ISceneManager * manager = NULL);
