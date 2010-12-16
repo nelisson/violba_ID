@@ -105,9 +105,7 @@ bool Game::doActions() {
         }
 
         if (mainCharacter_->getState() == GETTING_ITEM) {
-            printf("%p\n", mainCharacter_->getInventory());
-            Item a(NULL,NULL,"oi","./models/sword7anim.x");
-            mainCharacter_->getInventory()->putItem(&a);
+
             try {
                 vector<Item*> items = grid_.getItems(mainCharacter_->getGridRectangle());
                 vector<Item*> pickedItems;

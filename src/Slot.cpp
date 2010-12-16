@@ -12,7 +12,8 @@ Item * Slot::getItem() {
 }
 
 bool Slot::isEmpty() {
-    return item_ == NULL;
+    cout << "pau aqui?" << endl;
+    return (item_ == NULL);
 }
 
 Slot::Slot() {
