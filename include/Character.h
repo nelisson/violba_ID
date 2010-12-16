@@ -79,6 +79,8 @@ class Character : public AnimatedNode,
         void setSize(dimension2df size) { size_ = size; }
         dimension2df getSize() const    { return size_; }
 
+        float getCurrentHP() {return currentHP_; };
+        
         void fillHP();
         float heal(float value, bool playSound = true);
         float hurt(float value);

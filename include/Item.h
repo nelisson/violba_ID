@@ -15,8 +15,8 @@ class Item : public AnimatedNode, public ISceneNode {
     private:
         int level_;
         int ID_;
-        string name_;
-        string modelPath_;
+        std::string name_;
+        std::string modelPath_;
         static int id_;
 
         int generateID() { return id_++; }
@@ -26,14 +26,14 @@ class Item : public AnimatedNode, public ISceneNode {
     public:
         int getLevel() const { return level_; }
         int getID() const { return ID_; }
-        const string getNamex() const {  return name_; }
+        const std::string getNamex() const {  return name_; }
 
         virtual void render() {}
         virtual const core::aabbox3d<f32>& getBoundingBox() const { }
 
         Item(ISceneNode * parent,
              ISceneManager * manager,
-             const string name,
+             const std::string name,
              const char * modelPath,
              int level = DEFAULT_ITEM_LEVEL);
 

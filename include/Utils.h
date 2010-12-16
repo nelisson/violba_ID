@@ -5,7 +5,9 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <irrlicht/irrlicht.h>
 
+using namespace irr::core;
 
 int sinal (double num);
 
@@ -19,12 +21,14 @@ float timeDifference();
 
 float timeDifference(clock_t start, clock_t end);
 
-const wchar_t* toWchar_T(long value);
+const wchar_t* toWchar_T(long value,bool bar = false);
 
-const wchar_t* toWchar_T(int value);
+const wchar_t* toWchar_T(int value, bool bar = false);
 
-const wchar_t* toWchar_T(float value);
+const wchar_t* toWchar_T(float value, bool bar = false);
 
+recti getStringSize(const char* value, int font);
 
+recti getStringSize(char* value, int font);
 
 #endif // UTILS_H_INCLUDED

@@ -68,6 +68,7 @@ class MainCharacter : public Character {
     protected:
 
     public:
+
         static void slash(void *userData);
         static void spin(void *userData);
         static void kick(void *userData);
@@ -81,6 +82,12 @@ class MainCharacter : public Character {
         static void drinkPotion(void *userData);
 
         virtual void levelUp();
+
+        int getVitality() {return vitality_;}
+        int getStrength() {return strength_;}
+        int getAgility() {return agility_;}
+
+
 
         float getJumpHeight() const { return jumpHeight_; }
         void earnExperience(int experience);
