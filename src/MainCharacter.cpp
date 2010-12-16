@@ -236,6 +236,7 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
 
         case CROUCHING :
             setFrameLoop(ANIM_CROUCHFREEZE);
+            setState(GETTING_ITEM);
             break;
 
         default :
@@ -315,6 +316,8 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     cout<<"CreatingSword"<<endl;
     equippedWeapon_ = new Weapon(NULL, NULL, "Espada");
     cout<<"CreatedSword"<<endl;
+    inventory_ = new Inventory();
+    printf("%p\n", inventory_);
 
     addSoundEffect("./sounds/heal.wav");
     addSoundEffect("./sounds/charHit.wav");
@@ -331,6 +334,8 @@ MainCharacter::MainCharacter(ISceneNode * parent,
 
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
     cout << "CHAR KASLDSALD Height: " << center.Y * 2;
+
+    setSize(dimension2df(5,5));
 
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);

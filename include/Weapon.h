@@ -11,7 +11,7 @@
 #define DEFAULT_WEAPON_RANGE 10
 #define DEFAULT_WEAPON_ATTACKSPEED 30
 #define DEFAULT_WEAPON_ATTACKANGLE 60
-#define DEFAULT_WEAPON_MESH_PATH "./models/sword7.3ds"
+#define DEFAULT_WEAPON_MESH_PATH "./models/sword7anim.x"
 
 using namespace irr;
 using namespace irr::scene;

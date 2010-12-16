@@ -6,6 +6,7 @@
 #include <iostream>
 
 #define DEFAULT_ITEM_LEVEL 1
+#define DROP_ANIMATION 0,39
 
 using namespace std;
 using namespace irr;

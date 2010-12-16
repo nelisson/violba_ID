@@ -25,13 +25,16 @@ void Game::setCallbacks() {
     controller_->setCallBack(X, HOLD, mainCharacter_->slash, mainCharacter_);
     controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
     controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
+    controller_->setCallBack(B, HOLD, mainCharacter_->spin, mainCharacter_);
     controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
+    controller_->setCallBack(Y, HOLD, mainCharacter_->kick, mainCharacter_);
     controller_->setCallBack(L_ANALOG_BUTTON, PRESSED, mainCharacter_->drinkPotion, mainCharacter_);
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
     controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
     controller_->setCallBack(L, RELEASED, mainCharacter_->getUp, mainCharacter_);
     controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
+    controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
 
     controller_->setCallBack(START, PRESSED, this->showStatus, this);
@@ -101,6 +104,42 @@ bool Game::doActions() {
             cout << "Hits: " << attackMonsters();
         }
 
+        if (mainCharacter_->getState() == GETTING_ITEM) {
+            printf("%p\n", mainCharacter_->getInventory());
+            Item a(NULL,NULL,"oi","./models/sword7anim.x");
+            mainCharacter_->getInventory()->putItem(&a);
+            try {
+                vector<Item*> items = grid_.getItems(mainCharacter_->getGridRectangle());
+                vector<Item*> pickedItems;
+
+                int counter = 0;
+                vector<Item*>::iterator i;
+                for (i < items.begin(); i < items.end(); i++) {
+                    cout << "Entrando no for." <<endl;
+                    try {
+                        cout << "Vo coloca item." << endl;
+                        printf("%p", mainCharacter_->getInventory()->removeItem(0));
+                        cout<<endl;
+                        mainCharacter_->getInventory()->putItem(*i);
+                        cout << "Vo coloquei item." <<endl;
+
+                        counter++;
+                        pickedItems.push_back(*i);
+                        (*i)->setVisible(false);
+                    }
+                    catch(int j) {
+                        cout << "Inventory is full." <<endl;
+                    }
+                }
+
+                cout << "Got " << counter << " items."<<endl;
+            }
+            catch (int i) {}
+            
+            mainCharacter_->setState(CROUCHING);
+        }
+
+
         time_t currentTime;
         time(&currentTime);
         if (difftime(currentTime, lastSpawn_) >= DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS) {
@@ -122,10 +161,8 @@ void Game::clearCorpses() {
     vector<Monster*>::iterator i;
     for (i = monsters_.begin(); i < monsters_.end(); i++)
         if ( (*i)->getState() == DEAD) {
-
-            cout<<"To entrando uhul"<<endl;
-            cout<<"Elapsed time"<<elapsedTime_<<endl;
             (*i)->decreaseCorspeDelay(elapsedTime_);
+
             if ( (*i)->getCorspeDelay() < 0) {
                 delete (*i);
                 i = monsters_.erase(i)--;
@@ -147,6 +184,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
             cout<<"Vo dropa."<<endl;
             Item droppedItem = itemGenerator_.dropItem(DEFAULT_ITEM_GENERATION_CHANCE);
             playSoundEffect(Sounds::GOLD_DROP);
+            
             cout<<"DropedItem OK." << endl;
 
             Item * item = droppedItem.copy(level_, getSceneManager());
@@ -159,6 +197,11 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
             
             position.Y = getLevel()->getTerrain()->getHeight(position.X, position.Z);
             item->setPosition(position);
+//            item->setLoopMode(false);
+            item->setFrameLoop(DROP_ANIMATION);
+            item->setAnimationSpeed(20);
+            
+
             grid_.fillCell((*monster)->getGridPosition(), item);
             cout << "CellFill OK." << endl;
         } catch (int i) {
@@ -213,7 +256,7 @@ int Game::attackMonsters() {
 }
 
 void Game::tryGeneratingMonster(int chancePercent) {
-    if (randomBetween(0, 100) <= chancePercent) {
+    if (randomBetween(0, 100) <= chancePercent && monsters_.size() < MAX_MONSTERS) {
         Monster * newMonster = new Monster(level_, sceneManager_, getSoundEngine());
         addMonster(newMonster);
 

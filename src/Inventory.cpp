@@ -12,8 +12,33 @@ Item * Inventory::removeItem(int) {
     //slots_
 }
 
-Item * Inventory::putItem(Item * item) {
-    //if ()
+void Inventory::putItem(Item * item) {
+    cout<<"vo por o item num slot livre fora do try"<<endl;
+    try {
+        cout<<"vo por o item num slot livre"<<endl;
+        findEmptySlot()->putItem(item);
+        cout<<"item colocado"<<endl;
+    }
+    catch (int i) {
+        throw;
+    }
+}
+
+Slot* Inventory::findEmptySlot() const {
+    vector<Slot*>::iterator i;
+
+    for (i < slots_.begin(); i < slots_.end(); i++) {
+        cout << "for slots" << endl;
+        if ((*i)->isEmpty()) {
+            cout << "is empty" << endl;
+            return *i;
+        }
+        else {
+            cout << "not empty" << endl;
+        }
+    }
+
+    throw 2;
 }
 
 Item * Inventory::putItem(Item *, int) {
