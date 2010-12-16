@@ -9,8 +9,8 @@ void Game::addMonster(Monster * monster) {
 
     ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(),
             monster, core::vector3df(5, 5, 5),
-            core::vector3df(0, -10.0f, 0),
-            core::vector3df(0, 5, 0), 0);
+            core::vector3df(0, GRAVITY, 0),
+            core::vector3df(0, -5, 0), 0);
     monster->addAnimator(anim);
 
     anim->drop();
@@ -83,20 +83,14 @@ bool Game::doActions() {
 
     getSceneManager()->drawAll();
 
-    if (mainCharacter_->getState() != JUMP_STARTING && 
-        mainCharacter_->getState() != JUMP_ENDING) {
-        
-        cameras_[0]->setTarget(mainCharacter_->getPosition());
-        cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
-    } else {
         cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
-                getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                mainCharacter_->getPosition().Z));
+                                         getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                         mainCharacter_->getPosition().Z));
 
         cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
-                getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
-    }
+                                           getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                           mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
+
 
 
     if (mainCharacter_->isAlive()) {
@@ -133,6 +127,7 @@ bool Game::doActions() {
             mainCharacter_->setState(CROUCHING);
         }
 
+        cout << "Height: " << mainCharacter_->getPosition().Y << endl;
 
         time_t currentTime;
         time(&currentTime);
@@ -275,8 +270,6 @@ void Game::printPath(vector<void*> path) const {
 }
 
 void Game::runMonstersAI() {
-    f32 timeToWalk;
-
     vector<Monster*>::iterator monster;
     for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
         if ((*monster)->isAlive()) {
@@ -285,16 +278,6 @@ void Game::runMonstersAI() {
 
             if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
 
-                vector<void*> path;
-                float totalCost;
-                Cell* destination = grid_.getCell(mainCharacter_->getGridPosition());
-
-            	pather_.Solve((void*) (grid_.getCell( (*monster)->getGridPosition()) ),
-                              (void*) destination, &path, &totalCost );
-
-                printPath(path);
-
-                timeToWalk = getElapsedTime();
                 vector3df vetor = ninjaPosition - monsterPosition;
                 vetor.normalize();
                 (*monster)->walk(vetor * getElapsedTime());
@@ -518,6 +501,12 @@ void Game::load() {
     playMusic(GameMusic::DUNGEON, true);
 }
 
+void Game::startGame(void *userData) {
+    ((Game*)userData)->playSoundEffect(Sounds::SELECTION);
+    ((Game*)userData)->mainScreen_ = false;
+    ((Game*)userData)->needsRestart_ = true;
+}
+
 Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
     : SoundEmmitter(soundEngine),
       isStatusVisible_(false),
@@ -554,6 +543,8 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
     controller_ = new XBOX360Controller();
     cout << "Controller created." << endl;
 
+    controller_->setCallBack(X, PRESSED, startGame, this);
+
     mainCharacter_ = new MainCharacter(level_, getSceneManager(), getSoundEngine());
     cout << "Char created." << endl;
 
@@ -569,8 +560,8 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
             level_->getTriangleSelector(),
             mainCharacter_,
             vector3df(5, 5, 5),
-            core::vector3df(0, -10.0f, 0),
-            core::vector3df(0, 5, 0), 0);
+            core::vector3df(0, GRAVITY, 0),
+            core::vector3df(0, -5, 0), 0);
 
     mainCharacter_->addAnimator(anim);
 

@@ -1,4 +1,5 @@
 #include "MainCharacter.h"
+#include "Game.h"
 
 using namespace State;
 
@@ -112,6 +113,12 @@ void MainCharacter::jump(void * userData) {
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING) {
 
+        // Disable gravity
+        list<ISceneNodeAnimator*>::ConstIterator animatorIt = thisptr->getAnimators().getLast();
+        ((ISceneNodeAnimatorCollisionResponse*) *animatorIt)->setGravity(vector3df(0,0,0));
+
+        cout << "NAO CHEGUEI A SETAR"<<endl;
+        thisptr->setAnimationSpeed(5.0 / (thisptr->getJumpHeight() / (float)JUMP_ACCELERATION) );
         thisptr->setFrameLoop(ANIM_JUMP_START);
         thisptr->playSoundEffect(Sounds::JUMP);
         thisptr->setState(JUMP_STARTING);
@@ -219,6 +226,9 @@ void MainCharacter::updateAttributes() {
     currentExperience_ = experienceCurve(getLevel() - 1);
     experienceToLevelUp_ = experienceCurve(getLevel());
     fillHP();
+
+    timeToFall_ = squareroot((2.0*jumpHeight_)/10.0);
+    cout<<"Timetofall: " << timeToFall_<<endl;
 }
 
 float MainCharacter::getDamage() const {
@@ -259,16 +269,26 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
             setState(GETTING_ITEM);
             break;
 
+        case JUMP_STARTING :
+        case DOUBLE_JUMPING : {
+            cout<<"Height "<< getPosition().Y <<endl;
+            setAnimationSpeed(10);
+            setFrameLoop(ANIM_JUMP_END);
+            
+            setState(JUMP_ENDING);
+            
+            list<ISceneNodeAnimator*>::ConstIterator animatorIt = getAnimators().getLast();
+            ((ISceneNodeAnimatorCollisionResponse*) *animatorIt)->setGravity(vector3df(0,GRAVITY,0));
+            break;
+        }
+
         default :
-            node->setFrameLoop(ANIM_IDLE);
+            setFrameLoop(ANIM_IDLE);
             setState(STOPPING);
     }
 }
 
 void MainCharacter::refresh(f32 elapsedTime) {
-    irr::core::list<ISceneNodeAnimator*>::ConstIterator animIt = getAnimators().getLast();
-    ISceneNodeAnimatorCollisionResponse* anim = (ISceneNodeAnimatorCollisionResponse*) * animIt;
-
     switch (getState()) {
         case JUMP_STARTING: {
             moveDelta(vector3df(0, JUMP_ACCELERATION * elapsedTime, 0));

@@ -19,7 +19,7 @@
 #define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 1
 #define MAX_MONSTERS 1
 
-#define GRAVITY 10
+#define GRAVITY -2
 #define DEFAULT_MONSTER_GENERATION_CHANCE 100
 #define DEFAULT_ITEM_GENERATION_CHANCE 100
 
@@ -85,6 +85,8 @@ class Game : public SoundEmmitter,
     protected:
 
     public:
+
+        static void startGame(void *userData);
 
         static void showStatus(void *userData);
         static void hideStatus(void *userData);

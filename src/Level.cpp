@@ -30,8 +30,7 @@ Level::Level(ISceneManager * manager)
     terrain_->setMaterialTexture(1, driver->getTexture("./models/detailmap3.jpg"));
     terrain_->setMaterialType(video::EMT_DETAIL_MAP);
     terrain_->getMaterial(0).TextureLayer[0].AnisotropicFilter = 16;
-    terrain_->setScale(vector3df(1,0.4,1));
-    terrain_->scaleTexture(10);
+    terrain_->scaleTexture(2);
 
     cout << "Terrain X :" << terrain_->getTerrainCenter().X << " Z: " << terrain_->getTerrainCenter().Z << endl;
     cout << "Pos X :" << terrain_->getPosition().X << " Z: " << terrain_->getPosition().Z << endl;

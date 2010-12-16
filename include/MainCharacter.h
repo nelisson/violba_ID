@@ -45,8 +45,10 @@
 #define STARTING_VITALITY    1
 #define STARTING_AGILITY     1
 #define STARTING_LEVEL       1
-#define STARTING_JUMP_HEIGHT 30
-#define JUMP_ACCELERATION 30
+#define STARTING_JUMP_HEIGHT 20
+#define JUMP_ACCELERATION 60
+
+
 
 using namespace std;
 using namespace irr;
@@ -64,6 +66,7 @@ class MainCharacter : public Character {
         long experienceToLevelUp_;
         f32 speed_;
         float jumpHeight_;
+        float timeToFall_;
 
         long experienceCurve(int level) const { return (level == 0)? 0 : 980 + 200 * level*level; };
 
