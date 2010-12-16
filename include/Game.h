@@ -11,7 +11,7 @@
 #include <ctime>
 #include "SoundEmmitter.h"
 
-
+#define RESOLUTION_SCREEN core::dimension2d<u32>(1024, 683)
 #define DEFAULT_CAMERA_X 0
 #define DEFAULT_CAMERA_Y 35
 #define DEFAULT_CAMERA_Z -40

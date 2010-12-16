@@ -64,12 +64,12 @@ bool Game::doActions() {
     refreshSounds();
 
     if(isStatusVisible_){
+        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120),rect<s32> (0, 0,1024, 683));
         sceneManager_->getGUIEnvironment()->drawAll();
         return true;
     }
     if (mainScreen_) {
         sceneManager_->getGUIEnvironment()->drawAll();
-
         return isRunning_;
     }
 
@@ -360,27 +360,105 @@ bool Game::OnEvent(const SEvent& event) {
 
 void Game::createStatusSreen() {
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
-    IGUIStaticText* texto1;
-    texto1 = env->addStaticText(L"TESTE1",rect<s32> (300, 0, 600, 200));
-    texto1->setOverrideFont(fonts_.at(DIABLO36));
+    IGUIStaticText* text;
+    const char* Temp;
+    char* num = (char*)malloc(15);
+    rect<s32> tamanho;
+    position2di position;
+    dimension2d<u32> screen = RESOLUTION_SCREEN;
 
+    Temp="Status";
+    tamanho = getStringSize(Temp, 48);
+    position = position2di((screen.Width - tamanho.getWidth())/2,0);
+    text = env->addStaticText(L"Status",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO48));
+    text->setRelativePosition(position);
 
-    env->addTable(rect<s32> (0, 300, 1024, 683),0,-1,true);
+    Temp="HP:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30,screen.Height/6 - tamanho.getHeight()/2);
+    text = env->addStaticText(L"HP:",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%.0f/",mainCharacter_->getCurrentHP());
+    position += position2di(tamanho.getWidth(),0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getCurrentHP(),true),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%.0f",mainCharacter_->getMaxHP());
+    position += position2di(tamanho.getWidth()*(float)3/4,0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getMaxHP()),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp="Level:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30,(screen.Height/6)*1.25 - tamanho.getHeight()/2);
+    text = env->addStaticText(L"Level:",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%d",mainCharacter_->getLevel());
+    position += position2di(tamanho.getWidth()/1.5,0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getLevel()),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp="Vitality:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30,(screen.Height/6)*1.5 - tamanho.getHeight()/2);
+    position += position2di(0,30);
+    text = env->addStaticText(L"Vitality:",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%d",mainCharacter_->getVitality());
+    position += position2di(tamanho.getWidth()/1.5,0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getVitality()),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp="Agility:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30,(screen.Height/6)*1.75 - tamanho.getHeight()/2);
+    position += position2di(0,30);
+    text = env->addStaticText(L"Agility:",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%d",mainCharacter_->getAgility());
+    position += position2di(tamanho.getWidth()/1.5,0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getAgility()),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    Temp="Strength:";
+    tamanho = getStringSize(Temp, 28);
+    position = position2di(30,(screen.Height/6)*2 - tamanho.getHeight()/2);
+    position += position2di(0,30);
+    text = env->addStaticText(L"Strength:",tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
+
+    sprintf(num,"%d",mainCharacter_->getStrength());
+    position += position2di(tamanho.getWidth()/1.5,0);
+    tamanho = getStringSize(num, 28);
+    text = env->addStaticText(toWchar_T(mainCharacter_->getStrength()),tamanho);
+    text->setOverrideFont(fonts_.at(DIABLO28));
+    text->setRelativePosition(position);
     
- /*
-    texto2 = env->addStaticText(L"TESTE2",rect<s32> (0, 50, 1024, 683));
-    texto2->setOverrideFont(font16);
-    texto3 = env->addStaticText(L"TESTE3",rect<s32> (0, 100, 1024, 683));
-    texto3->setOverrideFont(font18);
-    texto4 = env->addStaticText(L"TESTE4",rect<s32> (0, 150, 1024, 683));
-    texto4->setOverrideFont(font28);
-    texto5 = env->addStaticText(L"TESTE5",rect<s32> (0, 200, 1024, 683));
-    texto5->setOverrideFont(font36);
-    texto6 = env->addStaticText(L"TESTE6",rect<s32> (0, 250, 1024, 683));
-    texto6->setOverrideFont(font48);
-    texto7 = env->addStaticText(L"TESTE7",rect<s32> (0, 350, 1024, 683));
-    texto7->setOverrideFont(font12);
- */
+    //exp -> current nextLevel
+    //jumpHeight
+    //moveSpeed
+    //AttackSpeed
+    //Position
  }
 
 void Game::showStatus(void *userData) {
