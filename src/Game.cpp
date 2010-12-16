@@ -221,7 +221,7 @@ void Game::tryGeneratingMonster(int chancePercent) {
 
         float randomX = randomBetween(0, size.Width);
         float randomZ = randomBetween(0, size.Height);
-        float Y = getLevel()->getTerrain()->getHeight(randomX, randomZ);
+        float Y = 1 + getLevel()->getTerrain()->getHeight(randomX, randomZ);
 
         newMonster->setPosition(vector3df(randomX, Y, randomZ));
     }
@@ -323,6 +323,7 @@ void Game::createStatusSreen() {
     texto1 = env->addStaticText(L"TESTE1",rect<s32> (300, 0, 600, 200));
     texto1->setOverrideFont(fonts_.at(DIABLO36));
 
+
     env->addTable(rect<s32> (0, 300, 1024, 683),0,-1,true);
     
  /*
@@ -362,7 +363,7 @@ void Game::hideStatus(void *userData) {
 
 void Game::load() {
     dimension2df terrainSize = getLevel()->getSize();
-    float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
+    float levelHeight = 1 + getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
                                                             terrainSize.Height / 2);
 
     vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
