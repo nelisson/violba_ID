@@ -88,7 +88,7 @@ class Game : public SoundEmmitter,
         
 
         static void showStatus(void *userData);
-        static void hideStatus(void *userData);
+        
         ISceneManager * getSceneManager() { return sceneManager_; }
 
         Level * getLevel() { return level_; }

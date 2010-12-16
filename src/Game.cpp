@@ -37,8 +37,7 @@ void Game::setCallbacks() {
     controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
 
-    controller_->setCallBack(START, PRESSED, this->showStatus, this);
-    controller_->setCallBack(START, RELEASED, this->hideStatus, this);
+    controller_->setCallBack(START, PRESSED, this->showStatus, this);    
 
 }
 
@@ -556,27 +555,22 @@ void Game::createStatusSreen() {
     //Position
 }
 
-
-
 void Game::showStatus(void *userData) {
     Game * thisptr = (Game*) userData;
 
     if (!thisptr->mainScreen_) {
-        thisptr->isStatusVisible_ = true;
-        thisptr->createStatusSreen();
-        thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
+
+        if (!thisptr->isStatusVisible_) {
+            thisptr->isStatusVisible_ = true;
+            thisptr->createStatusSreen();
+            thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
+        }
+        else{
+            thisptr->isStatusVisible_ = false;
+            thisptr->getSceneManager()->getGUIEnvironment()->clear();
+        }
     }
 }
-
-void Game::hideStatus(void *userData) {
-    Game * thisptr = (Game*) userData;
-
-    if (!thisptr->mainScreen_) {
-        thisptr->isStatusVisible_ = false;
-        thisptr->getSceneManager()->getGUIEnvironment()->clear();
-    }
-}
-
 void Game::load() {
     dimension2df terrainSize = getLevel()->getSize();
 
