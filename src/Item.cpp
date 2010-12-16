@@ -12,7 +12,6 @@ Item::Item(ISceneNode * parent,
     : AnimatedNode(), ISceneNode(parent, manager),
       modelPath_(modelPath), level_(level),
       name_(name), imagePath_(imagePath) {
-
     ID_ = generateID();
 }
 
@@ -21,7 +20,10 @@ Item* Item::copy(ISceneNode * parent, ISceneManager * manager) {
 
     cout<<"vo loadamesh"<<endl;
     IAnimatedMesh * mesh = item->getSceneManager()->getMesh(item->modelPath_.data());
+    cout<<"vo loada texture "<< imagePath_ <<endl;
     image_ = item->getSceneManager()->getVideoDriver()->getTexture(imagePath_.data());
+    item->setImage(image_);
+    printf("%Ponteiro da textura: %p\n",image_);
     cout<<"vo loada node"<<endl;
     item->setNode(item->getSceneManager()->addAnimatedMeshSceneNode(mesh, item));
     cout<<"vo geta node"<<endl;

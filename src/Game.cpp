@@ -65,7 +65,9 @@ bool Game::doActions() {
 
     if (isStatusVisible_) {
         sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32 > (0, 0, 1024, 683));
+
         mainCharacter_->getInventory()->drawInventory();
+
         sceneManager_->getGUIEnvironment()->drawAll();
         return true;
     }
@@ -116,6 +118,7 @@ bool Game::doActions() {
 
                 vector<Cell*>::iterator i;
                 for (i = items.begin(); i < items.end(); i++) {
+                    
                     try {
                         mainCharacter_->getInventory()->putItem((*i)->getItem());
                         (*i)->getItem()->setVisible(false);
@@ -298,7 +301,7 @@ void Game::runMonstersAI() {
             	pather_.Solve((void*) (grid_.getCell( (*monster)->getGridPosition()) ),
                               (void*) destination, &path, &totalCost );
 
-                printPath(path);
+                //printPath(path);
 
                 timeToWalk = getElapsedTime();
                 vector3df vetor = ninjaPosition - monsterPosition;
@@ -544,8 +547,7 @@ void Game::createStatusSreen() {
     text = env->addStaticText(L"Inventory", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
-
-    mainCharacter_->getInventory()->drawInventory();
+    
     //exp -> current nextLevel
     //jumpHeight
     //(500, 150,1000, 659)

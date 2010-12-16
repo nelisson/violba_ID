@@ -63,14 +63,29 @@ void Inventory::drawInventory(){
     gui::IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
     sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 50, 50, 50), rect<s32 > (500, 150, 1000, 650));
 
+    vector<Slot*>::const_iterator i;
+    int deslocX = 0, deslocY = 0;
+    for(i = slots_.begin(); i< slots_.end();i++){
+
+        if(!(*i)->isEmpty()){
+
+            ITexture* teste = (*i)->getItem()->getImage();
+            
+
+            if(teste){                
+                env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)));
+            }
+
+        }
+        deslocX++;
+        if(deslocX%5==0){
+            deslocY++;
+            deslocX=0;
+        }
+    }
+
     for(int i=1;i<5;i++){
         sceneManager_->getVideoDriver()->draw2DLine(position2di(500+(100*i),150),position2di(500+(100*i),650));
         sceneManager_->getVideoDriver()->draw2DLine(position2di(500,150+(100*i)),position2di(1000,150+(100*i)));
-    }
-
-    vector<Slot*>::const_iterator i;
-    printf("Antes de desenhar imagens\n");
-    for(i = slots_.begin(); i< slots_.end();i++){
-        env->addImage((*i)->getItem()->getImage(), position2di(500,150));
     }
 }

@@ -33,6 +33,7 @@ class Item : public AnimatedNode, public ISceneNode {
         int getID() const { return ID_; }
         const std::string getNamex() const {  return name_; }
         ITexture* getImage() {return image_; }
+        void setImage(ITexture* image) { image_ = image; }
 
         virtual void render() {}
         virtual const core::aabbox3d<f32>& getBoundingBox() const { }
