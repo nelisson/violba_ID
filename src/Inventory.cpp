@@ -13,11 +13,9 @@ Item * Inventory::removeItem(int) {
 }
 
 void Inventory::putItem(Item * item) {
-    cout<<"vo por o item num slot livre fora do try"<<endl;
     try {
-        cout<<"vo por o item num slot livre"<<endl;
         findEmptySlot()->putItem(item);
-        cout<<"item colocado"<<endl;
+        cout << "putei item fora" << endl;
     }
     catch (int i) {
         throw;

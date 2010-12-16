@@ -5,6 +5,7 @@
 #include "Slot.h"
 #include <irrlicht/irrlicht.h>
 
+
 #define DEFAULT_MAX_ITEMS 25
 using namespace irr;
 using namespace gui;

@@ -10,7 +10,7 @@ void Game::addMonster(Monster * monster) {
     ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(),
             monster, core::vector3df(5, 5, 5),
             core::vector3df(0, -10.0f, 0),
-            core::vector3df(0, 0, 0), 0);
+            core::vector3df(0, 5, 0), 0);
     monster->addAnimator(anim);
 
     anim->drop();
@@ -84,7 +84,9 @@ bool Game::doActions() {
 
     getSceneManager()->drawAll();
 
-    if (mainCharacter_->getState() != JUMPING) {
+    if (mainCharacter_->getState() != JUMP_STARTING && 
+        mainCharacter_->getState() != JUMP_ENDING) {
+        
         cameras_[0]->setTarget(mainCharacter_->getPosition());
         cameras_[0]->setPosition(mainCharacter_->getPosition() + DEFAULT_CAMERA_POSITION);
     } else {
@@ -99,7 +101,7 @@ bool Game::doActions() {
 
 
     if (mainCharacter_->isAlive()) {
-        mainCharacter_->refresh();
+        mainCharacter_->refresh(elapsedTime_);
 
         if (mainCharacter_->tryHitCheck()) {
             cout << "Hits: " << attackMonsters();
@@ -108,31 +110,31 @@ bool Game::doActions() {
         if (mainCharacter_->getState() == GETTING_ITEM) {
 
             try {
-                vector<Item*> items = grid_.getItems(mainCharacter_->getGridRectangle());
-                vector<Item*> pickedItems;
+                vector<Cell*> items = grid_.getItemCells(mainCharacter_->getGridRectangle());
 
                 int counter = 0;
-                vector<Item*>::iterator i;
-                for (i < items.begin(); i < items.end(); i++) {
-                    cout << "Entrando no for." << endl;
-                    try {
-                        cout << "Vo coloca item." << endl;
-                        printf("%p", mainCharacter_->getInventory()->removeItem(0));
-                        cout << endl;
-                        mainCharacter_->getInventory()->putItem(*i);
-                        cout << "Vo coloquei item." << endl;
 
+                vector<Cell*>::iterator i;
+                for (i = items.begin(); i < items.end(); i++) {
+                    try {
+                        mainCharacter_->getInventory()->putItem((*i)->getItem());
+                        (*i)->getItem()->setVisible(false);
+                        (*i)->removeItem();
                         counter++;
-                        pickedItems.push_back(*i);
-                        (*i)->setVisible(false);
-                    }                    catch (int j) {
-                        cout << "Inventory is full." << endl;
+                    }
+                    catch(int j) {
+                        cout << "Inventory is full." <<endl;
+                        playSoundEffect(Sounds::INV_FULL);
+
                     }
                 }
 
                 cout << "Got " << counter << " items." << endl;
             }            catch (int i) {
             }
+
+            catch(int) {}
+            
 
             mainCharacter_->setState(CROUCHING);
         }
@@ -262,31 +264,43 @@ void Game::tryGeneratingMonster(int chancePercent) {
 
         float randomX = randomBetween(0, size.Width);
         float randomZ = randomBetween(0, size.Height);
-        float Y = 1 + getLevel()->getTerrain()->getHeight(randomX, randomZ);
+        float Y = getLevel()->getTerrain()->getHeight(randomX, randomZ);
 
         newMonster->setPosition(vector3df(randomX, Y, randomZ));
     }
 }
 
+void Game::printPath(vector<void*> path) const {
+    cout << "PATH size:" << path.size() << endl;
+
+    vector<void*>::const_iterator i;
+    for (i = path.begin(); i < path.end(); i++) {
+        cout << "X: " << ((Cell*)(*i))->getPosition().X;
+        cout << " Y: " << ((Cell*)(*i))->getPosition().Y << endl;
+    }
+}
+
 void Game::runMonstersAI() {
+    f32 timeToWalk;
+
     vector<Monster*>::iterator monster;
     for (monster = monsters_.begin(); monster < monsters_.end(); monster++) {
         if ((*monster)->isAlive()) {
             vector3df ninjaPosition = mainCharacter_->getAbsolutePosition();
             vector3df monsterPosition = (*monster)->getPosition();
 
-            if (ninjaPosition.getDistanceFrom(monsterPosition) > 10 * (*monster)->getRange()) {
+            if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
 
-                vector3df vetor = ninjaPosition - monsterPosition;
-                vetor.normalize();
-                (*monster)->walk(vetor * getElapsedTime() * 4);
-                if ((*monster)->getState() == STOPPING) {
-                    (*monster)->setFrameLoop(MONSTER_RUN);
-                    (*monster)->setLoopMode(true);
-                    (*monster)->setState(RUNNING);
-                }
-            } else if (ninjaPosition.getDistanceFrom(monsterPosition) > (*monster)->getRange()) {
+                vector<void*> path;
+                float totalCost;
+                Cell* destination = grid_.getCell(mainCharacter_->getGridPosition());
 
+            	pather_.Solve((void*) (grid_.getCell( (*monster)->getGridPosition()) ),
+                              (void*) destination, &path, &totalCost );
+
+                printPath(path);
+
+                timeToWalk = getElapsedTime();
                 vector3df vetor = ninjaPosition - monsterPosition;
                 vetor.normalize();
                 (*monster)->walk(vetor * getElapsedTime());
@@ -563,9 +577,9 @@ void Game::hideStatus(void *userData) {
 
 void Game::load() {
     dimension2df terrainSize = getLevel()->getSize();
-    float levelHeight = 1 + getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
-            terrainSize.Height / 2);
 
+    float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
+                                                            terrainSize.Height / 2);
     vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
     mainCharacter_->setPosition(levelCenter);
     mainCharacter_->fillHP();
@@ -593,11 +607,14 @@ void Game::load() {
 }
 
 Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
-: SoundEmmitter(soundEngine),
-isStatusVisible_(false),
-isRunning_(true),
-mainScreen_(true),
-sceneManager_(sceneManager) {
+
+    : SoundEmmitter(soundEngine),
+      isStatusVisible_(false),
+      isRunning_(true),
+      mainScreen_(true),
+      sceneManager_(sceneManager),
+      pather_(&grid_) {
+
 
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
 
@@ -615,6 +632,7 @@ sceneManager_(sceneManager) {
     addSoundEffect("./sounds/itemDrop.wav");
     addSoundEffect("./sounds/selectItem.wav");
     addSoundEffect("./sounds/goldDrop.wav");
+    addSoundEffect("./sounds/stayAWhileAndListen.wav");
     cout << "Loaded game Music" << endl;
 
     createMainScreen();
@@ -637,11 +655,14 @@ sceneManager_(sceneManager) {
     lights_.push_back(getSceneManager()->addLightSceneNode());
     cameras_.push_back(getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION));
 
-    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(level_->getTriangleSelector(),
+    
+    ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(
+            level_->getTriangleSelector(),
+
             mainCharacter_,
             vector3df(5, 5, 5),
-            core::vector3df(0, -2.0f, 0),
-            core::vector3df(0, 0, 0), 0);
+            core::vector3df(0, -10.0f, 0),
+            core::vector3df(0, 5, 0), 0);
 
     mainCharacter_->addAnimator(anim);
 

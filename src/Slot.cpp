@@ -3,7 +3,7 @@
 Item * Slot::putItem(Item * item) {
     Item * oldItem = getItem();
     item_ = item;
-
+    cout << "putei item" << endl;
     return oldItem;
 }
 
@@ -12,7 +12,6 @@ Item * Slot::getItem() {
 }
 
 bool Slot::isEmpty() {
-    cout << "pau aqui?" << endl;
     return (item_ == NULL);
 }
 

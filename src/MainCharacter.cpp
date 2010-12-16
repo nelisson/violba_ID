@@ -21,7 +21,8 @@ bool MainCharacter::walk(vector3df desl) {
 
     if (getState() == STOPPING || 
         getState() == MOVING ||
-        getState() == JUMPING ||
+        getState() == JUMP_STARTING ||
+        getState() == JUMP_ENDING ||
         getState() == DOUBLE_JUMPING) {
         
         moveDelta(desl);
@@ -40,7 +41,8 @@ void MainCharacter::slash(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != DEAD &&
         thisptr->getState() != DYING &&
-        thisptr->getState() != JUMPING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
         thisptr->getState() != DOUBLE_JUMPING &&
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING) {
@@ -61,7 +63,8 @@ void MainCharacter::kick(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != DEAD && 
         thisptr->getState() != DYING &&
-        thisptr->getState() != JUMPING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
         thisptr->getState() != DOUBLE_JUMPING &&
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING) {
@@ -76,7 +79,8 @@ void MainCharacter::spin(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != DEAD && 
         thisptr->getState() != DYING &&
-        thisptr->getState() != JUMPING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
         thisptr->getState() != DOUBLE_JUMPING &&
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING) {
@@ -96,26 +100,27 @@ void MainCharacter::stop(void *userData, vector2df direction) {
 
 void MainCharacter::jump(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() == JUMPING) {
+    if (thisptr->getState() == JUMP_STARTING) {
         doubleJump(thisptr);
     }
 
     if (thisptr->getState() != DEAD &&
         thisptr->getState() != DYING &&
-        thisptr->getState() != JUMPING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
         thisptr->getState() != DOUBLE_JUMPING &&
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING) {
 
-        thisptr->setFrameLoop(ANIM_JUMP);
+        thisptr->setFrameLoop(ANIM_JUMP_START);
         thisptr->playSoundEffect(Sounds::JUMP);
-        thisptr->setState(JUMPING);
+        thisptr->setState(JUMP_STARTING);
     }
 }
 
 void MainCharacter::doubleJump(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() == JUMPING) {
+    if (thisptr->getState() == JUMP_STARTING) {
         thisptr->setFrameLoop(ANIM_FRONTFLIP);
         thisptr->playSoundEffect(Sounds::JUMP);
         thisptr->setState(DOUBLE_JUMPING);
@@ -126,7 +131,8 @@ void MainCharacter::crouch(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != DEAD &&
         thisptr->getState() != DYING &&
-        thisptr->getState() != JUMPING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
         thisptr->getState() != DOUBLE_JUMPING &&
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING &&
@@ -141,7 +147,8 @@ void MainCharacter::getUp(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
     if (thisptr->getState() != DEAD &&
         thisptr->getState() != DYING &&
-        thisptr->getState() != JUMPING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
         thisptr->getState() != DOUBLE_JUMPING &&
         thisptr->getState() != ATTACK_STARTING &&
         thisptr->getState() != ATTACK_ENDING) {
@@ -153,7 +160,14 @@ void MainCharacter::getUp(void *userData) {
 
 void MainCharacter::block(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != BLOCKING && thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != BLOCKING &&
+        thisptr->getState() != DEAD &&
+        thisptr->getState() != DYING &&
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
+        thisptr->getState() != ATTACK_STARTING &&
+        thisptr->getState() != ATTACK_ENDING) {
+        
         thisptr->setFrameLoop(ANIM_BLOCK);
         thisptr->setState(BLOCKING);
     }
@@ -161,7 +175,13 @@ void MainCharacter::block(void * userData) {
 
 void MainCharacter::unblock(void * userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
-    if (thisptr->getState() != DEAD && thisptr->getState() != DYING && thisptr->getState() != JUMPING && thisptr->getState() != ATTACK_STARTING && thisptr->getState() != ATTACK_ENDING) {
+    if (thisptr->getState() != DEAD &&
+        thisptr->getState() != DYING && 
+        thisptr->getState() != JUMP_STARTING &&
+        thisptr->getState() != JUMP_ENDING &&
+        thisptr->getState() != ATTACK_STARTING &&
+        thisptr->getState() != ATTACK_ENDING) {
+
         thisptr->setFrameLoop(ANIM_UNBLOCK);
         thisptr->setState(STOPPING);
     }
@@ -245,45 +265,16 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
     }
 }
 
-void MainCharacter::refresh() {
-    static f32 lastFrameNumber = 102;
-    f32 middleFrame = (getEndFrame() + getStartFrame()) / 2.0;
-
-    float jumpDelta = getJumpHeight() / (float) (middleFrame - getStartFrame());
-    f32 timeBetweenFrames = getFrameNr() - lastFrameNumber;
-
+void MainCharacter::refresh(f32 elapsedTime) {
     irr::core::list<ISceneNodeAnimator*>::ConstIterator animIt = getAnimators().getLast();
     ISceneNodeAnimatorCollisionResponse* anim = (ISceneNodeAnimatorCollisionResponse*) * animIt;
 
     switch (getState()) {
-        case JUMPING: {
-            if (getFrameNr() < middleFrame) {
-                anim->setGravity(vector3df(0, 0, 0));
-                moveDelta(vector3df(0, jumpDelta * timeBetweenFrames, 0));
-                lastFrameNumber = getFrameNr();
-                anim->setGravity(vector3df(0, -2.0f, 0));
-            }         
-            else {
-                //anim->setGravity(vector3df(0,-10.0f,0));
-                //if(middleFrame - lastFrameNumber > 0)
-                moveDelta(vector3df(0, jumpDelta * (middleFrame - lastFrameNumber), 0));
-                lastFrameNumber = middleFrame;
-            }
-            //lastFrameNumber = getFrameNr();
-            //        cout << "timeBetweenFrames: " << timeBetweenFrames << endl;
+        case JUMP_STARTING: {
+            moveDelta(vector3df(0, JUMP_ACCELERATION * elapsedTime, 0));
             break;
         }
-
-        default: {
-            lastFrameNumber = 102;
-        }
     }
-
-//    vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
-
-    //cout << "Position X: " << getPosition().X << " Z: " << getPosition().Z << endl;
-    //cout << "Center X: " << center.X << " Z: " << center.Z << endl;
-    //cout << "Size X: " << (center.X)*2 << " Z:" << (center.Z)*2 << endl;
 }
 
 bool MainCharacter::tryHitCheck() {
@@ -333,9 +324,8 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     addSoundEffect("./sounds/block.wav");
 
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
-    cout << "CHAR KASLDSALD Height: " << center.Y * 2;
 
-    setSize(dimension2df(5,5));
+    setSize(dimension2df(50,50));
 
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);

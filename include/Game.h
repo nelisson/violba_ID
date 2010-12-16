@@ -65,6 +65,7 @@ class Game : public SoundEmmitter,
         ISceneManager * sceneManager_;
         ItemGenerator itemGenerator_;
         Grid grid_;
+        MicroPather pather_;
         Level * level_;
         XBOX360Controller * controller_;
         MainCharacter * mainCharacter_;
@@ -103,6 +104,8 @@ class Game : public SoundEmmitter,
         vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
 
         void clearCorpses();
+
+        void printPath(vector<void*> path) const;
 
         void setCallbacks();
         bool doActions();

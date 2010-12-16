@@ -7,7 +7,8 @@ position2di Character::getGridPosition() const {
 }
 
 recti Character::getGridRectangle() const {
-    return recti(getGridPosition(), getSize());
+    return recti(getGridPosition() - position2di(getSize().Width/2, getSize().Height/2),
+                 getSize());
 }
 
 float Character::heal(float value,  bool playSound) {

@@ -1,6 +1,7 @@
 #include "Cell.h"
 
-Cell::Cell() {    
+Cell::Cell(position2di position)
+    : position_(position) {
     removeItem();
 }
 

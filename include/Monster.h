@@ -71,7 +71,7 @@ class Monster : public Character {
         virtual void OnAnimationEnd(IAnimatedMeshSceneNode *node);
         virtual bool walk(vector3df delta);
         virtual void die();
-        virtual void refresh() {}
+        virtual void refresh(f32 elapsedTime) {}
 
         bool canAttack();
         void attack();
