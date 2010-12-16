@@ -35,6 +35,19 @@ namespace GameMusic {
     };
 }
 
+namespace GameFonts {
+    enum Font {
+        DIABLO12,
+        DIABLO14,
+        DIABLO16,
+        DIABLO18,
+        DIABLO28,
+        DIABLO36,
+        DIABLO48,
+    };
+}
+
+
 enum
 {
 	GUI_ID_QUIT_BUTTON = 101,
@@ -56,6 +69,7 @@ class Game : public SoundEmmitter,
         XBOX360Controller * controller_;
         MainCharacter * mainCharacter_;
         vector<Monster*> monsters_;
+        vector<IGUIFont*> fonts_;
 
         vector<ICameraSceneNode*> cameras_;
         vector<ILightSceneNode*> lights_;

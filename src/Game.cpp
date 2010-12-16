@@ -1,6 +1,7 @@
 #include "Game.h"
 
 using namespace GameMusic;
+using namespace GameFonts;
 using namespace State;
 
 void Game::addMonster(Monster * monster) {
@@ -318,15 +319,26 @@ bool Game::OnEvent(const SEvent& event) {
 
 void Game::createStatusSreen() {
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
-    IGUISkin* skin = env->getSkin();
-    IGUIFont* font = env->getFont("./misc/diablo48.xml");
+    IGUIStaticText* texto1;
+    texto1 = env->addStaticText(L"TESTE1",rect<s32> (300, 0, 600, 200));
+    texto1->setOverrideFont(fonts_.at(DIABLO36));
 
-    if (font)
-        skin->setFont(font);
-
-    skin->setFont(env->getBuiltInFont(), EGDF_TOOLTIP);
-    env->addStaticText(toWchar_t(mainCharacter_),rect<s32> (0, 0, 1024, 683),true,false,NULL,-1,true);
+    env->addTable(rect<s32> (0, 300, 1024, 683),0,-1,true);
     
+ /*
+    texto2 = env->addStaticText(L"TESTE2",rect<s32> (0, 50, 1024, 683));
+    texto2->setOverrideFont(font16);
+    texto3 = env->addStaticText(L"TESTE3",rect<s32> (0, 100, 1024, 683));
+    texto3->setOverrideFont(font18);
+    texto4 = env->addStaticText(L"TESTE4",rect<s32> (0, 150, 1024, 683));
+    texto4->setOverrideFont(font28);
+    texto5 = env->addStaticText(L"TESTE5",rect<s32> (0, 200, 1024, 683));
+    texto5->setOverrideFont(font36);
+    texto6 = env->addStaticText(L"TESTE6",rect<s32> (0, 250, 1024, 683));
+    texto6->setOverrideFont(font48);
+    texto7 = env->addStaticText(L"TESTE7",rect<s32> (0, 350, 1024, 683));
+    texto7->setOverrideFont(font12);
+ */
  }
 
 void Game::showStatus(void *userData) {
@@ -384,6 +396,16 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
       isRunning_(true),
       mainScreen_(true),
       sceneManager_(sceneManager) {
+
+    IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
+
+    fonts_.push_back(env->getFont("./misc/diablo12.xml"));
+    fonts_.push_back(env->getFont("./misc/diablo14.xml"));
+    fonts_.push_back(env->getFont("./misc/diablo16.xml"));
+    fonts_.push_back(env->getFont("./misc/diablo18.xml"));
+    fonts_.push_back(env->getFont("./misc/diablo28.xml"));
+    fonts_.push_back(env->getFont("./misc/diablo36.xml"));
+    fonts_.push_back(env->getFont("./misc/diablo48.xml"));
 
     addMusic("./music/01-intro.mp3");
     addMusic("./music/02-town.mp3");
