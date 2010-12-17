@@ -315,7 +315,7 @@ void Game::runMonstersAI() {
                 vector3df vetor = ninjaPosition - monsterPosition;
                 vetor.normalize();
                 (*monster)->walk(vetor * getElapsedTime());
-                if ((*monster)->getState() == RUNNING) {
+                if ((*monster)->getState() == STOPPING) {
                     (*monster)->setFrameLoop(MONSTER_WALK);
                     (*monster)->setLoopMode(true);
                     (*monster)->setState(MOVING);
