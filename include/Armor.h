@@ -1,8 +1,8 @@
 #ifndef ARMOR_H
 #define ARMOR_H
 
-#define DEFAULT_ARMOR_MESH_PATH "./models/sword.x"
-#define DEFAULT_ARMOR_IMAGE_PATH "./misc/sword.bmp"
+#define DEFAULT_ARMOR_MESH_PATH "./models/helmet.3DS"
+#define DEFAULT_ARMOR_IMAGE_PATH "./misc/helmet.png"
 
 #include <irrlicht/irrlicht.h>
 #include "Item.h"

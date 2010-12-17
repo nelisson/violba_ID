@@ -9,9 +9,7 @@ Armor::Armor(ISceneNode* parent,
            manager,
            name,
            modelPath,
-           imagePath) {
-
-    setScale(core::vector3df(50,50,50));
+           imagePath) {    
 }
 
 Armor::~Armor() {}

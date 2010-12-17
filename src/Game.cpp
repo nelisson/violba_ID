@@ -192,7 +192,13 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
             
             item = droppedItem->copy(level_, getSceneManager());
             
-            //printf("ponteiro de dropped %p\n",dynamic_cast<Potion*>(droppedItem));
+            if(item->getNamex().compare("Potion")==0){
+                item->setScale(vector3df(0.025,0.025,0.025));
+            }
+
+            if(item->getNamex().compare("Armor")==0){
+                item->setScale(vector3df(0.1,0.1,0.1));
+            }
 
             cout << "ItemCopy OK." << endl;
 
@@ -201,6 +207,12 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
                     (*monster)->getGridPosition().Y);
 
             position.Y = getLevel()->getTerrain()->getHeight(position.X, position.Z);
+
+            if(item->getNamex().compare("Armor")==0){
+                item->setScale(vector3df(0.11,0.11,0.11));
+                position += vector3df(0,2,0);
+            }
+
             item->setPosition(position);
             //            item->setLoopMode(false);
             item->setFrameLoop(DROP_ANIMATION);
@@ -467,11 +479,11 @@ void Game::createStatusSreen() {
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    Temp = "Experience:";
+    Temp = "Exp:";
     tamanho = getStringSize(Temp, 28);
     position = position2di(30, (screen.Height / 6)*2.25 - tamanho.getHeight() / 2);
     position += position2di(0, 30);
-    text = env->addStaticText(L"Experience:", tamanho);
+    text = env->addStaticText(L"Exp:", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
@@ -635,7 +647,7 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
     addSoundEffect("./sounds/itemDrop.wav");
     addSoundEffect("./sounds/selectItem.wav");
     addSoundEffect("./sounds/goldDrop.wav");
-    addSoundEffect("./sounds/stayAWhileAndListen.wav");
+    addSoundEffect("./sounds/inventoryFull.wav");
     cout << "Loaded game Music" << endl;
 
     createMainScreen();

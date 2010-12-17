@@ -8,9 +8,7 @@ void ItemGenerator::loadWeapons() {
 }
 
 void ItemGenerator::loadArmors() {
-//    items_.push_back(Armor(NULL, NULL, "Armor 1"));
-//    items_.push_back(Armor(NULL, NULL, "Armor 2"));
-//    items_.push_back(Armor(NULL, NULL, "Armor 3"));
+    items_.push_back(new Armor(NULL, NULL, "Armor"));
 }
 
 void ItemGenerator::loadPotions(){

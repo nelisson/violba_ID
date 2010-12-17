@@ -26,14 +26,10 @@ Level::Level(ISceneManager * manager)
                                                       1);				// smoothFactor
 
     terrain_->setMaterialFlag(video::EMF_LIGHTING, false);
-    terrain_->setMaterialTexture(0, driver->getTexture("./models/terrain-texture.jpg"));
-    terrain_->setMaterialTexture(1, driver->getTexture("./models/detailmap3.jpg"));
+    terrain_->setMaterialTexture(0, driver->getTexture("./models/Tatami.psd"));
     terrain_->setMaterialType(video::EMT_DETAIL_MAP);
     terrain_->getMaterial(0).TextureLayer[0].AnisotropicFilter = 16;
-    terrain_->scaleTexture(2);
-
-    
-
+    terrain_->scaleTexture(16);
 
     cout << "Terrain X :" << terrain_->getTerrainCenter().X << " Z: " << terrain_->getTerrainCenter().Z << endl;
     cout << "Pos X :" << terrain_->getPosition().X << " Z: " << terrain_->getPosition().Z << endl;
@@ -44,6 +40,38 @@ Level::Level(ISceneManager * manager)
 
     setAutomaticCulling(irr::scene::EAC_OFF);
 
+    for(int i=1;i<24;i++){
+        IMeshSceneNode* lado = getSceneManager()->addCubeSceneNode(1);
+
+        lado->setScale(vector3df(0.2,25,25));
+        lado->setPosition(vector3df(0,12.5,12.5*i));
+        lado->setMaterialFlag(video::EMF_LIGHTING, false);
+        lado->setMaterialTexture(0, driver->getTexture("./models/Wall1.tga"));
+        lado->getMaterial(0).TextureLayer[0].AnisotropicFilter = 8;
+
+    }
+
+    for(int i=1;i<24;i++){
+        IMeshSceneNode* lado = getSceneManager()->addCubeSceneNode(1);
+
+        lado->setScale(vector3df(0.2,25,25));
+        lado->setPosition(vector3df(getSize().Width,12.5,12.5*i));
+        lado->setMaterialFlag(video::EMF_LIGHTING, false);
+        lado->setMaterialTexture(0, driver->getTexture("./models/Wall1.tga"));
+        lado->getMaterial(0).TextureLayer[0].AnisotropicFilter = 8;
+
+    }
+
+    for(int i=1;i<24;i++){
+        IMeshSceneNode* lado = getSceneManager()->addCubeSceneNode(1);
+
+        lado->setScale(vector3df(25,25,0.2));
+        lado->setPosition(vector3df(12.5*i,12.5,getSize().Height));
+        lado->setMaterialFlag(video::EMF_LIGHTING, false);
+        lado->setMaterialTexture(0, driver->getTexture("./models/Wall1.tga"));
+        lado->getMaterial(0).TextureLayer[0].AnisotropicFilter = 8;
+
+    }
 }
 
 Level::~Level() {
