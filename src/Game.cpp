@@ -28,7 +28,7 @@ void Game::setCallbacks() {
     controller_->setCallBack(B, HOLD, mainCharacter_->spin, mainCharacter_);
     controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
     controller_->setCallBack(Y, HOLD, mainCharacter_->kick, mainCharacter_);
-    controller_->setCallBack(L_ANALOG_BUTTON, PRESSED, mainCharacter_->drinkPotion, mainCharacter_);
+    controller_->setCallBack(BACK, PRESSED, mainCharacter_->drinkPotion, mainCharacter_);
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
     controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
@@ -63,10 +63,8 @@ bool Game::doActions() {
     refreshSounds();
 
     if (isStatusVisible_) {
-        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32 > (0, 0, 1024, 683));
-
+        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32> (0, 0, 1024, 683));
         mainCharacter_->getInventory()->drawInventory();
-
         sceneManager_->getGUIEnvironment()->drawAll();
         return true;
     }
@@ -81,9 +79,15 @@ bool Game::doActions() {
         needsRestart_ = false;
     }
 
+    
     clearCorpses();
-
     getSceneManager()->drawAll();
+    IGUIStaticText *kills = sceneManager_->getGUIEnvironment()->addStaticText(toWchar_Kills(killCounter_),
+            rect<s32>(800,0,1000,50),true,true, 0,-1,true);
+    kills->setTextAlignment(EGUIA_CENTER ,EGUIA_CENTER );
+    kills->draw();
+
+
 
         cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
                                          getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
@@ -135,7 +139,7 @@ bool Game::doActions() {
             mainCharacter_->setState(CROUCHING);
         }
 
-        cout << "Height: " << mainCharacter_->getPosition().Y << endl;
+        
 
         time_t currentTime;
         time(&currentTime);
@@ -175,16 +179,20 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         (*monster)->die();
         (*monster)->setState(DEAD);
+        killCounter_++;
 
         try {
 
             cout << "Vo dropa." << endl;
-            Item droppedItem = itemGenerator_.dropItem(DEFAULT_ITEM_GENERATION_CHANCE);
+            Item * droppedItem = itemGenerator_.dropItem(DEFAULT_ITEM_GENERATION_CHANCE);
             playSoundEffect(Sounds::GOLD_DROP);
 
             cout << "DropedItem OK." << endl;
-
-            Item * item = droppedItem.copy(level_, getSceneManager());
+            Item * item;
+            
+            item = droppedItem->copy(level_, getSceneManager());
+            
+            //printf("ponteiro de dropped %p\n",dynamic_cast<Potion*>(droppedItem));
 
             cout << "ItemCopy OK." << endl;
 
@@ -254,7 +262,14 @@ int Game::attackMonsters() {
 
 void Game::tryGeneratingMonster(int chancePercent) {
     if (randomBetween(0, 100) <= chancePercent && monsters_.size() < MAX_MONSTERS) {
-        Monster * newMonster = new Monster(level_, sceneManager_, getSoundEngine());
+        Monster * newMonster;
+        if(randomBetween(0,1)){
+            newMonster = new Monster(level_, sceneManager_, getSoundEngine(), DEFAULT_MONSTER_MESH1);
+        }
+        else{
+            newMonster = new Monster(level_, sceneManager_, getSoundEngine(),DEFAULT_MONSTER_MESH2);
+        }
+
         addMonster(newMonster);
 
         dimension2df size = getLevel()->getSize();
@@ -544,6 +559,7 @@ void Game::showStatus(void *userData) {
 
         if (!thisptr->isStatusVisible_) {
             thisptr->isStatusVisible_ = true;
+            thisptr->getSceneManager()->getGUIEnvironment()->clear();
             thisptr->createStatusSreen();
             thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
         }
@@ -561,6 +577,7 @@ void Game::load() {
     vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
 
 
+    killCounter_ = 0;
     mainCharacter_->setPosition(levelCenter);
     mainCharacter_->fillHP();
     mainCharacter_->setLevel(1);
@@ -601,7 +618,7 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
       sceneManager_(sceneManager),
       pather_(&grid_) {
 
-
+    killCounter_=0;
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
 
     fonts_.push_back(env->getFont("./misc/diablo12.xml"));

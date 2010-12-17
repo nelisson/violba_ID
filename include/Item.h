@@ -22,13 +22,16 @@ class Item : public AnimatedNode, public ISceneNode {
         std::string modelPath_;
         std::string imagePath_;
         static int id_;
-        ITexture* image_;
+        
 
         int generateID() { return id_++; }
 
     protected:
-
+        ITexture* image_;
     public:
+
+        std::string getModelPath(){return modelPath_;}
+        std::string getImagePath(){return imagePath_;}
         int getLevel() const { return level_; }
         int getID() const { return ID_; }
         const std::string getNamex() const {  return name_; }
@@ -46,8 +49,8 @@ class Item : public AnimatedNode, public ISceneNode {
              int level = DEFAULT_ITEM_LEVEL
              );
 
-        Item* copy(ISceneNode * parent = NULL,
-                   ISceneManager * manager = NULL);
+        virtual Item* copy(ISceneNode * parent = NULL,
+                   ISceneManager * manager = NULL);       
         
         virtual ~Item();
 

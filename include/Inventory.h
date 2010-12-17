@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Slot.h"
+#include "Potion.h"
 #include <irrlicht/irrlicht.h>
 
 
@@ -25,8 +26,10 @@ class Inventory {
         void setMaxItems(int maxItems);
         void increaseSize(int size);
         Item * removeItem(int index);
+        Item * removeItem(vector<Slot*>::const_iterator i);
         void putItem(Item * item);
         Item * putItem(Item * item, int index);
+        Potion* getPotion();
 
         Slot* findEmptySlot() const;
 

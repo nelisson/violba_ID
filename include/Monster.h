@@ -8,6 +8,7 @@
 
 #define DEFAULT_MONSTER_NAME "DwarfDaMorte"
 #define DEFAULT_MONSTER_MESH "./models/dwarf1.b3d"
+#define DEFAULT_MONSTER_MESH2 "./models/dwarf2.b3d"
 #define DEFAULT_EXPERIENCE_GIVEN 1000
 #define DEFAULT_MONSTER_HP 50
 #define DEFAULT_MONSTER_RANGE 10
@@ -79,8 +80,8 @@ class Monster : public Character {
         Monster(ISceneNode * parent,
                 ISceneManager * manager,
                 ISoundEngine * soundEngine,
-                const std::string name = DEFAULT_MONSTER_NAME,
-                const char * modelPath = DEFAULT_MONSTER_MESH,
+                const char * modelPath,
+                const std::string name = DEFAULT_MONSTER_NAME,                
                 int experienceGiven = DEFAULT_EXPERIENCE_GIVEN,
                 int maxHP = DEFAULT_MONSTER_HP,
                 int range = DEFAULT_MONSTER_RANGE,

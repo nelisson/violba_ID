@@ -34,6 +34,8 @@ Item* Item::copy(ISceneNode * parent, ISceneManager * manager) {
     return item;
 }
 
+
+
 Item::~Item() {
     //dtor
 }

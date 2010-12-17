@@ -18,6 +18,9 @@
 #define DEFAULT_CAMERA_POSITION vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)
 #define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 1
 #define MAX_MONSTERS 1
+#define DEFAULT_MONSTER_MESH1 "./models/dwarf1.b3d"
+#define DEFAULT_MONSTER_MESH2 "./models/dwarf2.b3d"
+
 
 #define GRAVITY -2
 #define DEFAULT_MONSTER_GENERATION_CHANCE 100
@@ -58,6 +61,7 @@ class Game : public SoundEmmitter,
              public IEventReceiver {
 
     private:
+        int killCounter_;
         bool needsRestart_;
         bool mainScreen_;
         bool isRunning_;

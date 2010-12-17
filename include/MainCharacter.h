@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include <irrklang/irrKlang.h>
 #include "Weapon.h"
+#include "Potion.h"
 
 #define ANIM_WALK  0,13
 #define ANIM_SLOW_WALK  14,29

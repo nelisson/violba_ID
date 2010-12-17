@@ -15,7 +15,7 @@ Item * Inventory::removeItem(int) {
 void Inventory::putItem(Item * item) {
     try {
         findEmptySlot()->putItem(item);
-        cout << "putei item fora" << endl;
+        
     }
     catch (int i) {
         throw;
@@ -26,16 +26,12 @@ Slot* Inventory::findEmptySlot() const {
     vector<Slot*>::const_iterator i;
 
     for (i = slots_.begin(); i < slots_.end(); i++) {
-        cout << "for slots" << endl;
-        printf("%p\n", *i);
-        cout << endl;
+        
         if ((*i)->isEmpty()) {
-            cout << "is empty" << endl;
+        
             return *i;
         }
-        else {
-            cout << "not empty" << endl;
-        }
+        
     }
 
     throw 2;
@@ -50,7 +46,7 @@ Inventory::Inventory(ISceneManager* sceneManager, int maxItems)
 
     for (int i = 0; i < maxItems_; i++) {
         slots_.push_back(new Slot());
-        printf("%p\n", slots_[i]);
+        
     }
 
 }
@@ -88,4 +84,30 @@ void Inventory::drawInventory(){
         sceneManager_->getVideoDriver()->draw2DLine(position2di(500+(100*i),150),position2di(500+(100*i),650));
         sceneManager_->getVideoDriver()->draw2DLine(position2di(500,150+(100*i)),position2di(1000,150+(100*i)));
     }
+}
+
+
+Potion* Inventory::getPotion(){
+    
+    vector<Slot*>::const_iterator i;
+
+    for(i = slots_.begin(); i< slots_.end();i++){
+
+        if(!(*i)->isEmpty()){
+            if((*i)->getItem()->getNamex().compare("Potion")==0){
+
+                Potion* pot = dynamic_cast<Potion*>( removeItem(i));
+                
+                printf("Potion pointer %p\n",pot);
+
+                return pot;
+            }
+        }
+    }
+    
+    return NULL;
+}
+
+Item * Inventory::removeItem(vector<Slot*>::const_iterator i){
+    return (*i)->putItem(NULL);
 }

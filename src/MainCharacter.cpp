@@ -6,8 +6,17 @@ using namespace State;
 void MainCharacter::drinkPotion(void *userData) {
     MainCharacter * thisptr = (MainCharacter*) userData;
 
-    thisptr->heal(DEFAULT_POTION_HEAL);
-    thisptr->playSoundEffect(Sounds::POTION);
+    cout << "Tentando beber" << endl;
+
+    Potion * potion = thisptr->getInventory()->getPotion();
+
+    if(potion){
+        cout << "Opa! Tem trago!!" << endl;
+        thisptr->heal(potion->getHealAmount(),true);
+    }else{
+        cout << "Vo fica no seco" << endl;
+    }
+
 }
 
 bool MainCharacter::walk(vector3df desl) {

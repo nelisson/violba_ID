@@ -25,6 +25,8 @@ const wchar_t* toWchar_T(long value,bool bar = false);
 
 const wchar_t* toWchar_T(int value, bool bar = false);
 
+const wchar_t* toWchar_Kills(int value);
+
 const wchar_t* toWchar_T(float value, bool bar = false);
 
 const wchar_t* toWchar_T(vector3df position);

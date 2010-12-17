@@ -48,6 +48,18 @@ const wchar_t* toWchar_T(long value, bool bar){
 
     return buffer;
 }
+const wchar_t* toWchar_Kills(int value){
+    wchar_t* buffer = (wchar_t*)malloc(sizeof(wchar_t)*15);
+    char* buffer1 = (char*)malloc(sizeof(char)*15);
+
+    
+   sprintf(buffer1, "Kills: %d",value);
+  
+
+    mbstowcs(buffer, buffer1, strlen(buffer1)+1);
+
+    return buffer;
+}
 
 const wchar_t* toWchar_T(int value, bool bar){
     wchar_t* buffer = (wchar_t*)malloc(sizeof(wchar_t)*15);
