@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Armor.h"
 #include "Potion.h"
+#include "Gold.h"
 #include <iostream>
 
 using namespace std;
@@ -23,6 +24,7 @@ class ItemGenerator {
         void loadWeapons();
         void loadArmors();
         void loadPotions();
+        void loadGold();
 
         ItemGenerator();
         virtual ~ItemGenerator();

@@ -1,5 +1,5 @@
-#ifndef POTION_H
-#define POTION_H
+#ifndef GOLD_H
+#define GOLD_H
 #include "Item.h"
 #include "Utils.h"
 

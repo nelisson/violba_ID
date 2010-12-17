@@ -89,13 +89,13 @@ bool Game::doActions() {
 
 
 
-        cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
-                                         getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                                         mainCharacter_->getPosition().Z));
+    cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
+                                     getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                     mainCharacter_->getPosition().Z));
 
-        cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
-                                           getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                                           mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
+    cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
+                                       getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                       mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
 
 
 
@@ -315,7 +315,7 @@ void Game::runMonstersAI() {
                 vector3df vetor = ninjaPosition - monsterPosition;
                 vetor.normalize();
                 (*monster)->walk(vetor * getElapsedTime());
-                if ((*monster)->getState() == RUNNING) {
+                if ((*monster)->getState() == STOPPING) {
                     (*monster)->setFrameLoop(MONSTER_WALK);
                     (*monster)->setLoopMode(true);
                     (*monster)->setState(MOVING);
