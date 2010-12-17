@@ -15,7 +15,7 @@ Potion::Potion(ISceneNode * parent,
 
     healAmount_ = healAmount;
 
-
+    
 }
 
 Potion::~Potion() {}

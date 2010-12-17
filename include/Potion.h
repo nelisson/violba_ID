@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 #define DEFAULT_HEAL_AMOUNT 50
-#define DEFAULT_POTION_MESH_PATH "./models/potion.3DS"
+#define DEFAULT_POTION_MESH_PATH "./models/potion-low.3DS"
 #define DEFAULT_POTION_IMAGE_PATH "./misc/potion.bmp"
 
 
