@@ -89,13 +89,13 @@ bool Game::doActions() {
 
 
 
-        cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
-                                         getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                                         mainCharacter_->getPosition().Z));
+    cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
+                                     getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                     mainCharacter_->getPosition().Z));
 
-        cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
-                                           getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                                           mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
+    cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
+                                       getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+                                       mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
 
 
 

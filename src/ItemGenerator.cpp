@@ -11,14 +11,19 @@ void ItemGenerator::loadArmors() {
     items_.push_back(new Armor(NULL, NULL, "Armor"));
 }
 
-void ItemGenerator::loadPotions(){
+void ItemGenerator::loadPotions() {
     items_.push_back(new Potion(NULL, NULL, "Potion"));
+}
+
+void ItemGenerator::loadGold() {
+    items_.push_back(new Gold(NULL, NULL, "Gold"));
 }
 
 void ItemGenerator::createItems() {
     loadWeapons();
     loadArmors();
     loadPotions();
+    loadGold();
 }
 
 Item* ItemGenerator::dropItem(int chance) {

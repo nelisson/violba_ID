@@ -35,6 +35,7 @@
 
 #define DEFAULT_CHARACTER_NAME "Violba"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
+//#define DEFAULT_CHARACTER_MESH "./models/coin.3ds"
 
 
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
