@@ -35,8 +35,6 @@
 
 #define DEFAULT_CHARACTER_NAME "Violba"
 #define DEFAULT_CHARACTER_MESH "./models/ninja.b3d"
-//#define DEFAULT_CHARACTER_MESH "./models/coin.3ds"
-
 
 #define DEFAULT_CHARACTER_MAX_LEVEL 40
 #define DEFAULT_POTION_HEAL 100
@@ -62,6 +60,8 @@ class MainCharacter : public Character {
     private:
         Inventory* inventory_;
         Weapon* equippedWeapon_;
+        ISceneNode* target_;
+        vector3df goto_;
 
         int vitality_, strength_, agility_;
         long currentExperience_;
@@ -89,7 +89,10 @@ class MainCharacter : public Character {
         static void drinkPotion(void *userData);
 
         virtual void levelUp();
+        void reset(vector3df position);
 
+        void setTarget(ISceneNode* target) { target_ = target; }
+        void setGoto(vector3df gotop) { goto_ = gotop; }
 
         int getVitality() {return vitality_;}
         int getStrength() {return strength_;}

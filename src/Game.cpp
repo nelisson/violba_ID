@@ -62,26 +62,45 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
+    vector3df temp;
+    ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), temp);
+    if (intersectedNode) {
+        if ( (intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY ) {
+            cursor_->setFilter(CursorColors::ATTACKING);
+        }
+        else if ( (intersectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM ) {
+            cursor_->setFilter(CursorColors::GETTING);
+        }
+        else
+            cursor_->setFilter(CursorColors::POINTING);
+    }
+    else
+        cursor_->setFilter(CursorColors::POINTING);
+    
     if (isStatusVisible_) {
         sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32> (0, 0, 1024, 683));
         mainCharacter_->getInventory()->drawInventory();
         sceneManager_->getGUIEnvironment()->drawAll();
+        cursor_->render();
         return true;
     }
     if (mainScreen_) {
         sceneManager_->getGUIEnvironment()->drawAll();
+        cursor_->render();
         return isRunning_;
     }
 
     if (needsRestart_) {
         sceneManager_->getGUIEnvironment()->clear();
-        load();
+        reset();
         needsRestart_ = false;
     }
 
     
     clearCorpses();
     getSceneManager()->drawAll();
+    cursor_->render();
+
     IGUIStaticText *kills = sceneManager_->getGUIEnvironment()->addStaticText(toWchar_Kills(killCounter_),
             rect<s32>(800,0,1000,50),true,true, 0,-1,true);
     kills->setTextAlignment(EGUIA_CENTER ,EGUIA_CENTER );
@@ -179,6 +198,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         (*monster)->die();
         (*monster)->setState(DEAD);
+        (*monster)->getAnimatedNode()->setID(NodeIDFlags::CORPSE);
         killCounter_++;
 
         try {
@@ -379,6 +399,24 @@ bool Game::OnEvent(const SEvent& event) {
             }
 
         return true;
+    } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
+        if (event.MouseInput.isLeftPressed()) {
+            
+            vector3df collisionPoint;
+            ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
+            mainCharacter_->setTarget(selectedNode);
+            mainCharacter_->setGoto(collisionPoint);
+
+            cout << "Collision Point X: "<< collisionPoint.X ;
+            cout << " Y: "<< collisionPoint.Y ;
+            cout << " Z: "<< collisionPoint.Z << endl;
+
+            if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
+                vector3df difference = collisionPoint - mainCharacter_->getPosition();
+                moveCharacter(this, vector2df(difference.X, difference.Z));
+            }
+        }
+
     } else
         return false;
 }
@@ -581,7 +619,7 @@ void Game::showStatus(void *userData) {
         }
     }
 }
-void Game::load() {
+void Game::reset() {
     dimension2df terrainSize = getLevel()->getSize();
 
     float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
@@ -590,11 +628,7 @@ void Game::load() {
 
 
     killCounter_ = 0;
-    mainCharacter_->setPosition(levelCenter);
-    mainCharacter_->fillHP();
-    mainCharacter_->setLevel(1);
-    mainCharacter_->updateAttributes();
-    mainCharacter_->setState(STOPPING);
+    mainCharacter_->reset(levelCenter);
 
     grid_.clear();
     cout << "Grid cleared." << endl;
@@ -621,7 +655,7 @@ void Game::startGame(void *userData) {
     ((Game*)userData)->needsRestart_ = true;
 }
 
-Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
+Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     : SoundEmmitter(soundEngine),
       isStatusVisible_(false),
@@ -666,6 +700,8 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     grid_ = Grid(level_);
     cout << "Grid Created." << endl;
+
+    cursor_ = new Cursor(device, getSceneManager()->getVideoDriver());
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 

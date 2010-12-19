@@ -1,78 +1,49 @@
 #include <irrlicht/irrlicht.h>
-#include <math.h>
-#include "XBOX360Controller.h"
-#include "Utils.h"
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 
 #include "Game.h"
 
-#include "MainCharacter.h"
-#include "Monster.h"
-
 #define RESOLUTION core::dimension2d<u32>(1024, 683)
-#define PROGRAM_NAME "Violba_ID"
-#define CURSOR_IMAGE_PATH "./misc/cursor.bmp"
+#define PROGRAM_NAME "Violba ID"
 
 using namespace irr;
-using namespace scene;
 using namespace std;
 using namespace core;
-using namespace video;
-using namespace io;
-using namespace gui;
 
 int main() {
 
     IrrlichtDevice* device = createDevice(video::EDT_OPENGL,
-            RESOLUTION, 32, false, false, false);
+            RESOLUTION, 32, false, true, false);
 
-    ISoundEngine* sound = createIrrKlangDevice();
+    stringw programName = PROGRAM_NAME;
+    array<SJoystickInfo> joystickInfo;
 
-    Game game(device->getSceneManager(), sound);
+    device->activateJoysticks(joystickInfo);
+    device->setWindowCaption(programName.c_str());
+    device->setResizable();
+    device->getCursorControl()->setVisible(false);
+
+    Game game(device, device->getSceneManager(), createIrrKlangDevice());
     cout << "Created game" << endl;
 
     device->setEventReceiver(&game);
-    
-    core::array<SJoystickInfo> joystickInfo;
-    device->activateJoysticks(joystickInfo);
-
-    core::stringw programName = PROGRAM_NAME;
-    device->setWindowCaption(programName.c_str());
-
+   
     u32 then = device->getTimer()->getTime();
-
-    device->setWindowCaption(L"violba_ID");
-    device->setResizable();
     
-    IVideoDriver* driver = device->getVideoDriver();
-
-    video::ITexture* cursor = driver->getTexture(CURSOR_IMAGE_PATH);
-    driver->makeColorKeyTexture(cursor, SColor(255, 255, 255, 255));
-
-    device->getCursorControl()->setVisible(false);
-
     while (device->run()) {
         u32 now = device->getTimer()->getTime();
         game.setElapsedTime((f32) (now - then) / 1000.f);
         then = now;
 
-        driver->beginScene();
+        device->getVideoDriver()->beginScene();
         if(!game.doActions()) {
             device->closeDevice();
             sleep(1);
         }
 
-        recti imageRect(0,0,cursor->getOriginalSize().Width, cursor->getOriginalSize().Height);
-        driver->draw2DImage(cursor, device->getCursorControl()->getPosition(),
-                            imageRect, 0, SColor(255, 255, 255, 255), true);
-
-        driver->endScene();
+        device->getVideoDriver()->endScene();
     }
 
     device->drop();
     return 0;
 }
-
-

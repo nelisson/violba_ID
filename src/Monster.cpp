@@ -64,7 +64,7 @@ Monster::Monster(ISceneNode * parent,
                  float attackSpeed,
                  float minDamage,
                  float maxDamage)
-    : Character(parent, manager,
+    : Character(parent, manager, NodeIDFlags::ENEMY,
                 soundEngine, vector3df(0,0,0), name,
                 modelPath, level),
       experienceGiven_(experienceGiven),

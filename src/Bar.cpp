@@ -46,7 +46,7 @@ Bar::Bar(ISceneNode * parent,
          int horizontalOffset_,
          int segments_,
          int segmentSeparatorWidth_)
-    : ISceneNode(parent, manager),
+    : ISceneNode(parent, manager, NodeIDFlags::IGNORED),
       fillPercentage(fillPercentage_),
       borderColor(borderColor_),
       backgroundColor(backgroundColor_),
