@@ -36,7 +36,8 @@ class Cursor : public ISceneNode {
 
     public:
         void setFilter(int filter) { currentFilter_ = filter; }
-        ISceneNode* getIntersectedSceneNode(ISceneManager* manager, vector3df& collisionPoint_out);
+        ISceneNode* getIntersectedSceneNode(ISceneManager* manager, 
+                                            vector3df& collisionPoint_out);
 
         virtual void render();
         virtual const core::aabbox3d<f32>& getBoundingBox() const {};

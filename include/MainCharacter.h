@@ -61,7 +61,7 @@ class MainCharacter : public Character {
         Inventory* inventory_;
         Weapon* equippedWeapon_;
         ISceneNode* target_;
-        vector3df goto_;
+        line3df route_;
 
         int vitality_, strength_, agility_;
         long currentExperience_;
@@ -91,8 +91,11 @@ class MainCharacter : public Character {
         virtual void levelUp();
         void reset(vector3df position);
 
+        ISceneNode* getTarget() const { return target_; }
         void setTarget(ISceneNode* target) { target_ = target; }
-        void setGoto(vector3df gotop) { goto_ = gotop; }
+
+        line3df getRoute() const { return route_; }
+        void setRoute(line3df route) { route_ = route; }
 
         int getVitality() {return vitality_;}
         int getStrength() {return strength_;}

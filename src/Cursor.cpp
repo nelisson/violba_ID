@@ -2,7 +2,8 @@
 
 #include "Cursor.h"
 
-ISceneNode* Cursor::getIntersectedSceneNode(ISceneManager* manager, vector3df& collisionPoint_out) {
+ISceneNode* Cursor::getIntersectedSceneNode(ISceneManager* manager,
+                                            vector3df& collisionPoint_out) {
     ISceneCollisionManager* collision = manager->getSceneCollisionManager();
 
     vector2di cursorPosition = device_->getCursorControl()->getPosition();
@@ -12,8 +13,10 @@ ISceneNode* Cursor::getIntersectedSceneNode(ISceneManager* manager, vector3df& c
 
     ISceneNode* selectedNode = collision->getSceneNodeFromRayBB(ray, NodeIDFlags::ITEM);
 
-    if (selectedNode)
+    if (selectedNode) {
+        cout << "achou node item"<<endl;
         return selectedNode;
+    }
     else
         return collision->getSceneNodeAndCollisionPointFromRay(
                               ray,

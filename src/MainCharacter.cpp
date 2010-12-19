@@ -323,7 +323,7 @@ void MainCharacter::reset(vector3df position) {
     updateAttributes();
     setState(STOPPING);
     setTarget(0);
-    setGoto(vector3df());
+    setRoute(line3df());
 }
 
 MainCharacter::MainCharacter(ISceneNode * parent,
@@ -371,7 +371,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
 
     setState(STOPPING);
     setTarget(0);
-    setGoto(vector3df());
+    setRoute(line3df());
 }
 
 MainCharacter::~MainCharacter() {

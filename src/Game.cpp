@@ -95,7 +95,6 @@ bool Game::doActions() {
         reset();
         needsRestart_ = false;
     }
-
     
     clearCorpses();
     getSceneManager()->drawAll();
@@ -106,21 +105,59 @@ bool Game::doActions() {
     kills->setTextAlignment(EGUIA_CENTER ,EGUIA_CENTER );
     kills->draw();
 
-
-
-    cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
+    camera_->setTarget(vector3df(mainCharacter_->getPosition().X,
                                      getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
                                      mainCharacter_->getPosition().Z));
 
-    cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
+    camera_->setPosition(vector3df(mainCharacter_->getPosition().X,
                                        getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
                                        mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
-
-
 
     if (mainCharacter_->isAlive()) {
         mainCharacter_->refresh(elapsedTime_);
 
+        if (mainCharacter_->getTarget()) {
+
+            cout<<"Char pos X: " << mainCharacter_->getPosition().X;
+            cout<<" Y: " << mainCharacter_->getPosition().Y;
+            cout<<" Z: " << mainCharacter_->getPosition().Z << endl;
+
+            cout<<"Target pos X: " << mainCharacter_->getTarget()->getPosition().X;
+            cout<<" Y: " << mainCharacter_->getTarget()->getPosition().Y;
+            cout<<" Z: " << mainCharacter_->getTarget()->getPosition().Z << endl;
+
+            if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
+                vector3df vector = mainCharacter_->getRoute().getVector();
+                moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                    mainCharacter_->setTarget(0);
+            }
+
+            else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
+                vector3df vector = mainCharacter_->getRoute().getVector();
+
+                if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
+
+                    float moveHorizontal = vector.X;
+                    float moveVertical = vector.Z;
+                    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+                    if (ang >= 180)
+                        ang = 179;
+
+                    mainCharacter_->setRotation(vector3df(0, ang, 0));
+
+                    mainCharacter_->slash(mainCharacter_);
+                    mainCharacter_->setTarget(0);
+                }
+                else {
+                    moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                    if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                        mainCharacter_->setTarget(0);
+                }
+            }
+        }
         if (mainCharacter_->tryHitCheck()) {
             cout << "Hits: " << attackMonsters();
         }
@@ -405,15 +442,23 @@ bool Game::OnEvent(const SEvent& event) {
             vector3df collisionPoint;
             ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
             mainCharacter_->setTarget(selectedNode);
-            mainCharacter_->setGoto(collisionPoint);
 
-            cout << "Collision Point X: "<< collisionPoint.X ;
-            cout << " Y: "<< collisionPoint.Y ;
-            cout << " Z: "<< collisionPoint.Z << endl;
+            if (selectedNode) {
 
-            if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
-                vector3df difference = collisionPoint - mainCharacter_->getPosition();
-                moveCharacter(this, vector2df(difference.X, difference.Z));
+                if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
+                    cout << "Collision Point X: "<< collisionPoint.X ;
+                    cout << " Y: "<< collisionPoint.Y ;
+                    cout << " Z: "<< collisionPoint.Z << endl;
+                    
+                    cout << "Floor node" << endl;
+                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), collisionPoint));
+                }
+
+                else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
+                    cout << "Monster node" << endl;
+                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getPosition()));
+                }
+
             }
         }
 
@@ -643,7 +688,7 @@ void Game::reset() {
 
     time(&lastSpawn_);
 
-    cameras_[0]->setTarget(mainCharacter_->getPosition());
+    camera_->setTarget(mainCharacter_->getPosition());
 
     setCallbacks();
     playMusic(GameMusic::DUNGEON, true);
@@ -705,13 +750,11 @@ Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * 
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 
-    lights_.push_back(getSceneManager()->addLightSceneNode());
-    cameras_.push_back(getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION));
+    camera_ = getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION,
+                                                    vector3df(), NodeIDFlags::IGNORED);
 
-    
     ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(
             level_->getTriangleSelector(),
-
             mainCharacter_,
             vector3df(5, 5, 5),
             core::vector3df(0, GRAVITY, 0),

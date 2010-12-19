@@ -15,7 +15,7 @@ Level::Level(ISceneManager * manager)
 
     //"./models/heightmap.bmp"
     terrain_ = getSceneManager()->addTerrainSceneNode("./models/heightmapwow.bmp",
-                                                      getSceneManager()->getRootSceneNode(),					// parent node
+                                                      this,					// parent node
                                                       NodeIDFlags::FLOOR,					// node id
                                                       core::vector3df(0.f, 0.f, 0.f),		// position
                                                       core::vector3df(0.f, 0.f, 0.f),		// rotation
