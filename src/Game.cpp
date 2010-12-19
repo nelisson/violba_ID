@@ -456,7 +456,7 @@ bool Game::OnEvent(const SEvent& event) {
 
                 else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
                     cout << "Monster node" << endl;
-                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getPosition()));
+                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
                 }
 
             }

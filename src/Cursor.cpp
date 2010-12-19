@@ -11,18 +11,32 @@ ISceneNode* Cursor::getIntersectedSceneNode(ISceneManager* manager,
 
     triangle3df triangle;
 
-    ISceneNode* selectedNode = collision->getSceneNodeFromRayBB(ray, NodeIDFlags::ITEM);
+    ISceneNode* selectedNode = collision->getSceneNodeAndCollisionPointFromRay(
+                                              ray,
+                                              collisionPoint_out,
+                                              triangle,
+                                              NodeIDFlags::ENEMY);
+
+    
 
     if (selectedNode) {
-        cout << "achou node item"<<endl;
+        cout << "achou monstro"<<endl;
         return selectedNode;
     }
-    else
-        return collision->getSceneNodeAndCollisionPointFromRay(
+    else {
+        selectedNode = collision->getSceneNodeFromRayBB(ray, NodeIDFlags::ITEM);
+        
+        if (selectedNode) {
+            cout << "achou node item"<<endl;
+            return selectedNode;
+        }
+        else
+            return collision->getSceneNodeAndCollisionPointFromRay(
                               ray,
                               collisionPoint_out,
                               triangle,
-                              NodeIDFlags::ENEMY & NodeIDFlags::FLOOR);
+                              NodeIDFlags::FLOOR);
+    }
 }
 
 void Cursor::render() {
