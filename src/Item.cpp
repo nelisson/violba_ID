@@ -4,12 +4,12 @@ int Item::id_ = 0;
 
 Item::Item(ISceneNode * parent,
            ISceneManager * manager,
-           const string name,
+           const std::string name,
            const char * modelPath,
            const char* imagePath,
            int level
            )
-    : AnimatedNode(), ISceneNode(parent, manager),
+    : AnimatedNode(), ISceneNode(parent, manager, NodeIDFlags::ITEM),
       modelPath_(modelPath), level_(level),
       name_(name), imagePath_(imagePath) {
     ID_ = generateID();
@@ -25,9 +25,13 @@ Item* Item::copy(ISceneNode * parent, ISceneManager * manager) {
     item->setImage(image_);
     printf("%Ponteiro da textura: %p\n",image_);
     cout<<"vo loada node"<<endl;
-    item->setNode(item->getSceneManager()->addAnimatedMeshSceneNode(mesh, item));
+    item->setNode(item->getSceneManager()->addAnimatedMeshSceneNode(mesh, item, ISceneNode::getID()));
     cout<<"vo geta node"<<endl;
     item->getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
+
+    ITriangleSelector* selector = item->getSceneManager()->createOctreeTriangleSelector(mesh, item->getAnimatedNode());
+    item->getAnimatedNode()->setTriangleSelector(selector);
+    selector->drop();
 
     item->setScale(core::vector3df(5,5,5));
     item->setRotation(core::vector3df(0,45,0));

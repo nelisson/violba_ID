@@ -9,6 +9,18 @@
 
 using namespace irr::core;
 
+
+namespace NodeIDFlags {
+    enum NodeIDFlags {
+        IGNORED = 0,
+        ENEMY = 1,
+        ITEM = 1 << 1,
+        CORPSE = 1 << 2,
+        FLOOR = 1 << 3,
+    };
+}
+
+
 int sinal (double num);
 
 int randomBetween(int first, int second);

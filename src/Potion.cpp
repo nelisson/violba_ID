@@ -30,7 +30,7 @@ Item* Potion::copy(ISceneNode * parent, ISceneManager * manager) {
     item->setImage(image_);
     printf("%Ponteiro da textura: %p\n",image_);
     cout<<"vo loada node"<<endl;
-    item->setNode(item->getSceneManager()->addAnimatedMeshSceneNode(mesh, item));
+    item->setNode(item->getSceneManager()->addAnimatedMeshSceneNode(mesh, item, ISceneNode::getID()));
     cout<<"vo geta node"<<endl;
     item->getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);
 

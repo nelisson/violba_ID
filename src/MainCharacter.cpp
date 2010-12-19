@@ -323,7 +323,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
         const char * name,
         const char * modelPath,
         int level)
-    : Character(parent, manager,
+    : Character(parent, manager, NodeIDFlags::IGNORED,
                 soundEngine,
                 offset, name,
                 modelPath, level) {

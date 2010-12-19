@@ -41,7 +41,7 @@
 327-360	Idle 2
 */
 
-#define DEFAULT_MONSTER_CORPSE_DELAY 2
+#define DEFAULT_MONSTER_CORPSE_DELAY 5
 
 using namespace irrklang;
 

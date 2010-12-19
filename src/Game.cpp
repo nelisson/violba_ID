@@ -62,14 +62,30 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
+    ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager());
+    if (intersectedNode) {
+        if ( (intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY ) {
+            cursor_->setFilter(CursorColors::ATTACKING);
+        }
+        else if ( (intersectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM ) {
+            cursor_->setFilter(CursorColors::GETTING);
+        }
+        else
+            cursor_->setFilter(CursorColors::POINTING);
+    }
+    else
+        cursor_->setFilter(CursorColors::POINTING);
+    
     if (isStatusVisible_) {
         sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32> (0, 0, 1024, 683));
         mainCharacter_->getInventory()->drawInventory();
         sceneManager_->getGUIEnvironment()->drawAll();
+        cursor_->render();
         return true;
     }
     if (mainScreen_) {
         sceneManager_->getGUIEnvironment()->drawAll();
+        cursor_->render();
         return isRunning_;
     }
 
@@ -82,6 +98,8 @@ bool Game::doActions() {
     
     clearCorpses();
     getSceneManager()->drawAll();
+    cursor_->render();
+
     IGUIStaticText *kills = sceneManager_->getGUIEnvironment()->addStaticText(toWchar_Kills(killCounter_),
             rect<s32>(800,0,1000,50),true,true, 0,-1,true);
     kills->setTextAlignment(EGUIA_CENTER ,EGUIA_CENTER );
@@ -179,6 +197,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         (*monster)->die();
         (*monster)->setState(DEAD);
+        (*monster)->getAnimatedNode()->setID(NodeIDFlags::CORPSE);
         killCounter_++;
 
         try {
@@ -379,6 +398,13 @@ bool Game::OnEvent(const SEvent& event) {
             }
 
         return true;
+    } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
+        if (event.MouseInput.isLeftPressed()) {
+            cout << "Left clicked"<<endl;
+            //TODO
+            //mainCharacter_->setTarget(cursor_->getIntersectedSceneNode(getSceneManager()));
+        }
+
     } else
         return false;
 }
@@ -621,7 +647,7 @@ void Game::startGame(void *userData) {
     ((Game*)userData)->needsRestart_ = true;
 }
 
-Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
+Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     : SoundEmmitter(soundEngine),
       isStatusVisible_(false),
@@ -666,6 +692,8 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     grid_ = Grid(level_);
     cout << "Grid Created." << endl;
+
+    cursor_ = new Cursor(device, getSceneManager()->getVideoDriver());
 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 

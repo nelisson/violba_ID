@@ -124,6 +124,7 @@ class Character : public AnimatedNode,
 
         Character(ISceneNode * parent,
                   ISceneManager * manager,
+                  s32 id,
                   ISoundEngine * soundEngine,
                   vector3df offset,
                   const std::string name,

@@ -4,6 +4,7 @@
 #include "AnimatedNode.h"
 #include <irrlicht/irrlicht.h>
 #include <iostream>
+#include "Utils.h"
 
 #define DEFAULT_ITEM_LEVEL 1
 #define DROP_ANIMATION 0,39

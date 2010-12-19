@@ -62,6 +62,7 @@ class MainCharacter : public Character {
     private:
         Inventory* inventory_;
         Weapon* equippedWeapon_;
+        //ISceneNode
 
         int vitality_, strength_, agility_;
         long currentExperience_;
