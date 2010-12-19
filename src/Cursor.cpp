@@ -2,21 +2,24 @@
 
 #include "Cursor.h"
 
-ISceneNode* Cursor::getIntersectedSceneNode(ISceneManager* manager) const {
+ISceneNode* Cursor::getIntersectedSceneNode(ISceneManager* manager, vector3df& collisionPoint_out) {
     ISceneCollisionManager* collision = manager->getSceneCollisionManager();
 
     vector2di cursorPosition = device_->getCursorControl()->getPosition();
     line3df ray = collision->getRayFromScreenCoordinates(position2di(cursorPosition.X, cursorPosition.Y));
 
-    vector3df collisionPoint;
     triangle3df triangle;
 
-    ISceneNode* selectedNode = collision->getSceneNodeFromRayBB(ray, NodeIDFlags::ENEMY & NodeIDFlags::ITEM);
+    ISceneNode* selectedNode = collision->getSceneNodeFromRayBB(ray, NodeIDFlags::ITEM);
 
     if (selectedNode)
         return selectedNode;
     else
-        return collision->getSceneNodeAndCollisionPointFromRay(ray, collisionPoint, triangle, NodeIDFlags::ENEMY);
+        return collision->getSceneNodeAndCollisionPointFromRay(
+                              ray,
+                              collisionPoint_out,
+                              triangle,
+                              NodeIDFlags::ENEMY & NodeIDFlags::FLOOR);
 }
 
 void Cursor::render() {

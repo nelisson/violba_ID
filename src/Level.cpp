@@ -37,6 +37,7 @@ Level::Level(ISceneManager * manager)
     vector3df size = 2* (terrain_->getTerrainCenter() - terrain_->getPosition());
     size_ = dimension2df(size.X, size.Z);
     selector_ = getSceneManager()->createTerrainTriangleSelector(getTerrain());
+    terrain_->setTriangleSelector(selector_);
 
     setAutomaticCulling(irr::scene::EAC_OFF);
 

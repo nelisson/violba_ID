@@ -62,7 +62,8 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
-    ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager());
+    vector3df temp;
+    ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), temp);
     if (intersectedNode) {
         if ( (intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY ) {
             cursor_->setFilter(CursorColors::ATTACKING);
@@ -91,7 +92,7 @@ bool Game::doActions() {
 
     if (needsRestart_) {
         sceneManager_->getGUIEnvironment()->clear();
-        load();
+        reset();
         needsRestart_ = false;
     }
 
@@ -400,9 +401,20 @@ bool Game::OnEvent(const SEvent& event) {
         return true;
     } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.isLeftPressed()) {
-            cout << "Left clicked"<<endl;
-            //TODO
-            //mainCharacter_->setTarget(cursor_->getIntersectedSceneNode(getSceneManager()));
+            
+            vector3df collisionPoint;
+            ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
+            mainCharacter_->setTarget(selectedNode);
+            mainCharacter_->setGoto(collisionPoint);
+
+            cout << "Collision Point X: "<< collisionPoint.X ;
+            cout << " Y: "<< collisionPoint.Y ;
+            cout << " Z: "<< collisionPoint.Z << endl;
+
+            if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
+                vector3df difference = collisionPoint - mainCharacter_->getPosition();
+                moveCharacter(this, vector2df(difference.X, difference.Z));
+            }
         }
 
     } else
@@ -607,7 +619,7 @@ void Game::showStatus(void *userData) {
         }
     }
 }
-void Game::load() {
+void Game::reset() {
     dimension2df terrainSize = getLevel()->getSize();
 
     float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
@@ -616,11 +628,7 @@ void Game::load() {
 
 
     killCounter_ = 0;
-    mainCharacter_->setPosition(levelCenter);
-    mainCharacter_->fillHP();
-    mainCharacter_->setLevel(1);
-    mainCharacter_->updateAttributes();
-    mainCharacter_->setState(STOPPING);
+    mainCharacter_->reset(levelCenter);
 
     grid_.clear();
     cout << "Grid cleared." << endl;

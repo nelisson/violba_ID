@@ -316,6 +316,16 @@ bool MainCharacter::tryHitCheck() {
     return false;
 }
 
+void MainCharacter::reset(vector3df position) {
+    setPosition(position);
+    fillHP();
+    setLevel(1);
+    updateAttributes();
+    setState(STOPPING);
+    setTarget(0);
+    setGoto(vector3df());
+}
+
 MainCharacter::MainCharacter(ISceneNode * parent,
         ISceneManager * manager,
         ISoundEngine * soundEngine,
@@ -360,6 +370,8 @@ MainCharacter::MainCharacter(ISceneNode * parent,
     updateAttributes();
 
     setState(STOPPING);
+    setTarget(0);
+    setGoto(vector3df());
 }
 
 MainCharacter::~MainCharacter() {

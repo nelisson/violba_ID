@@ -129,7 +129,7 @@ class Game : public SoundEmmitter,
 
         virtual bool OnEvent(const SEvent& event);
 
-        void load();
+        void reset();
 
         Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine);
         virtual ~Game();
