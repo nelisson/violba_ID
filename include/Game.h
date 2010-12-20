@@ -78,11 +78,9 @@ class Game : public SoundEmmitter,
         vector<Monster*> monsters_;
         vector<IGUIFont*> fonts_;
 
-        vector<ICameraSceneNode*> cameras_;
-        vector<ILightSceneNode*> lights_;
-
         f32 elapsedTime_;
         time_t lastSpawn_;
+        ICameraSceneNode* camera_;
 
         void createMainScreen();
         void createStatusSreen();
@@ -103,9 +101,6 @@ class Game : public SoundEmmitter,
         MainCharacter * getMainCharacter() { return mainCharacter_; }
         vector<Monster*> getMonsters() { return monsters_; }
         Monster* getMonster(int i) { return monsters_.at(i); }
-
-        vector<ICameraSceneNode*> getCameras() { return cameras_; }
-        vector<ILightSceneNode*> getLights() { return lights_; }
 
         void addMonster(Monster * monster);
         vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);

@@ -3,7 +3,7 @@
 
 #include "Game.h"
 
-#define RESOLUTION core::dimension2d<u32>(1024, 683)
+#define RESOLUTION core::dimension2du(1024, 683)
 #define PROGRAM_NAME "Violba ID"
 
 using namespace irr;
