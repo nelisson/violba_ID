@@ -2,6 +2,7 @@
 #define BAR_H
 
 #include <irrlicht/irrlicht.h>
+#include "Utils.h"
 
 #define DEFAULT_BAR_FILL_PERCENTAGE 100
 

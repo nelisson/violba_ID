@@ -49,13 +49,14 @@ void Character::render() {}
 
 Character::Character(ISceneNode * parent,
                      ISceneManager * manager,
+                     s32 id,
                      ISoundEngine * soundEngine,
                      vector3df offset,
                      const std::string name,
                      const char * modelPath,
                      int level)
     : AnimatedNode(), 
-      ISceneNode(parent, manager, 0, offset),
+      ISceneNode(parent, manager, id, offset),
       SoundEmmitter(soundEngine) {
 
     cout<<"To entrando em char"<<endl;
@@ -72,9 +73,14 @@ Character::Character(ISceneNode * parent,
     IAnimatedMesh * mesh = getSceneManager()->getMesh(modelPath);
 
     cout<<"Loaded char model"<<endl;
-    setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh, this));
+    setNode(getSceneManager()->addAnimatedMeshSceneNode(mesh, this, getID()));
     cout<<"Setted char node"<<endl;
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
+
+    ITriangleSelector* selector = getSceneManager()->createOctreeTriangleSelector(mesh, getAnimatedNode());
+    getAnimatedNode()->setTriangleSelector(selector);
+    selector->drop();
+    
     cout<<"accessed animatedNode"<<endl;
     f32 x = max_(center.X, center.Z);
     setSize(dimension2df(2 * x, 2 * center.Y));

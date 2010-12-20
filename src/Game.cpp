@@ -62,46 +62,102 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 bool Game::doActions() {
     refreshSounds();
 
+    vector3df temp;
+    ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), temp);
+    if (intersectedNode) {
+        if ( (intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY ) {
+            cursor_->setFilter(CursorColors::ATTACKING);
+        }
+        else if ( (intersectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM ) {
+            cursor_->setFilter(CursorColors::GETTING);
+        }
+        else
+            cursor_->setFilter(CursorColors::POINTING);
+    }
+    else
+        cursor_->setFilter(CursorColors::POINTING);
+    
     if (isStatusVisible_) {
         sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32> (0, 0, 1024, 683));
         mainCharacter_->getInventory()->drawInventory();
         sceneManager_->getGUIEnvironment()->drawAll();
+        cursor_->render();
         return true;
     }
     if (mainScreen_) {
         sceneManager_->getGUIEnvironment()->drawAll();
+        cursor_->render();
         return isRunning_;
     }
 
     if (needsRestart_) {
         sceneManager_->getGUIEnvironment()->clear();
-        load();
+        reset();
         needsRestart_ = false;
     }
-
     
     clearCorpses();
     getSceneManager()->drawAll();
+    cursor_->render();
+
     IGUIStaticText *kills = sceneManager_->getGUIEnvironment()->addStaticText(toWchar_Kills(killCounter_),
             rect<s32>(800,0,1000,50),true,true, 0,-1,true);
     kills->setTextAlignment(EGUIA_CENTER ,EGUIA_CENTER );
     kills->draw();
 
-
-
-    cameras_[0]->setTarget(vector3df(mainCharacter_->getPosition().X,
+    camera_->setTarget(vector3df(mainCharacter_->getPosition().X,
                                      getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
                                      mainCharacter_->getPosition().Z));
 
-    cameras_[0]->setPosition(vector3df(mainCharacter_->getPosition().X,
+    camera_->setPosition(vector3df(mainCharacter_->getPosition().X,
                                        getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
                                        mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
-
-
 
     if (mainCharacter_->isAlive()) {
         mainCharacter_->refresh(elapsedTime_);
 
+        if (mainCharacter_->getTarget()) {
+
+            cout<<"Char pos X: " << mainCharacter_->getPosition().X;
+            cout<<" Y: " << mainCharacter_->getPosition().Y;
+            cout<<" Z: " << mainCharacter_->getPosition().Z << endl;
+
+            cout<<"Target pos X: " << mainCharacter_->getTarget()->getPosition().X;
+            cout<<" Y: " << mainCharacter_->getTarget()->getPosition().Y;
+            cout<<" Z: " << mainCharacter_->getTarget()->getPosition().Z << endl;
+
+            if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
+                vector3df vector = mainCharacter_->getRoute().getVector();
+                moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                    mainCharacter_->setTarget(0);
+            }
+
+            else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
+                vector3df vector = mainCharacter_->getRoute().getVector();
+
+                if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
+
+                    float moveHorizontal = vector.X;
+                    float moveVertical = vector.Z;
+                    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+                    if (ang >= 180)
+                        ang = 179;
+
+                    mainCharacter_->setRotation(vector3df(0, ang, 0));
+
+                    mainCharacter_->slash(mainCharacter_);
+                    mainCharacter_->setTarget(0);
+                }
+                else {
+                    moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                    if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                        mainCharacter_->setTarget(0);
+                }
+            }
+        }
         if (mainCharacter_->tryHitCheck()) {
             cout << "Hits: " << attackMonsters();
         }
@@ -179,6 +235,7 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
         mainCharacter_->earnExperience((*monster)->getExperienceGiven());
         (*monster)->die();
         (*monster)->setState(DEAD);
+        (*monster)->getAnimatedNode()->setID(NodeIDFlags::CORPSE);
         killCounter_++;
 
         try {
@@ -379,6 +436,32 @@ bool Game::OnEvent(const SEvent& event) {
             }
 
         return true;
+    } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
+        if (event.MouseInput.isLeftPressed()) {
+            
+            vector3df collisionPoint;
+            ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
+            mainCharacter_->setTarget(selectedNode);
+
+            if (selectedNode) {
+
+                if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
+                    cout << "Collision Point X: "<< collisionPoint.X ;
+                    cout << " Y: "<< collisionPoint.Y ;
+                    cout << " Z: "<< collisionPoint.Z << endl;
+                    
+                    cout << "Floor node" << endl;
+                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), collisionPoint));
+                }
+
+                else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
+                    cout << "Monster node" << endl;
+                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
+                }
+
+            }
+        }
+
     } else
         return false;
 }
@@ -581,7 +664,7 @@ void Game::showStatus(void *userData) {
         }
     }
 }
-void Game::load() {
+void Game::reset() {
     dimension2df terrainSize = getLevel()->getSize();
 
     float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
@@ -590,11 +673,7 @@ void Game::load() {
 
 
     killCounter_ = 0;
-    mainCharacter_->setPosition(levelCenter);
-    mainCharacter_->fillHP();
-    mainCharacter_->setLevel(1);
-    mainCharacter_->updateAttributes();
-    mainCharacter_->setState(STOPPING);
+    mainCharacter_->reset(levelCenter);
 
     grid_.clear();
     cout << "Grid cleared." << endl;
@@ -609,7 +688,7 @@ void Game::load() {
 
     time(&lastSpawn_);
 
-    cameras_[0]->setTarget(mainCharacter_->getPosition());
+    camera_->setTarget(mainCharacter_->getPosition());
 
     setCallbacks();
     playMusic(GameMusic::DUNGEON, true);
@@ -621,7 +700,7 @@ void Game::startGame(void *userData) {
     ((Game*)userData)->needsRestart_ = true;
 }
 
-Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
+Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
     : SoundEmmitter(soundEngine),
       isStatusVisible_(false),
@@ -667,15 +746,15 @@ Game::Game(ISceneManager * sceneManager, ISoundEngine * soundEngine)
     grid_ = Grid(level_);
     cout << "Grid Created." << endl;
 
+    cursor_ = new Cursor(device, getSceneManager()->getVideoDriver());
+
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 
-    lights_.push_back(getSceneManager()->addLightSceneNode());
-    cameras_.push_back(getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION));
+    camera_ = getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION,
+                                                    vector3df(), NodeIDFlags::IGNORED);
 
-    
     ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(
             level_->getTriangleSelector(),
-
             mainCharacter_,
             vector3df(5, 5, 5),
             core::vector3df(0, GRAVITY, 0),

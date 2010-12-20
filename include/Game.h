@@ -10,14 +10,15 @@
 #include <iostream>
 #include <ctime>
 #include "SoundEmmitter.h"
+#include "Cursor.h"
 
 #define RESOLUTION_SCREEN core::dimension2d<u32>(1024, 683)
 #define DEFAULT_CAMERA_X 0
 #define DEFAULT_CAMERA_Y 35
 #define DEFAULT_CAMERA_Z -40
 #define DEFAULT_CAMERA_POSITION vector3df(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y, DEFAULT_CAMERA_Z)
-#define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 1
-#define MAX_MONSTERS 1
+#define DEFAULT_MONSTER_CREATION_TIME_IN_SECONDS 2
+#define MAX_MONSTERS 5
 #define DEFAULT_MONSTER_MESH1 "./models/dwarf1.b3d"
 #define DEFAULT_MONSTER_MESH2 "./models/dwarf2.b3d"
 
@@ -69,6 +70,7 @@ class Game : public SoundEmmitter,
         ISceneManager * sceneManager_;
         ItemGenerator itemGenerator_;
         Grid grid_;
+        Cursor * cursor_;
         MicroPather pather_;
         Level * level_;
         XBOX360Controller * controller_;
@@ -76,11 +78,9 @@ class Game : public SoundEmmitter,
         vector<Monster*> monsters_;
         vector<IGUIFont*> fonts_;
 
-        vector<ICameraSceneNode*> cameras_;
-        vector<ILightSceneNode*> lights_;
-
         f32 elapsedTime_;
         time_t lastSpawn_;
+        ICameraSceneNode* camera_;
 
         void createMainScreen();
         void createStatusSreen();
@@ -101,9 +101,6 @@ class Game : public SoundEmmitter,
         MainCharacter * getMainCharacter() { return mainCharacter_; }
         vector<Monster*> getMonsters() { return monsters_; }
         Monster* getMonster(int i) { return monsters_.at(i); }
-
-        vector<ICameraSceneNode*> getCameras() { return cameras_; }
-        vector<ILightSceneNode*> getLights() { return lights_; }
 
         void addMonster(Monster * monster);
         vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
@@ -127,9 +124,9 @@ class Game : public SoundEmmitter,
 
         virtual bool OnEvent(const SEvent& event);
 
-        void load();
+        void reset();
 
-        Game(ISceneManager * sceneManager, ISoundEngine * soundEngine);
+        Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine);
         virtual ~Game();
 };
 
