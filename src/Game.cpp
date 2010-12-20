@@ -37,7 +37,7 @@ void Game::setCallbacks() {
     controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
 
-    controller_->setCallBack(START, PRESSED, this->showStatus, this);    
+    controller_->setCallBack(START, PRESSED, this->showStatus, this);
 
 }
 
@@ -65,20 +65,17 @@ bool Game::doActions() {
     vector3df temp;
     ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), temp);
     if (intersectedNode) {
-        if ( (intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY ) {
+        if ((intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
             cursor_->setFilter(CursorColors::ATTACKING);
-        }
-        else if ( (intersectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM ) {
+        } else if ((intersectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM) {
             cursor_->setFilter(CursorColors::GETTING);
-        }
-        else
+        } else
             cursor_->setFilter(CursorColors::POINTING);
-    }
-    else
+    } else
         cursor_->setFilter(CursorColors::POINTING);
-    
+
     if (isStatusVisible_) {
-        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32> (0, 0, 1024, 683));
+        sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32 > (0, 0, 1024, 683));
         mainCharacter_->getInventory()->drawInventory();
         sceneManager_->getGUIEnvironment()->drawAll();
         cursor_->render();
@@ -95,36 +92,36 @@ bool Game::doActions() {
         reset();
         needsRestart_ = false;
     }
-    
+
     clearCorpses();
     getSceneManager()->drawAll();
     cursor_->render();
 
     IGUIStaticText *kills = sceneManager_->getGUIEnvironment()->addStaticText(toWchar_Kills(killCounter_),
-            rect<s32>(800,0,1000,50),true,true, 0,-1,true);
-    kills->setTextAlignment(EGUIA_CENTER ,EGUIA_CENTER );
+            rect<s32 > (800, 0, 1000, 50), true, true, 0, -1, true);
+    kills->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
     kills->draw();
 
     camera_->setTarget(vector3df(mainCharacter_->getPosition().X,
-                                     getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                                     mainCharacter_->getPosition().Z));
+            getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+            mainCharacter_->getPosition().Z));
 
     camera_->setPosition(vector3df(mainCharacter_->getPosition().X,
-                                       getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
-                                       mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
+            getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
+            mainCharacter_->getPosition().Z) + DEFAULT_CAMERA_POSITION);
 
     if (mainCharacter_->isAlive()) {
         mainCharacter_->refresh(elapsedTime_);
 
         if (mainCharacter_->getTarget()) {
 
-            cout<<"Char pos X: " << mainCharacter_->getPosition().X;
-            cout<<" Y: " << mainCharacter_->getPosition().Y;
-            cout<<" Z: " << mainCharacter_->getPosition().Z << endl;
+            cout << "Char pos X: " << mainCharacter_->getPosition().X;
+            cout << " Y: " << mainCharacter_->getPosition().Y;
+            cout << " Z: " << mainCharacter_->getPosition().Z << endl;
 
-            cout<<"Target pos X: " << mainCharacter_->getTarget()->getPosition().X;
-            cout<<" Y: " << mainCharacter_->getTarget()->getPosition().Y;
-            cout<<" Z: " << mainCharacter_->getTarget()->getPosition().Z << endl;
+            cout << "Target pos X: " << mainCharacter_->getTarget()->getPosition().X;
+            cout << " Y: " << mainCharacter_->getTarget()->getPosition().Y;
+            cout << " Z: " << mainCharacter_->getTarget()->getPosition().Z << endl;
 
             if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
                 vector3df vector = mainCharacter_->getRoute().getVector();
@@ -132,9 +129,7 @@ bool Game::doActions() {
 
                 if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
                     mainCharacter_->setTarget(0);
-            }
-
-            else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
+            } else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
                 vector3df vector = mainCharacter_->getRoute().getVector();
 
                 if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
@@ -149,8 +144,7 @@ bool Game::doActions() {
 
                     mainCharacter_->slash(mainCharacter_);
                     mainCharacter_->setTarget(0);
-                }
-                else {
+                } else {
                     moveCharacter(this, vector2df(vector.X, -vector.Z));
 
                     if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
@@ -171,31 +165,32 @@ bool Game::doActions() {
 
                 vector<Cell*>::iterator i;
                 for (i = items.begin(); i < items.end(); i++) {
-                    
+
                     try {
                         mainCharacter_->getInventory()->putItem((*i)->getItem());
                         (*i)->getItem()->setVisible(false);
                         (*i)->removeItem();
                         counter++;
-                    }
-                    catch(int j) {
-                        cout << "Inventory is full." <<endl;
+                    } catch (int j) {
+                        cout << "Inventory is full." << endl;
                         playSoundEffect(Sounds::INV_FULL);
+                        sleep(2);
+                        mainScreen_ = true;
+                        createMainScreen();
 
                     }
                 }
 
                 cout << "Got " << counter << " items." << endl;
-            }            catch (int i) {
+            } catch (int i) {
+            } catch (int) {
             }
 
-            catch(int) {}
-            
 
             mainCharacter_->setState(CROUCHING);
         }
 
-        
+
 
         time_t currentTime;
         time(&currentTime);
@@ -246,15 +241,15 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 
             cout << "DropedItem OK." << endl;
             Item * item;
-            
+
             item = droppedItem->copy(level_, getSceneManager());
-            
-            if(item->getNamex().compare("Potion")==0){
-                item->setScale(vector3df(0.025,0.025,0.025));
+
+            if (item->getNamex().compare("Potion") == 0) {
+                item->setScale(vector3df(0.025, 0.025, 0.025));
             }
 
-            if(item->getNamex().compare("Armor")==0){
-                item->setScale(vector3df(0.1,0.1,0.1));
+            if (item->getNamex().compare("Armor") == 0) {
+                item->setScale(vector3df(0.1, 0.1, 0.1));
             }
 
             cout << "ItemCopy OK." << endl;
@@ -265,9 +260,9 @@ vector<Monster*>::iterator Game::attackMonster(vector<Monster*>::iterator monste
 
             position.Y = getLevel()->getTerrain()->getHeight(position.X, position.Z);
 
-            if(item->getNamex().compare("Armor")==0){
-                item->setScale(vector3df(0.11,0.11,0.11));
-                position += vector3df(0,2,0);
+            if (item->getNamex().compare("Armor") == 0) {
+                item->setScale(vector3df(0.11, 0.11, 0.11));
+                position += vector3df(0, 2, 0);
             }
 
             item->setPosition(position);
@@ -332,11 +327,10 @@ int Game::attackMonsters() {
 void Game::tryGeneratingMonster(int chancePercent) {
     if (randomBetween(0, 100) <= chancePercent && monsters_.size() < MAX_MONSTERS) {
         Monster * newMonster;
-        if(randomBetween(0,1)){
+        if (randomBetween(0, 1)) {
             newMonster = new Monster(level_, sceneManager_, getSoundEngine(), DEFAULT_MONSTER_MESH1);
-        }
-        else{
-            newMonster = new Monster(level_, sceneManager_, getSoundEngine(),DEFAULT_MONSTER_MESH2);
+        } else {
+            newMonster = new Monster(level_, sceneManager_, getSoundEngine(), DEFAULT_MONSTER_MESH2);
         }
 
         addMonster(newMonster);
@@ -356,8 +350,8 @@ void Game::printPath(vector<void*> path) const {
 
     vector<void*>::const_iterator i;
     for (i = path.begin(); i < path.end(); i++) {
-        cout << "X: " << ((Cell*)(*i))->getPosition().X;
-        cout << " Y: " << ((Cell*)(*i))->getPosition().Y << endl;
+        cout << "X: " << ((Cell*) (*i))->getPosition().X;
+        cout << " Y: " << ((Cell*) (*i))->getPosition().Y << endl;
     }
 }
 
@@ -416,29 +410,31 @@ void Game::createMainScreen() {
 bool Game::OnEvent(const SEvent& event) {
 
     controller_->OnEvent(event);
-
+    cout << "EVENT!!!" << endl;
     if (event.EventType == EET_GUI_EVENT) {
+        cout << "GUI EVENT!!!" << endl;
         s32 id = event.GUIEvent.Caller->getID();
 
         if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
-            switch (id) {
-                case GUI_ID_QUIT_BUTTON:
-                    playSoundEffect(Sounds::SELECTION);
-                    isRunning_ = false;
+            cout << "CLICKED EVENT!!!" << endl;
+        switch (id) {
+            case GUI_ID_QUIT_BUTTON:
+                playSoundEffect(Sounds::SELECTION);
+                isRunning_ = false;
 
-                    break;
+                break;
 
-                case GUI_ID_PLAY_DEMO_BUTTON:
-                    playSoundEffect(Sounds::SELECTION);
-                    mainScreen_ = false;
-                    needsRestart_ = true;
-                    break;
-            }
+            case GUI_ID_PLAY_DEMO_BUTTON:
+                playSoundEffect(Sounds::SELECTION);
+                mainScreen_ = false;
+                needsRestart_ = true;
+                break;
+        }
 
         return true;
     } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.isLeftPressed()) {
-            
+
             vector3df collisionPoint;
             ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
             mainCharacter_->setTarget(selectedNode);
@@ -446,15 +442,13 @@ bool Game::OnEvent(const SEvent& event) {
             if (selectedNode) {
 
                 if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
-                    cout << "Collision Point X: "<< collisionPoint.X ;
-                    cout << " Y: "<< collisionPoint.Y ;
-                    cout << " Z: "<< collisionPoint.Z << endl;
-                    
+                    cout << "Collision Point X: " << collisionPoint.X;
+                    cout << " Y: " << collisionPoint.Y;
+                    cout << " Z: " << collisionPoint.Z << endl;
+
                     cout << "Floor node" << endl;
                     mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), collisionPoint));
-                }
-
-                else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
+                } else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
                     cout << "Monster node" << endl;
                     mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
                 }
@@ -638,7 +632,7 @@ void Game::createStatusSreen() {
     text = env->addStaticText(L"Inventory", tamanho);
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
-    
+
     //exp -> current nextLevel
     //jumpHeight
     //(500, 150,1000, 659)
@@ -657,18 +651,18 @@ void Game::showStatus(void *userData) {
             thisptr->getSceneManager()->getGUIEnvironment()->clear();
             thisptr->createStatusSreen();
             thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
-        }
-        else{
+        } else {
             thisptr->isStatusVisible_ = false;
             thisptr->getSceneManager()->getGUIEnvironment()->clear();
         }
     }
 }
+
 void Game::reset() {
     dimension2df terrainSize = getLevel()->getSize();
 
     float levelHeight = getLevel()->getTerrain()->getHeight(terrainSize.Width / 2,
-                                                            terrainSize.Height / 2);
+            terrainSize.Height / 2);
     vector3df levelCenter(terrainSize.Width / 2, levelHeight, terrainSize.Height / 2);
 
 
@@ -695,21 +689,21 @@ void Game::reset() {
 }
 
 void Game::startGame(void *userData) {
-    ((Game*)userData)->playSoundEffect(Sounds::SELECTION);
-    ((Game*)userData)->mainScreen_ = false;
-    ((Game*)userData)->needsRestart_ = true;
+    ((Game*) userData)->playSoundEffect(Sounds::SELECTION);
+    ((Game*) userData)->mainScreen_ = false;
+    ((Game*) userData)->needsRestart_ = true;
 }
 
 Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine)
 
-    : SoundEmmitter(soundEngine),
-      isStatusVisible_(false),
-      isRunning_(true),
-      mainScreen_(true),
-      sceneManager_(sceneManager),
-      pather_(&grid_) {
+: SoundEmmitter(soundEngine),
+isStatusVisible_(false),
+isRunning_(true),
+mainScreen_(true),
+sceneManager_(sceneManager),
+pather_(&grid_) {
 
-    killCounter_=0;
+    killCounter_ = 0;
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
 
     fonts_.push_back(env->getFont("./misc/diablo12.xml"));
@@ -738,7 +732,7 @@ Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * 
     controller_ = new XBOX360Controller();
     cout << "Controller created." << endl;
 
-    controller_->setCallBack(X, PRESSED, startGame, this);
+    controller_->setCallBack(START, PRESSED, startGame, this);
 
     mainCharacter_ = new MainCharacter(level_, getSceneManager(), getSoundEngine());
     cout << "Char created." << endl;
@@ -751,7 +745,7 @@ Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * 
     sceneManager_->getVideoDriver()->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 
     camera_ = getSceneManager()->addCameraSceneNode(level_, DEFAULT_CAMERA_POSITION,
-                                                    vector3df(), NodeIDFlags::IGNORED);
+            vector3df(), NodeIDFlags::IGNORED);
 
     ISceneNodeAnimator* anim = sceneManager_->createCollisionResponseAnimator(
             level_->getTriangleSelector(),
