@@ -32,7 +32,6 @@ void Game::setCallbacks() {
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
     controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
-    controller_->setCallBack(L, RELEASED, mainCharacter_->getUp, mainCharacter_);
     controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
@@ -60,18 +59,6 @@ void Game::moveCharacter(void* userData, vector2df desl) {
 
 bool Game::doActions() {
     refreshSounds();
-
-    vector3df temp;
-    ISceneNode* intersectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), temp);
-    if (intersectedNode) {
-        if ((intersectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
-            cursor_->setFilter(CursorColors::ATTACKING);
-        } else if ((intersectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM) {
-            cursor_->setFilter(CursorColors::GETTING);
-        } else
-            cursor_->setFilter(CursorColors::POINTING);
-    } else
-        cursor_->setFilter(CursorColors::POINTING);
 
     if (isStatusVisible_) {
         sceneManager_->getVideoDriver()->draw2DRectangle(SColor(255, 120, 120, 120), rect<s32 > (0, 0, 1024, 683));
@@ -117,66 +104,69 @@ bool Game::doActions() {
     if (mainCharacter_->isAlive()) {
         mainCharacter_->refresh(elapsedTime_);
 
-        if (mainCharacter_->getTarget()) {
-
-            cout << "Char pos X: " << mainCharacter_->getPosition().X;
-            cout << " Y: " << mainCharacter_->getPosition().Y;
-            cout << " Z: " << mainCharacter_->getPosition().Z << endl;
-
-            cout << "Target pos X: " << mainCharacter_->getTarget()->getPosition().X;
-            cout << " Y: " << mainCharacter_->getTarget()->getPosition().Y;
-            cout << " Z: " << mainCharacter_->getTarget()->getPosition().Z << endl;
-
-            if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
-                vector3df vector = mainCharacter_->getRoute().getVector();
-                moveCharacter(this, vector2df(vector.X, -vector.Z));
-
-                if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
-                    mainCharacter_->setTarget(0);
-            } else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
-                vector3df vector = mainCharacter_->getRoute().getVector();
-
-                if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
-
-                    float moveHorizontal = vector.X;
-                    float moveVertical = vector.Z;
-                    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
-                    if (ang >= 180)
-                        ang = 179;
-
-                    mainCharacter_->setRotation(vector3df(0, ang, 0));
-
-                    mainCharacter_->slash(mainCharacter_);
-                    mainCharacter_->setTarget(0);
-                } else {
+        if (mainCharacter_->getTarget())
+            switch (mainCharacter_->getTarget()->getID()) {
+                case NodeIDFlags::FLOOR : {
+                    vector3df vector = mainCharacter_->getRoute().getVector();
                     moveCharacter(this, vector2df(vector.X, -vector.Z));
 
                     if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
                         mainCharacter_->setTarget(0);
+
+                    break;
                 }
-            }else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM) {
-                vector3df vector = mainCharacter_->getRoute().getVector();
 
-                if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
+                case NodeIDFlags::ENEMY : {
+                    vector3df vector = mainCharacter_->getRoute().getVector();
 
-                    float moveHorizontal = vector.X;
-                    float moveVertical = vector.Z;
-                    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
-                    if (ang >= 180)
-                        ang = 179;
+                    if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
 
-                    mainCharacter_->setRotation(vector3df(0, ang, 0));
+                        float moveHorizontal = vector.X;
+                        float moveVertical = vector.Z;
+                        double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+                        if (ang >= 180)
+                            ang = 179;
 
-                    mainCharacter_->crouch(mainCharacter_);
-                    mainCharacter_->setTarget(0);
-                } else {
-                    moveCharacter(this, vector2df(vector.X, -vector.Z));
+                        mainCharacter_->setRotation(vector3df(0, ang, 0));
 
-                    if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                        mainCharacter_->slash(mainCharacter_);
                         mainCharacter_->setTarget(0);
+
+                    } else {
+                        moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                        if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                            mainCharacter_->setTarget(0);
+                    }
+                    break;
+                }
+
+                case NodeIDFlags::ITEM : {
+                    vector3df vector = mainCharacter_->getRoute().getVector();
+
+                    if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
+
+                        float moveHorizontal = vector.X;
+                        float moveVertical = vector.Z;
+                        double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+                        if (ang >= 180)
+                            ang = 179;
+
+                        mainCharacter_->setRotation(vector3df(0, ang, 0));
+
+                        mainCharacter_->crouch(mainCharacter_);
+                        mainCharacter_->setTarget(0);
+                    } else {
+                        moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                        if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                            mainCharacter_->setTarget(0);
+                    }
+
+                    break;
                 }
             }
-        }
+        
         if (mainCharacter_->tryHitCheck()) {
             cout << "Hits: " << attackMonsters();
         }
@@ -436,12 +426,10 @@ bool Game::OnEvent(const SEvent& event) {
 
     controller_->OnEvent(event);
 
-    if (event.EventType == EET_GUI_EVENT) {
-        s32 id = event.GUIEvent.Caller->getID();
+    if (event.EventType == EET_GUI_EVENT) {       
+        if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED) {
         
-        if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED){
-        
-            switch (id) {
+            switch (event.GUIEvent.Caller->getID()) {
                 case GUI_ID_QUIT_BUTTON:
                     playSoundEffect(Sounds::SELECTION);
                     isRunning_ = false;
@@ -452,11 +440,8 @@ bool Game::OnEvent(const SEvent& event) {
                     mainScreen_ = false;
                     needsRestart_ = true;
                     break;
-                case GUI_ID_OPEN_INVENTORY_BUTTON:
-                    playSoundEffect(Sounds::SELECTION);
-                    showStatus(this);
-                    break;
 
+                case GUI_ID_OPEN_INVENTORY_BUTTON:
                 case GUI_ID_CLOSE_INVENTORY_BUTTON:
                     playSoundEffect(Sounds::SELECTION);
                     showStatus(this);
@@ -464,9 +449,9 @@ bool Game::OnEvent(const SEvent& event) {
             }
         }
         
-        if (event.GUIEvent.EventType == EGET_ELEMENT_FOCUSED){
+        else if (event.GUIEvent.EventType == EGET_ELEMENT_FOCUSED){
             
-            switch (id) {
+            switch (event.GUIEvent.Caller->getID()) {
                 case GUI_ID_POTION_IMAGE:
                     playSoundEffect(Sounds::SELECTION);
                     mainCharacter_->drinkPotion(this);
@@ -475,33 +460,54 @@ bool Game::OnEvent(const SEvent& event) {
         }
 
         return true;
-    } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
-        if (event.MouseInput.isLeftPressed()) {
-            
-            vector3df collisionPoint;
-            ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
-            mainCharacter_->setTarget(selectedNode);
 
-            if (selectedNode) {
+    }
 
-                if ((selectedNode->getID() & NodeIDFlags::FLOOR) == NodeIDFlags::FLOOR) {
-                    cout << "Collision Point X: " << collisionPoint.X;
-                    cout << " Y: " << collisionPoint.Y;
-                    cout << " Z: " << collisionPoint.Z << endl;
+    if (event.EventType == EET_MOUSE_INPUT_EVENT) {
 
-                    cout << "Floor node" << endl;
-                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), collisionPoint));
-                } else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
-                    cout << "Monster node" << endl;
-                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
-                } else if ((selectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM) {
-                    cout << "Item node" << endl;
-                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
-                }
+        vector3df collisionPoint;
+        ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
+
+        if (selectedNode)
+            switch (selectedNode->getID()) {
+                case NodeIDFlags::ENEMY :
+                    cursor_->setFilter(CursorColors::ATTACKING);
+                    break;
+
+                case NodeIDFlags::ITEM :
+                    cursor_->setFilter(CursorColors::GETTING);
+                    break;
+                    
+                default :
+                    cursor_->setFilter(CursorColors::POINTING);
             }
+
+        if (event.MouseInput.isLeftPressed()) {
+            mainCharacter_->setTarget(selectedNode);
+            
+            if (selectedNode)
+                switch (selectedNode->getID()) {
+                    case NodeIDFlags::FLOOR :
+                        cout << "Floor node" << endl;
+                        mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), collisionPoint));
+                        break;
+
+                    case NodeIDFlags::ENEMY :
+                        cout << "Monster node" << endl;
+                        mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
+                        break;
+
+                    case NodeIDFlags::ITEM :
+                        cout << "Item node" << endl;
+                        mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
+                        break;
+                }
+            
         }
 
-    } else
+        return false;
+    }
+    else
         return false;
 }
 

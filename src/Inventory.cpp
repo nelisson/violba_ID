@@ -1,4 +1,5 @@
 #include "Inventory.h"
+#include "Game.h"
 
 void Inventory::setMaxItems(int maxItems) {
     maxItems_ = maxItems;
@@ -70,7 +71,7 @@ void Inventory::drawInventory(){
 
             if(teste){
                 if((*i)->getItem()->getNamex().compare("Potion")==0)
-                    env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)),true,NULL,503);
+                    env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)),true,NULL,GUI_ID_POTION_IMAGE);
                 else
                     env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)));
                 
@@ -94,8 +95,7 @@ void Inventory::drawInventory(){
 Potion* Inventory::getPotion(){
     
     vector<Slot*>::const_iterator i;
-
-    for(i = slots_.begin(); i< slots_.end();i++){
+    for(i = slots_.begin(); i < slots_.end(); i++){
 
         if(!(*i)->isEmpty()){
             if((*i)->getItem()->getNamex().compare("Potion")==0){

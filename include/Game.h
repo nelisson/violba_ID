@@ -55,7 +55,7 @@ namespace GameFonts {
 }
 
 enum {
-    GUI_ID_QUIT_BUTTON = 501,
+    GUI_ID_QUIT_BUTTON,
     GUI_ID_PLAY_DEMO_BUTTON,
     GUI_ID_POTION_IMAGE,
     GUI_ID_OPEN_INVENTORY_BUTTON,

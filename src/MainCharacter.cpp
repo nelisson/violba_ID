@@ -272,7 +272,7 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
             break;
 
         case CROUCHING :
-            setFrameLoop(ANIM_CROUCHFREEZE);
+            setFrameLoop(ANIM_GET_UP);
             setState(GETTING_ITEM);
             break;
 
