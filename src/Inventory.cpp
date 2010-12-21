@@ -42,6 +42,12 @@ Item * Inventory::putItem(Item *, int) {
 
 }
 
+void Inventory::clear() {
+    vector<Slot*>::const_iterator i;
+    for (i = slots_.begin(); i < slots_.end(); i++)
+        (*i)->clear();
+}
+
 Inventory::Inventory(ISceneManager* sceneManager, int maxItems)
     : sceneManager_(sceneManager), maxItems_(maxItems) {
 

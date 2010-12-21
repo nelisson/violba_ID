@@ -25,12 +25,12 @@ enum Button {
     R,
     BACK,
     START,
+    L_ANALOG_BUTTON,
+    R_ANALOG_BUTTON,
     POV_UP,
     POV_DOWN,
     POV_LEFT,
-    POV_RIGHT,
-    L_ANALOG_BUTTON,
-    R_ANALOG_BUTTON,
+    POV_RIGHT,    
 };
 
 enum ButtonState {

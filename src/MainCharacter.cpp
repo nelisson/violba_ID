@@ -153,6 +153,7 @@ void MainCharacter::crouch(void *userData) {
         thisptr->getState() != CROUCHING) {
 
         thisptr->setFrameLoop(ANIM_CROUCH);
+        thisptr->setLoopMode(false);
         thisptr->setState(CROUCHING);
     }
 }
@@ -273,6 +274,7 @@ void MainCharacter::OnAnimationEnd(IAnimatedMeshSceneNode *node) {
 
         case CROUCHING :
             setFrameLoop(ANIM_GET_UP);
+            setLoopMode(false);
             setState(GETTING_ITEM);
             break;
 
@@ -327,6 +329,7 @@ void MainCharacter::reset(vector3df position) {
     setState(STOPPING);
     setTarget(0);
     setRoute(line3df());
+    inventory_->clear();
 }
 
 MainCharacter::MainCharacter(ISceneNode * parent,
@@ -362,7 +365,7 @@ MainCharacter::MainCharacter(ISceneNode * parent,
 
     vector3df center = getAnimatedNode()->getBoundingBox().getCenter();
 
-    setSize(dimension2df(50,50));
+    setSize(dimension2df(20,20));
 
     setAnimationEndCallback(this);
     getAnimatedNode()->setMaterialFlag(video::EMF_LIGHTING, false);

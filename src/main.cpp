@@ -10,7 +10,7 @@ using namespace irr;
 using namespace std;
 using namespace core;
 
-int main() {
+int main( int argc, char* argv[]) {
 
     IrrlichtDevice* device = createDevice(video::EDT_OPENGL,
             RESOLUTION, 32, false, true, false);
@@ -23,7 +23,7 @@ int main() {
     device->setResizable();
     device->getCursorControl()->setVisible(false);
 
-    Game game(device, device->getSceneManager(), createIrrKlangDevice());
+    Game game(device, device->getSceneManager(), createIrrKlangDevice(), argc > 1 ? ControllerType::PLAYSTATION2 :  ControllerType::XBOX360);
     cout << "Created game" << endl;
 
     device->setEventReceiver(&game);

@@ -21,22 +21,45 @@ vector<Monster*>::iterator Game::removeMonster(vector<Monster*>::iterator monste
 }
 
 void Game::setCallbacks() {
-    controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
-    controller_->setCallBack(X, HOLD, mainCharacter_->slash, mainCharacter_);
-    controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
-    controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
-    controller_->setCallBack(B, HOLD, mainCharacter_->spin, mainCharacter_);
-    controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
-    controller_->setCallBack(Y, HOLD, mainCharacter_->kick, mainCharacter_);
-    controller_->setCallBack(BACK, PRESSED, mainCharacter_->drinkPotion, this);
-    controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
-    controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
-    controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
-    controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
-    controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
-    controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
-    controller_->setCallBack(START, PRESSED, this->showStatus, this);
 
+
+    if(type_ == ControllerType::PLAYSTATION2){
+        controller_->setCallBack(Y, PRESSED, mainCharacter_->slash, mainCharacter_);
+        controller_->setCallBack(Y, HOLD, mainCharacter_->slash, mainCharacter_);
+        controller_->setCallBack(X, PRESSED, mainCharacter_->jump, mainCharacter_);
+        controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
+        controller_->setCallBack(B, HOLD, mainCharacter_->spin, mainCharacter_);
+        controller_->setCallBack(A, PRESSED, mainCharacter_->kick, mainCharacter_);
+        controller_->setCallBack(A, HOLD, mainCharacter_->kick, mainCharacter_);
+        controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
+        controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
+        controller_->setCallBack(BACK, PRESSED, mainCharacter_->crouch, mainCharacter_);
+        controller_->setCallBack(START, PRESSED, mainCharacter_->block, mainCharacter_);
+        controller_->setCallBack(START, HOLD, mainCharacter_->block, mainCharacter_);
+        controller_->setCallBack(START, RELEASED, mainCharacter_->unblock, mainCharacter_);
+
+        controller_->setCallBack(R_ANALOG_BUTTON, PRESSED, this->showStatus, this);
+        controller_->setCallBack(L_ANALOG_BUTTON, PRESSED, mainCharacter_->drinkPotion, this);
+    }
+    else {
+        controller_->setCallBack(X, PRESSED, mainCharacter_->slash, mainCharacter_);
+        controller_->setCallBack(X, HOLD, mainCharacter_->slash, mainCharacter_);
+        controller_->setCallBack(A, PRESSED, mainCharacter_->jump, mainCharacter_);
+        controller_->setCallBack(B, PRESSED, mainCharacter_->spin, mainCharacter_);
+        controller_->setCallBack(B, HOLD, mainCharacter_->spin, mainCharacter_);
+        controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
+        controller_->setCallBack(Y, HOLD, mainCharacter_->kick, mainCharacter_);
+        controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
+        controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
+        controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
+        controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
+        controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
+        controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
+        controller_->setCallBack(START, PRESSED, this->showStatus, this);
+        controller_->setCallBack(BACK, PRESSED, mainCharacter_->drinkPotion, this);
+    }
+
+    
 }
 
 void Game::moveCharacter(void* userData, vector2df desl) {
@@ -202,10 +225,8 @@ bool Game::doActions() {
             }
 
 
-            mainCharacter_->setState(CROUCHING);
+            mainCharacter_->setState(STOPPING);
         }
-
-
 
         time_t currentTime;
         time(&currentTime);
@@ -441,7 +462,6 @@ bool Game::OnEvent(const SEvent& event) {
                     needsRestart_ = true;
                     break;
 
-                case GUI_ID_OPEN_INVENTORY_BUTTON:
                 case GUI_ID_CLOSE_INVENTORY_BUTTON:
                     playSoundEffect(Sounds::SELECTION);
                     showStatus(this);
@@ -503,6 +523,11 @@ bool Game::OnEvent(const SEvent& event) {
                         break;
                 }
             
+        }
+
+        else if (event.MouseInput.isRightPressed()) {
+            playSoundEffect(Sounds::SELECTION);
+            showStatus(this);
         }
 
         return false;
@@ -743,14 +768,16 @@ void Game::startGame(void *userData) {
     ((Game*) userData)->needsRestart_ = true;
 }
 
-Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine)
+Game::Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine, ControllerType::ControllerType type)
 
 : SoundEmmitter(soundEngine),
 isStatusVisible_(false),
 isRunning_(true),
 mainScreen_(true),
 sceneManager_(sceneManager),
-pather_(&grid_) {
+pather_(&grid_),
+type_(type)
+{
 
     killCounter_ = 0;
     IGUIEnvironment* env = sceneManager_->getGUIEnvironment();
@@ -781,7 +808,13 @@ pather_(&grid_) {
     controller_ = new XBOX360Controller();
     cout << "Controller created." << endl;
 
-    controller_->setCallBack(START, PRESSED, startGame, this);
+    if(type_ == ControllerType::PLAYSTATION2){
+        controller_->setCallBack(R_ANALOG_BUTTON, PRESSED, startGame, this);
+    }
+    else{
+        controller_->setCallBack(START, PRESSED, startGame, this);
+    }
+    
 
     mainCharacter_ = new MainCharacter(level_, getSceneManager(), getSoundEngine());
     cout << "Char created." << endl;

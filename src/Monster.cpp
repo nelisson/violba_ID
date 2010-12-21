@@ -18,6 +18,7 @@ bool Monster::walk(vector3df delta) {
 
 void Monster::die() {
     if (getState() != DYING) {
+        setLoopMode(false);
         setFrameLoop(MONSTER_DIE);
         setState(DYING);
         playSoundEffect(Sounds::DEAD);

@@ -20,6 +20,13 @@ namespace NodeIDFlags {
     };
 }
 
+namespace ControllerType{
+    enum ControllerType{
+        XBOX360,
+        PLAYSTATION2,
+        };
+}
+
 
 int sinal (double num);
 

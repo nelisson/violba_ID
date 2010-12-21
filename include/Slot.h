@@ -14,6 +14,8 @@ class Slot {
         Item * getItem();
         bool isEmpty();
 
+        void clear();
+
         Slot();
         virtual ~Slot();
 };

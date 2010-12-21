@@ -33,6 +33,8 @@ class Inventory {
 
         Slot* findEmptySlot() const;
 
+        void clear();
+
         Inventory(ISceneManager* sceneManager, int maxItems = DEFAULT_MAX_ITEMS);
         virtual ~Inventory();
 };

@@ -15,6 +15,11 @@ bool Slot::isEmpty() {
     return (item_ == NULL);
 }
 
+void Slot::clear() {
+    //delete item_;
+    item_ = NULL;
+}
+
 Slot::Slot() {
     item_ = NULL;
 }

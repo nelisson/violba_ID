@@ -84,6 +84,7 @@ private:
     f32 elapsedTime_;
     time_t lastSpawn_;
     ICameraSceneNode* camera_;
+    ControllerType::ControllerType type_;
 
 
 
@@ -150,7 +151,7 @@ public:
 
     void reset();
 
-    Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine);
+    Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine, ControllerType::ControllerType type);
     virtual ~Game();
 };
 
