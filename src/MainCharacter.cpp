@@ -3,14 +3,17 @@
 
 using namespace State;
 
-void MainCharacter::drinkPotion(void *userData) {
-    MainCharacter * thisptr = (MainCharacter*) userData;
+void MainCharacter::drinkPotion(void *gameData) {
+    Game * thisptr = (Game*) gameData;
 
-    Potion * potion = thisptr->getInventory()->getPotion();
+       
+    Potion * potion = thisptr->getMainCharacter()->getInventory()->getPotion();   
 
     if(potion){
-    
-        thisptr->heal(potion->getHealAmount(),true);
+        thisptr->getMainCharacter()->heal(potion->getHealAmount(),true);
+        thisptr->getSceneManager()->getGUIEnvironment()->clear();
+        thisptr->createStatusSreen();
+        thisptr->getSceneManager()->getGUIEnvironment()->drawAll();
     }
 }
 

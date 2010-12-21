@@ -33,6 +33,7 @@ using namespace irr::core;
 using namespace irr::gui;
 
 namespace GameMusic {
+
     enum Music {
         INTRO,
         TOWN,
@@ -41,6 +42,7 @@ namespace GameMusic {
 }
 
 namespace GameFonts {
+
     enum Font {
         DIABLO12,
         DIABLO14,
@@ -52,82 +54,104 @@ namespace GameFonts {
     };
 }
 
-enum
-{
-	GUI_ID_QUIT_BUTTON = 101,
-	GUI_ID_PLAY_DEMO_BUTTON,
+enum {
+    GUI_ID_QUIT_BUTTON = 501,
+    GUI_ID_PLAY_DEMO_BUTTON,
+    GUI_ID_POTION_IMAGE,
+    GUI_ID_OPEN_INVENTORY_BUTTON,
+    GUI_ID_CLOSE_INVENTORY_BUTTON,
 };
 
-class Game : public SoundEmmitter, 
-             public IEventReceiver {
+class Game : public SoundEmmitter,
+public IEventReceiver {
+private:
+    int killCounter_;
+    bool needsRestart_;
+    bool mainScreen_;
+    bool isRunning_;
+    bool isStatusVisible_;
+    ISceneManager * sceneManager_;
+    ItemGenerator itemGenerator_;
+    Grid grid_;
+    Cursor * cursor_;
+    MicroPather pather_;
+    Level * level_;
+    XBOX360Controller * controller_;
+    MainCharacter * mainCharacter_;
+    vector<Monster*> monsters_;
+    vector<IGUIFont*> fonts_;
 
-    private:
-        int killCounter_;
-        bool needsRestart_;
-        bool mainScreen_;
-        bool isRunning_;
-        bool isStatusVisible_;
-        ISceneManager * sceneManager_;
-        ItemGenerator itemGenerator_;
-        Grid grid_;
-        Cursor * cursor_;
-        MicroPather pather_;
-        Level * level_;
-        XBOX360Controller * controller_;
-        MainCharacter * mainCharacter_;
-        vector<Monster*> monsters_;
-        vector<IGUIFont*> fonts_;
-
-        f32 elapsedTime_;
-        time_t lastSpawn_;
-        ICameraSceneNode* camera_;
-
-        void createMainScreen();
-        void createStatusSreen();
-
-    protected:
-
-    public:
+    f32 elapsedTime_;
+    time_t lastSpawn_;
+    ICameraSceneNode* camera_;
 
 
-        static void startGame(void *userData);
-        
-        static void showStatus(void *userData);
-        
-        ISceneManager * getSceneManager() { return sceneManager_; }
 
-        Level * getLevel() { return level_; }
-        XBOX360Controller * getController() { return controller_; }
-        MainCharacter * getMainCharacter() { return mainCharacter_; }
-        vector<Monster*> getMonsters() { return monsters_; }
-        Monster* getMonster(int i) { return monsters_.at(i); }
+protected:
 
-        void addMonster(Monster * monster);
-        vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
+public:
+    void createMainScreen();
+    void createStatusSreen();
 
-        void clearCorpses();
+    static void startGame(void *userData);
 
-        void printPath(vector<void*> path) const;
+    static void showStatus(void *userData);
 
-        void setCallbacks();
-        bool doActions();
-        vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);
-        void attackMainCharacter(float damage);
-        int attackMonsters();
-        void tryGeneratingMonster(int chancePercent);
-        void runMonstersAI();
+    ISceneManager * getSceneManager() {
+        return sceneManager_;
+    }
 
-        f32 getElapsedTime() { return elapsedTime_; }
-        void setElapsedTime(f32 elapsedTime) { elapsedTime_ = elapsedTime; }
+    Level * getLevel() {
+        return level_;
+    }
 
-        static void moveCharacter(void*, core::vector2df desl);
+    XBOX360Controller * getController() {
+        return controller_;
+    }
 
-        virtual bool OnEvent(const SEvent& event);
+    MainCharacter * getMainCharacter() {
+        return mainCharacter_;
+    }
 
-        void reset();
+    vector<Monster*> getMonsters() {
+        return monsters_;
+    }
 
-        Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine);
-        virtual ~Game();
+    Monster* getMonster(int i) {
+        return monsters_.at(i);
+    }
+
+    void addMonster(Monster * monster);
+    vector<Monster*>::iterator removeMonster(vector<Monster*>::iterator monster);
+
+    void clearCorpses();
+
+    void printPath(vector<void*> path) const;
+
+    void setCallbacks();
+    bool doActions();
+    vector<Monster*>::iterator attackMonster(vector<Monster*>::iterator monster);
+    void attackMainCharacter(float damage);
+    int attackMonsters();
+    void tryGeneratingMonster(int chancePercent);
+    void runMonstersAI();
+
+    f32 getElapsedTime() {
+        return elapsedTime_;
+    }
+
+    void setElapsedTime(f32 elapsedTime) {
+        elapsedTime_ = elapsedTime;
+    }
+
+    static void moveCharacter(void*, core::vector2df desl);
+
+    virtual bool OnEvent(const SEvent& event);
+
+    void reset();
+
+    Game(IrrlichtDevice* device, ISceneManager * sceneManager, ISoundEngine * soundEngine);
+    virtual ~Game();
 };
 
 #endif // GAME_H

@@ -28,7 +28,7 @@ void Game::setCallbacks() {
     controller_->setCallBack(B, HOLD, mainCharacter_->spin, mainCharacter_);
     controller_->setCallBack(Y, PRESSED, mainCharacter_->kick, mainCharacter_);
     controller_->setCallBack(Y, HOLD, mainCharacter_->kick, mainCharacter_);
-    controller_->setCallBack(BACK, PRESSED, mainCharacter_->drinkPotion, mainCharacter_);
+    controller_->setCallBack(BACK, PRESSED, mainCharacter_->drinkPotion, this);
     controller_->setCallBack(L_ANALOG, PRESSED, this->moveCharacter, this);
     controller_->setCallBack(L_ANALOG, RELEASED, mainCharacter_->stop, mainCharacter_);
     controller_->setCallBack(L, PRESSED, mainCharacter_->crouch, mainCharacter_);
@@ -36,7 +36,6 @@ void Game::setCallbacks() {
     controller_->setCallBack(R, PRESSED, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, HOLD, mainCharacter_->block, mainCharacter_);
     controller_->setCallBack(R, RELEASED, mainCharacter_->unblock, mainCharacter_);
-
     controller_->setCallBack(START, PRESSED, this->showStatus, this);
 
 }
@@ -95,12 +94,17 @@ bool Game::doActions() {
 
     clearCorpses();
     getSceneManager()->drawAll();
-    cursor_->render();
+    
 
     IGUIStaticText *kills = sceneManager_->getGUIEnvironment()->addStaticText(toWchar_Kills(killCounter_),
             rect<s32 > (800, 0, 1000, 50), true, true, 0, -1, true);
     kills->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
     kills->draw();
+
+    IGUIButton *inventory = sceneManager_->getGUIEnvironment()->addButton(recti(100,0,300,50), NULL, GUI_ID_OPEN_INVENTORY_BUTTON,L"Inventory");
+    inventory->draw();
+
+    cursor_->render();
 
     camera_->setTarget(vector3df(mainCharacter_->getPosition().X,
             getLevel()->getTerrain()->getHeight(mainCharacter_->getPosition().X, mainCharacter_->getPosition().Z),
@@ -143,6 +147,27 @@ bool Game::doActions() {
                     mainCharacter_->setRotation(vector3df(0, ang, 0));
 
                     mainCharacter_->slash(mainCharacter_);
+                    mainCharacter_->setTarget(0);
+                } else {
+                    moveCharacter(this, vector2df(vector.X, -vector.Z));
+
+                    if (!mainCharacter_->getRoute().isPointBetweenStartAndEnd(mainCharacter_->getPosition()))
+                        mainCharacter_->setTarget(0);
+                }
+            }else if ((mainCharacter_->getTarget()->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM) {
+                vector3df vector = mainCharacter_->getRoute().getVector();
+
+                if (mainCharacter_->getPosition().getDistanceFrom(mainCharacter_->getTarget()->getAbsolutePosition()) <= mainCharacter_->getEquippedWeapon()->getRange()) {
+
+                    float moveHorizontal = vector.X;
+                    float moveVertical = vector.Z;
+                    double ang = sinal(moveHorizontal) * (180.0 / PI) * acos(vector3df(0, 0, 1).dotProduct(vector3df(moveHorizontal, 0, moveVertical).normalize()));
+                    if (ang >= 180)
+                        ang = 179;
+
+                    mainCharacter_->setRotation(vector3df(0, ang, 0));
+
+                    mainCharacter_->crouch(mainCharacter_);
                     mainCharacter_->setTarget(0);
                 } else {
                     moveCharacter(this, vector2df(vector.X, -vector.Z));
@@ -410,31 +435,49 @@ void Game::createMainScreen() {
 bool Game::OnEvent(const SEvent& event) {
 
     controller_->OnEvent(event);
-    cout << "EVENT!!!" << endl;
+
     if (event.EventType == EET_GUI_EVENT) {
-        cout << "GUI EVENT!!!" << endl;
         s32 id = event.GUIEvent.Caller->getID();
+        
+        if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED){
+        
+            switch (id) {
+                case GUI_ID_QUIT_BUTTON:
+                    playSoundEffect(Sounds::SELECTION);
+                    isRunning_ = false;
+                    break;
 
-        if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
-            cout << "CLICKED EVENT!!!" << endl;
-        switch (id) {
-            case GUI_ID_QUIT_BUTTON:
-                playSoundEffect(Sounds::SELECTION);
-                isRunning_ = false;
+                case GUI_ID_PLAY_DEMO_BUTTON:
+                    playSoundEffect(Sounds::SELECTION);
+                    mainScreen_ = false;
+                    needsRestart_ = true;
+                    break;
+                case GUI_ID_OPEN_INVENTORY_BUTTON:
+                    playSoundEffect(Sounds::SELECTION);
+                    showStatus(this);
+                    break;
 
-                break;
-
-            case GUI_ID_PLAY_DEMO_BUTTON:
-                playSoundEffect(Sounds::SELECTION);
-                mainScreen_ = false;
-                needsRestart_ = true;
-                break;
+                case GUI_ID_CLOSE_INVENTORY_BUTTON:
+                    playSoundEffect(Sounds::SELECTION);
+                    showStatus(this);
+                    break;
+            }
+        }
+        
+        if (event.GUIEvent.EventType == EGET_ELEMENT_FOCUSED){
+            
+            switch (id) {
+                case GUI_ID_POTION_IMAGE:
+                    playSoundEffect(Sounds::SELECTION);
+                    mainCharacter_->drinkPotion(this);
+                    break;               
+            }
         }
 
         return true;
     } else if (event.EventType == EET_MOUSE_INPUT_EVENT) {
         if (event.MouseInput.isLeftPressed()) {
-
+            
             vector3df collisionPoint;
             ISceneNode* selectedNode = cursor_->getIntersectedSceneNode(getSceneManager(), collisionPoint);
             mainCharacter_->setTarget(selectedNode);
@@ -451,8 +494,10 @@ bool Game::OnEvent(const SEvent& event) {
                 } else if ((selectedNode->getID() & NodeIDFlags::ENEMY) == NodeIDFlags::ENEMY) {
                     cout << "Monster node" << endl;
                     mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
+                } else if ((selectedNode->getID() & NodeIDFlags::ITEM) == NodeIDFlags::ITEM) {
+                    cout << "Item node" << endl;
+                    mainCharacter_->setRoute(line3df(mainCharacter_->getPosition(), selectedNode->getAbsolutePosition()));
                 }
-
             }
         }
 
@@ -468,6 +513,9 @@ void Game::createStatusSreen() {
     rect<s32> tamanho;
     position2di position;
     dimension2d<u32> screen = RESOLUTION_SCREEN;
+
+    sceneManager_->getGUIEnvironment()->addButton(recti(900,0,1000,50), NULL, GUI_ID_CLOSE_INVENTORY_BUTTON,L"Close");
+
 
     Temp = "Status";
     tamanho = getStringSize(Temp, 48);
@@ -633,12 +681,7 @@ void Game::createStatusSreen() {
     text->setOverrideFont(fonts_.at(DIABLO28));
     text->setRelativePosition(position);
 
-    //exp -> current nextLevel
-    //jumpHeight
-    //(500, 150,1000, 659)
-    //moveSpeed
-    //AttackSpeed
-    //Position
+   
 }
 
 void Game::showStatus(void *userData) {

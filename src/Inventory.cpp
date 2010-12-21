@@ -68,8 +68,12 @@ void Inventory::drawInventory(){
             ITexture* teste = (*i)->getItem()->getImage();
             
 
-            if(teste){                
-                env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)));
+            if(teste){
+                if((*i)->getItem()->getNamex().compare("Potion")==0)
+                    env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)),true,NULL,503);
+                else
+                    env->addImage(teste, position2di(501+(deslocX*100),151+(deslocY*100)));
+                
             }
 
         }
