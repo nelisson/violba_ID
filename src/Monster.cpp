@@ -77,6 +77,8 @@ Monster::Monster(ISceneNode * parent,
     attackSpeed_ = attackSpeed;
 
     setMaxHP(DEFAULT_MONSTER_HP);
+    fillHP();
+    cout <<"Max hp"<<getMaxHP()<<endl;
     setMoveSpeed(DEFAULT_CHARACTER_MOVESPEED);
 
     addSoundEffect("./sounds/potion.wav");

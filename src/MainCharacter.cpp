@@ -240,7 +240,7 @@ void MainCharacter::updateAttributes() {
 }
 
 float MainCharacter::getDamage() const {
-    return getEquippedWeapon()->getDamage() * strength_;
+    return getEquippedWeapon()->getDamage() + (getEquippedWeapon()->getDamage() * strength_ /100.0);
 }
 
 void MainCharacter::earnExperience(int experience) {

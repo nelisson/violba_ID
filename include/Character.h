@@ -9,7 +9,7 @@
 #include "SoundEmmitter.h"
 
 #define DEFAULT_CHARACTER_LEVEL 1
-#define DEFAULT_CHARACTER_MOVESPEED 60
+#define DEFAULT_CHARACTER_MOVESPEED 30
 
 using namespace std;
 using namespace irr::scene;

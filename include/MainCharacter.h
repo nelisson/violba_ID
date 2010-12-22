@@ -70,7 +70,7 @@ class MainCharacter : public Character {
         float jumpHeight_;
         float timeToFall_;
 
-        long experienceCurve(int level) const { return (level == 0)? 0 : 980 + 200 * level*level; };
+        long experienceCurve(int level) const { return (level == 0)? 0 : 980 + 2000 * level*level; };
 
     protected:
 
